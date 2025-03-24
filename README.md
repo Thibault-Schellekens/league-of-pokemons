@@ -44,7 +44,7 @@ ONLY TEAMS OF 3 POKEMONS ALLOWED
 We assume the order of pokemons appearing in battle is the sale as they are stored in this list.
 
 
-more information soon
+### More Information Soon
 
 
 ## Diagramme de Classe
@@ -59,10 +59,18 @@ L'architecture retenue pour ce projet est _model-view-controller_.
 
 
 ## Plan de Tests Fonctionnels
+Program launched
+We are in the *MAIN-MENU_fxml*, we got 2 choices *Play* *Load* *Save* *Quit*
 
-Les tests fonctionnels élémentaires pour le projet sont les suivants :
+### INVENTORY PERFECT TEST
+- *Play* button changes scenes and brings us to the *HUB_fxml*
+- In the *HUB_fxml* player can choose between : *Battle* *Collection* *Back*
+- *Collection* button brings up *Collection_fxml*
+- in the *Collection_fxml* we have the player's inventory, we also have the list of pre-downloaded set of pokemon cards.
+- The player can pick 3 pokemons which will be directly added to the player's inventory and shown in his inventory somewhere in the corner.
+Example -> file:///C:/Users/maria/OneDrive/Desktop/image.png
+- In order for the player to remove a card from his inventory, he needs to click it
 
-- ...
 
 ## Calendrier Hebdomadaire des Tâches
 
