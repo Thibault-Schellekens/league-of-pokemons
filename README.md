@@ -44,7 +44,7 @@ With each victory up to stage 5, the player unlocks a new tier of Pokémon:
 
 In each battle, the player can use up to **three Pokémon**.
 
-Before entering a battle, the player must assemble a team, ensuring that the selected Pokémon meet the reWhored [**Tier](#**pokémon-tiers) for that stage.
+Before entering a battle, the player must assemble a team, ensuring that the selected Pokémon meet the required [**Tier](#**pokémon-tiers) for that stage.
 
 ### Battle System
 
@@ -85,6 +85,20 @@ The class diagram below illustrates the structure of the application's **util** 
 ## Choice of Architecture
 
 The architecture chosen for this project is model-view-controller.
+
+## FXML Files Preview
+
+The project has 5 main FXML files
+
+1. ![Main Menu Preview](./pics/main-menu-preview.png)
+
+2. ![Hub Preview](./pics/hub-preview.png)
+
+3. ![Battle Preview](./pics/battle-preview.png)
+
+4. ![Collection Preview](./pics/collection-preview.png)
+
+5. ![Scanner Preview](./pics/scanner-preview.png)
 
 ## Functional Testing Plan
 
@@ -132,49 +146,42 @@ The architecture chosen for this project is model-view-controller.
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | _TODO_      |
-| Thibault | _TODO_      |
-| Marian   | _TODO_      |
+| All      | Project analysis, readme completed      |
+| Thibault | FXML - Battle Scene + Scanner Scene      |
+| Marian   | FXML - Main Menu Scene, Hub Scene, Collection Scene     |
 
 ### Week 2 - 6H
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | _TODO_      |
-| Thibault | _TODO_      |
-| Marian   | _TODO_      |
+| All      | Implementation of Model      |
+| Thibault | OCR Service      |
+| Marian   | DataBase Connection      |
 
 ### Week 3 - 6H
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | _TODO_      |
-| Thibault | _TODO_      |
-| Marian   | _TODO_      |
+| All      | Implementation of Model      |
+| Thibault | _TBD_      |
+| Marian   | _TBD_      |
 
 ### Week 4 - 6H
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | _TODO_      |
-| Thibault | _TODO_      |
-| Marian   | _TODO_      |
+| All      | Implementation of MVC      |
+| Thibault | _TBD_      |
+| Marian   | _TBD_      |
 
 ### Week 5 - 6H
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | _TODO_      |
+| All      | Preparing final release      |
 | Thibault | _TODO_      |
 | Marian   | _TODO_      |
 
-### Week 6 - 6H
-
-| Who      | Description |
-| -------- | ----------- |
-| All      | _TODO_      |
-| Thibault | _TODO_      |
-| Marian   | _TODO_      |
 
 ## Installation and Usage
 
