@@ -44,7 +44,7 @@ With each victory up to stage 5, the player unlocks a new tier of Pokémon:
 
 In each battle, the player can use up to **three Pokémon**.
 
-Before entering a battle, the player must assemble a team, ensuring that the selected Pokémon meet the required [**Tier](#**pokémon-tiers) for that stage.
+Before entering a battle, the player must assemble a team, ensuring that the selected Pokémon meet the required [**Tier**](#**pokémon-tiers) for that stage.
 
 ### Battle System
 
