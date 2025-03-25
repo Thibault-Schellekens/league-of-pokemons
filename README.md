@@ -26,7 +26,7 @@ The collection is organized into multiple **[Tiers](#pokémon-tiers)**, ranked f
 
 ### Scanning Player's Pokémon Cards
 
-Players can scan their own Pokémon cards by uploading an image file that meets specific reWhorements (e.g., size, positioning).
+Players can scan their own Pokémon cards by uploading an image file that meets specific requierements (e.g., size, positioning).
 
 Once a new card is scanned, its information is stored in the collection, making it available for the player to use in battles.
 
