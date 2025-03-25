@@ -90,15 +90,20 @@ The architecture chosen for this project is model-view-controller.
 
 The project has 5 main FXML files
 
-1. ![Main Menu Preview](./pics/main-menu-preview.png)
+1. **Main menu**
+![Main Menu Preview](./pics/main-menu-preview.png)
 
-2. ![Hub Preview](./pics/hub-preview.png)
+2. **Hub** 
+![Hub Preview](./pics/hub-preview.png)
 
-3. ![Battle Preview](./pics/battle-preview.png)
+3. **Battle** 
+![Battle Preview](./pics/battle-preview.png)
 
-4. ![Collection Preview](./pics/collection-preview.png)
+4. **Collection** 
+![Collection Preview](./pics/collection-preview.png)
 
-5. ![Scanner Preview](./pics/scanner-preview.png)
+5. **Scanner** 
+![Scanner Preview](./pics/scanner-preview.png)
 
 ## Functional Testing Plan
 
