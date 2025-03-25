@@ -22,7 +22,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <Pane layoutX="40.0" layoutY="23.0" prefHeight="149.0" prefWidth="283.0">
+      <Pane layoutX="54.0" layoutY="14.0" prefHeight="149.0" prefWidth="283.0">
          <children>
             <ImageView fitHeight="149.0" fitWidth="391.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -36,6 +36,19 @@
             </Text>
          </children></Pane>
       <Button layoutX="481.0" layoutY="564.0" mnemonicParsing="false" text="todo file explorer" />
-      <Button layoutX="855.0" layoutY="564.0" mnemonicParsing="false" text="todo back" />
+      <Pane layoutX="827.0" layoutY="464.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <ImageView fitHeight="129.0" fitWidth="114.0" layoutX="74.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/icons.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="62.0" fitWidth="64.0" layoutX="99.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/back.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
    </children>
 </Pane>
