@@ -34,7 +34,6 @@
                   <Font size="23.0" />
                </font></Text>
          </children></Pane>
-      <Button layoutX="481.0" layoutY="564.0" mnemonicParsing="false" text="todo file explorer" />
       <Pane layoutX="827.0" layoutY="464.0" prefHeight="200.0" prefWidth="200.0">
          <children>
             <ImageView fitHeight="129.0" fitWidth="114.0" layoutX="74.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
@@ -47,6 +46,21 @@
                   <Image url="@../assets/back.png" />
                </image>
             </ImageView>
+         </children>
+      </Pane>
+      <Pane layoutX="449.0" layoutY="504.0" prefHeight="149.0" prefWidth="172.0">
+         <children>
+            <ImageView fitHeight="141.0" fitWidth="163.0" layoutX="5.0" layoutY="-6.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/houseGlowy.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="125.0" fitWidth="150.0" layoutX="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/templateHouse.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="39.0" layoutY="15.0" mnemonicParsing="false" opacity="0.0" prefHeight="96.0" prefWidth="96.0" text="todo file explorer" />
          </children>
       </Pane>
    </children>
