@@ -52,12 +52,12 @@
          <children>
             <ImageView fitHeight="141.0" fitWidth="163.0" layoutX="5.0" layoutY="-6.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../assets/houseGlowy.png" />
+                  <Image url="@houseGlowy.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="125.0" fitWidth="150.0" layoutX="12.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../assets/templateHouse.png" />
+                  <Image url="@templateHouse.png" />
                </image>
             </ImageView>
             <Button layoutX="39.0" layoutY="15.0" mnemonicParsing="false" opacity="0.0" prefHeight="96.0" prefWidth="96.0" text="todo file explorer" />
