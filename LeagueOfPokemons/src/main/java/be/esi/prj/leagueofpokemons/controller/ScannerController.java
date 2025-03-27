@@ -23,11 +23,16 @@ import java.io.IOException;
 // TODO: Add Information message (either fail or success)
 public class ScannerController {
     private final OCRService ocrService;
+    // Field to store the scanned card
 
     @FXML
     private Button fileExplorerBtn;
     @FXML
+    private Button addCardBtn;
+    @FXML
     private ImageView glowingHouse;
+    @FXML
+    private ImageView bag;
     @FXML
     private Line lineScanner;
     @FXML
@@ -43,7 +48,6 @@ public class ScannerController {
     public void initialize() {
         System.out.println("Initializing Scanner");
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);
-        fileExplorerBtn.setOnMouseClicked(_ -> openFileExplorer());
     }
 
     public void openFileExplorer() {
@@ -54,8 +58,12 @@ public class ScannerController {
         handleCardScan(file);
     }
 
+    public void addToCollection() {
+        System.out.println("Adding to collection");
+    }
+
     private void handleCardScan(File file) {
-        resetText();
+        reset();
         Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
 
         new Thread(() -> {
@@ -80,19 +88,25 @@ public class ScannerController {
         }).start();
     }
 
-    private void resetText() {
+    private void reset() {
+        addCardBtn.setDisable(true);
         successText.setOpacity(0.0);
         failedText.setOpacity(0.0);
+        bag.setOpacity(0.4);
     }
 
     private void handleScanSuccess() {
+        addCardBtn.setDisable(false);
         successText.setOpacity(1.0);
         ScannerAnimation.stopScanningLineAnimation(lineScanner);
+        bag.setOpacity(1.0);
     }
 
     private void handleScanFailed() {
+        addCardBtn.setDisable(true);
         failedText.setOpacity(1.0);
         ScannerAnimation.stopScanningLineAnimation(lineScanner);
+        bag.setOpacity(0.4);
     }
 
 }

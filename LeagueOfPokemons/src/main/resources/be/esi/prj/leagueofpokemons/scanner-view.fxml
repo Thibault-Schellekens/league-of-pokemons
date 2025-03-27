@@ -8,10 +8,10 @@
 
 <Pane prefHeight="663.0" prefWidth="1061.0" stylesheets="@style/scanner_scene.css, @style/global.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.ScannerController">
    <children>
-      <ImageView fitHeight="669.0" fitWidth="1072.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="669.0" fitWidth="1072.0" layoutX="-5.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
           <Image url="@pics/scanner/scanner_background.png" />
       </ImageView>
-      <AnchorPane layoutX="393.0" layoutY="98.0" prefHeight="408.0" prefWidth="283.0">
+      <Pane layoutX="393.0" layoutY="98.0" prefHeight="408.0" prefWidth="283.0">
          <children>
             <ImageView fitHeight="389.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -19,7 +19,7 @@
                </image>
             </ImageView>
          </children>
-      </AnchorPane>
+      </Pane>
       <Pane layoutX="54.0" layoutY="14.0" prefHeight="149.0" prefWidth="283.0">
          <children>
             <ImageView fitHeight="149.0" fitWidth="391.0" pickOnBounds="true" preserveRatio="true">
@@ -32,14 +32,14 @@
                   <Font size="23.0" />
                </font></Text>
          </children></Pane>
-      <Pane layoutX="827.0" layoutY="464.0" prefHeight="200.0" prefWidth="200.0">
+      <Pane layoutX="7.0" layoutY="504.0" prefHeight="149.0" prefWidth="172.0">
          <children>
-            <ImageView fitHeight="129.0" fitWidth="114.0" layoutX="74.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="129.0" fitWidth="114.0" layoutX="36.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@pics/common/icons.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="62.0" fitWidth="64.0" layoutX="99.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="62.0" fitWidth="64.0" layoutX="61.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@pics/common/back.png" />
                </image>
@@ -58,7 +58,7 @@
                   <Image url="@pics/scanner/templateHouse.png" />
                </image>
             </ImageView>
-            <Button fx:id="fileExplorerBtn" layoutX="28.0" layoutY="10.0" mnemonicParsing="false" opacity="0.0" prefHeight="106.0" prefWidth="114.0" style="-fx-cursor: hand;" text="todo file explorer" />
+            <Button fx:id="fileExplorerBtn" layoutX="28.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#openFileExplorer" opacity="0.0" prefHeight="106.0" prefWidth="114.0" style="-fx-cursor: hand;" text="todo file explorer" />
          </children>
       </Pane>
       <Line fx:id="lineScanner" endX="134.0" fill="RED" layoutX="535.0" layoutY="95.0" opacity="0.0" startX="-134.0" stroke="RED" strokeWidth="4.0" />
@@ -79,6 +79,21 @@
                   <Font size="42.0" />
                </font>
             </Text>
+         </children>
+      </Pane>
+      <Pane layoutX="911.0" layoutY="506.0" prefHeight="115.0" prefWidth="114.0">
+         <children>
+            <ImageView fitHeight="137.0" fitWidth="129.0" layoutX="-1.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/icons.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="54.0" fitWidth="64.0" layoutX="29.0" layoutY="46.0" opacity="0.4" pickOnBounds="true" preserveRatio="true" fx:id="bag">
+               <image>
+                  <Image url="@pics/common/bag.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="29.0" layoutY="46.0" onMouseClicked="#addToCollection" opacity="0" prefHeight="54.0" prefWidth="64.0" style="-fx-cursor: hand;" fx:id="addCardBtn" disable="true"/>
          </children>
       </Pane>
    </children>
