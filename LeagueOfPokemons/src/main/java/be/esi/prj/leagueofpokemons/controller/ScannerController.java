@@ -14,6 +14,10 @@ public class ScannerController {
         ocrService = new OCRService();
     }
 
+    public void initialize() {
+        System.out.println("Initializing Scanner");
+    }
+
     public Card extractCardData() {
         return null;
     }
