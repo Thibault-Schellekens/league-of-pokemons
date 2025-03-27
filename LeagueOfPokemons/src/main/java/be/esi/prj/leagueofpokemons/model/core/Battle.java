@@ -18,7 +18,7 @@ public class Battle {
         return false;
     }
 
-    // Might have to just return the name
+    // Might have to just return the pokemonName
     public CombatEntity getWinner() {
         return null;
     }

@@ -1,9 +1,6 @@
 package be.esi.prj.leagueofpokemons.animation;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
@@ -11,6 +8,7 @@ import javafx.util.Duration;
 
 
 public class ScannerAnimation {
+    private static double startY;
 
     public static void addGlowingAnimation(Button btn, ImageView image) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), image);
@@ -22,19 +20,19 @@ public class ScannerAnimation {
     }
 
     public static void scanningLineAnimation(Line line) {
-        double startY = line.getTranslateY();
+        startY = line.getTranslateY();
 
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(2), line);
+        TranslateTransition transition = new TranslateTransition(Duration.millis(500), line);
         transition.setByY(395);
         transition.setAutoReverse(true);
-        transition.setCycleCount(3);
+        transition.setCycleCount(Animation.INDEFINITE);
 
         line.getStyleClass().add("opacity-item");
         transition.play();
+    }
 
-        transition.setOnFinished(e -> {
-            line.getStyleClass().remove("opacity-item");
-            line.setTranslateY(startY);
-        });
+    public static void stopScanningLineAnimation(Line line) {
+        line.getStyleClass().remove("opacity-item");
+        line.setTranslateY(startY);
     }
 }

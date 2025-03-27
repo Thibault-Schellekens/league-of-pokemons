@@ -7,6 +7,7 @@ import net.sourceforge.tess4j.TesseractException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -22,17 +23,18 @@ public class OCRService {
     public CardScanResult scanCardImage(BufferedImage image) {
         assertImageValid(image);
         try {
-            BufferedImage nameRegion = ImageProcessor.preprocessImage(image, "name");
+            BufferedImage nameRegion = ImageProcessor.preprocessImage(image, "pokemonName");
             tesseract.setVariable("tessedit_char_whitelist", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUWXYZ");
-            String nameText = tesseract.doOCR(nameRegion);
+            String nameText = tesseract.doOCR(nameRegion).trim();
 
-            BufferedImage hpRegion = ImageProcessor.preprocessImage(image, "hp");
             tesseract.setVariable("tessedit_char_whitelist", "0123456789");
-            int hp = Integer.parseInt(tesseract.doOCR(hpRegion).trim());
 
-            return new CardScanResult(true, nameText, hp);
+            BufferedImage localIdRegion = ImageProcessor.preprocessImage(image, "localId");
+            int localId = Integer.parseInt(tesseract.doOCR(localIdRegion).trim());
 
-        } catch (TesseractException e) {
+            return new CardScanResult(true, nameText, localId);
+
+        } catch (TesseractException | NumberFormatException e) {
             return new CardScanResult(false, null, -1);
         }
     }
@@ -45,7 +47,7 @@ public class OCRService {
 
 
     public static void main(String[] args) throws IOException {
-        String imageURL = "https://assets.tcgdex.net/en/swsh/swsh1/2/low.png";
+        String imageURL = "https://assets.tcgdex.net/en/swsh/swsh1/51/high.png";
         URL url = new URL(imageURL);
         BufferedImage image = ImageIO.read(url);
         OCRService ocrService = new OCRService();

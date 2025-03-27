@@ -1,50 +1,32 @@
 package be.esi.prj.leagueofpokemons.model.api;
 
+import be.esi.prj.leagueofpokemons.model.core.Card;
+import be.esi.prj.leagueofpokemons.model.core.Tier;
+import be.esi.prj.leagueofpokemons.model.core.Type;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.tcgdex.sdk.Extension;
+import net.tcgdex.sdk.Quality;
+import net.tcgdex.sdk.TCGdex;
+
+import java.util.Optional;
 
 public class PokeApiService {
-    private final ApiClient apiClient;
-    private final String baseURL = "https://pokeapi.co/api/v2/pokemon/";
-    private final ObjectMapper mapper;
 
-    public PokeApiService() {
-        this.apiClient = new ApiClient();
-        mapper = new ObjectMapper();
-    }
-
-    public String getPokemonType(String pokemonName) {
-        String pokemonNameURL = baseURL + pokemonName;
-        String response = apiClient.get(pokemonNameURL).orElse(null);
-
-        if (response == null) {
-            throw new RuntimeException(pokemonName + " not found");
+    public static Optional<Card> getPokemonCard(int localId, String pokemonName) {
+        TCGdex tcgdex = new TCGdex("en");
+        // Iterate through all the swsh (Sword and Shield) sets. (1-9)
+        for (int i = 1; i <= 9; i++) {
+            net.tcgdex.sdk.models.Card card = tcgdex.fetchCard("swsh" + i, String.valueOf(localId));
+            if (card != null && pokemonName.equals(card.getName())) {
+                return Optional.of(new Card(card.getId(),
+                        pokemonName,
+                        card.getHp(),
+                        card.getImageUrl(Quality.HIGH, Extension.PNG).toLowerCase(),
+                        Type.valueOf(card.getTypes().getFirst().toUpperCase())));
+            }
         }
-
-        return extractPokemonType(response);
-    }
-
-    private String extractPokemonType(String jsonResponse) {
-        JsonNode rootNode = null;
-        try {
-            rootNode = mapper.readTree(jsonResponse);
-        } catch (JsonProcessingException e) {
-            // todo: throw some real exception
-            throw new RuntimeException(e);
-        }
-        JsonNode typesNode = rootNode.get("types");
-        if (typesNode == null) {
-            throw new RuntimeException(jsonResponse + " not found");
-        }
-
-        JsonNode firstTypeNode = typesNode.get(0).get("type").get("name");
-        return firstTypeNode.asText();
-    }
-
-    public static void main(String[] args) {
-        PokeApiService apiService = new PokeApiService();
-        String firstType = apiService.getPokemonType("bulbasaur");
-        System.out.println(firstType);
+        return Optional.empty();
     }
 }

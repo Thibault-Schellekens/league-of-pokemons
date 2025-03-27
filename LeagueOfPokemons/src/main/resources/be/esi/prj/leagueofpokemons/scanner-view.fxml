@@ -61,6 +61,25 @@
             <Button fx:id="fileExplorerBtn" layoutX="28.0" layoutY="10.0" mnemonicParsing="false" opacity="0.0" prefHeight="106.0" prefWidth="114.0" style="-fx-cursor: hand;" text="todo file explorer" />
          </children>
       </Pane>
-      <Line fx:id="lineScanner" endX="134.0" fill="RED" layoutX="535.0" layoutY="95.0" opacity="0.0" startX="-134.0" stroke="RED" strokeWidth="2.0" />
+      <Line fx:id="lineScanner" endX="134.0" fill="RED" layoutX="535.0" layoutY="95.0" opacity="0.0" startX="-134.0" stroke="RED" strokeWidth="4.0" />
+      <Pane layoutX="759.0" layoutY="89.0" prefHeight="160.0" prefWidth="304.0">
+         <children>
+            <ImageView fitHeight="225.0" fitWidth="315.0" layoutX="-16.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/betterBoard.png" />
+               </image>
+            </ImageView>
+            <Text fx:id="successText" fill="#eeff00" layoutX="24.0" layoutY="98.0" opacity="0.0" stroke="#3743e5" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="SUCCESS" wrappingWidth="269.9999999999999">
+               <font>
+                  <Font size="39.0" />
+               </font>
+            </Text>
+            <Text fx:id="failedText" fill="RED" layoutX="46.0" layoutY="98.0" opacity="0.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="FAILED" wrappingWidth="226.91799926757812">
+               <font>
+                  <Font size="42.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
    </children>
 </Pane>
