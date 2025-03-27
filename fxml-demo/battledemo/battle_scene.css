@@ -1,0 +1,67 @@
+.hp-bar {
+    -fx-accent: green;
+}
+
+.hp-bar .bar {
+    -fx-background-color: linear-gradient(to right, #4CAF50, #8BC34A);
+    -fx-background-radius: 10;
+}
+
+.enemy-hp-bar {
+    -fx-accent: red;
+}
+
+.enemy-hp-bar .bar {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+}
+
+.progress-bar .track {
+    -fx-background-color: #E0E0E0;
+    -fx-background-radius: 10;
+}
+
+.battle-text-box {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+}
+
+
+Button {
+    -fx-background-radius: 5px;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0.0, 0, 1);
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+.fight-button {
+    -fx-background-color: #D40000;
+}
+
+.fight-button:hover {
+    -fx-background-color: #A30000;
+}
+
+.bag-button {
+    -fx-background-color: #2E8B57;
+}
+
+.bag-button:hover {
+    -fx-background-color: #1F6A42;
+}
+
+.pokemon-button {
+    -fx-background-color: #1E90FF;
+}
+
+.pokemon-button:hover {
+    -fx-background-color: #1C77CC;
+}
+
+.run-button {
+    -fx-background-color: #FFD700;
+}
+
+.run-button:hover {
+    -fx-background-color: #CC9A00;
+}
