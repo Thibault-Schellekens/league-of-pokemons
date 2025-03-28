@@ -45,15 +45,4 @@ public class OCRService {
         }
     }
 
-
-    public static void main(String[] args) throws IOException {
-        String imageURL = "https://assets.tcgdex.net/en/swsh/swsh1/51/high.png";
-        URL url = new URL(imageURL);
-        BufferedImage image = ImageIO.read(url);
-        OCRService ocrService = new OCRService();
-        CardScanResult result = ocrService.scanCardImage(image);
-
-        System.out.println(result);
-
-    }
 }

@@ -26,6 +26,7 @@ import java.util.Objects;
 
 public class ScannerController {
     private final OCRService ocrService;
+    private final PokeApiService pokeApiService;
     // Field to store the scanned card
     private Card scannedCard;
 
@@ -57,6 +58,7 @@ public class ScannerController {
 
     public ScannerController() {
         ocrService = new OCRService();
+        pokeApiService = new PokeApiService();
     }
 
     public void initialize() {
@@ -71,7 +73,9 @@ public class ScannerController {
         fileChooser.setTitle("Select Pokémon Card Image");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
         File file = fileChooser.showOpenDialog(fileExplorerBtn.getScene().getWindow());
-        handleCardScan(file);
+        if (file != null) {
+            handleCardScan(file);
+        }
     }
 
     public void addToCollection() {
@@ -88,9 +92,6 @@ public class ScannerController {
     }
 
     private void handleCardScan(File file) {
-        if (file == null) {
-            return;
-        }
 //        Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
         ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
@@ -101,7 +102,7 @@ public class ScannerController {
                     handleScanFailed();
                     return;
                 }
-                Card card = PokeApiService.getPokemonCard(scanResult.localId(), scanResult.pokemonName()).orElse(null);
+                Card card = pokeApiService.getPokemonCard(scanResult.localId(), scanResult.pokemonName()).orElse(null);
                 if (card == null) {
                     handleScanFailed();
                     return;
@@ -161,7 +162,6 @@ public class ScannerController {
     }
 
     private void handleScanSuccess(Image newImage) {
-        System.out.println("ici");
         updateCollectionButtons(true);
         successText.setOpacity(1.0);
         failedText.setOpacity(0.0);
@@ -182,7 +182,6 @@ public class ScannerController {
         double opacity = isSuccess ? 1.0 : 0.4;
         addCardImg.setOpacity(opacity);
         cancelCardImg.setOpacity(opacity);
-
     }
 
 

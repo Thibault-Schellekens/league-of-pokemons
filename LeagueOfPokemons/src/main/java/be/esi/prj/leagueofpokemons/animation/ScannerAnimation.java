@@ -48,7 +48,6 @@ public class ScannerAnimation {
         rotator.setAxis(Rotate.Y_AXIS);
         rotator.setFromAngle(0);
         rotator.setToAngle(90);
-
         rotator.setInterpolator(Interpolator.LINEAR);
 
         RotateTransition rotator2 = new RotateTransition(Duration.millis(750), image);
@@ -71,7 +70,7 @@ public class ScannerAnimation {
         image.getStyleClass().remove("drop-image");
         dropZone.getStyleClass().add("no-display");
         dropZone.getStyleClass().remove("drop-zone");
-        rotator.play();
 
+        rotator.play();
     }
 }

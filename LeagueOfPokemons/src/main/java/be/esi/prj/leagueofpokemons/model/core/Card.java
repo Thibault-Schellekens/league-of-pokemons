@@ -1,5 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.util.Objects;
+
 // Class or Record ?
 public class Card {
     private final String id;
@@ -62,5 +64,17 @@ public class Card {
                 ", tier=" + tier +
                 ", type=" + type +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return maxHP == card.maxHP && Objects.equals(id, card.id) && Objects.equals(name, card.name) && Objects.equals(imageURL, card.imageURL) && tier == card.tier && type == card.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, maxHP, imageURL, tier, type);
     }
 }
