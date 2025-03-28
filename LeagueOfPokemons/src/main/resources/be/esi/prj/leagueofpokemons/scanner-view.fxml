@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane prefHeight="663.0" prefWidth="1061.0" stylesheets="@style/scanner_scene.css, @style/global.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.ScannerController">
+<Pane prefHeight="663.0" prefWidth="1061.0" stylesheets="@style/scanner_scene.css, @style/global.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.ScannerController">
    <children>
       <ImageView fitHeight="669.0" fitWidth="1072.0" layoutX="-5.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
           <Image url="@pics/scanner/scanner_background.png" />
       </ImageView>
-      <Pane layoutX="393.0" layoutY="98.0" prefHeight="408.0" prefWidth="283.0">
+      <Pane fx:id="dropZone" layoutX="393.0" layoutY="98.0" prefHeight="390.0" prefWidth="283.0" styleClass="drop-zone">
          <children>
-            <ImageView fitHeight="389.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="389.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true" styleClass="drop-image" fx:id="cardImage">
                <image>
                   <Image url="@pics/scanner/bulbasaur.png" />
                </image>
@@ -62,21 +64,21 @@
          </children>
       </Pane>
       <Line fx:id="lineScanner" endX="134.0" fill="RED" layoutX="535.0" layoutY="95.0" opacity="0.0" startX="-134.0" stroke="RED" strokeWidth="4.0" />
-      <Pane layoutX="759.0" layoutY="89.0" prefHeight="160.0" prefWidth="304.0">
+      <Pane layoutX="840.0" layoutY="46.0" prefHeight="94.0" prefWidth="207.0">
          <children>
-            <ImageView fitHeight="225.0" fitWidth="315.0" layoutX="-16.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="106.0" fitWidth="272.0" layoutX="3.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@pics/common/betterBoard.png" />
                </image>
             </ImageView>
-            <Text fx:id="successText" fill="#eeff00" layoutX="24.0" layoutY="98.0" opacity="0.0" stroke="#3743e5" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="SUCCESS" wrappingWidth="269.9999999999999">
+            <Text fx:id="successText" fill="#eeff00" layoutX="32.0" layoutY="58.0" opacity="0.0" stroke="#3743e5" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="SUCCESS" wrappingWidth="172.0">
                <font>
-                  <Font size="39.0" />
+                  <Font size="25.0" />
                </font>
             </Text>
-            <Text fx:id="failedText" fill="RED" layoutX="46.0" layoutY="98.0" opacity="0.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="FAILED" wrappingWidth="226.91799926757812">
+            <Text fx:id="failedText" fill="RED" layoutX="32.0" layoutY="61.0" opacity="0.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="FAILED" wrappingWidth="162.9999999999999">
                <font>
-                  <Font size="42.0" />
+                  <Font size="33.0" />
                </font>
             </Text>
          </children>
@@ -88,12 +90,12 @@
                   <Image url="@pics/common/icons.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="54.0" fitWidth="64.0" layoutX="29.0" layoutY="46.0" opacity="0.4" pickOnBounds="true" preserveRatio="true" fx:id="bag">
+            <ImageView fx:id="bag" fitHeight="54.0" fitWidth="64.0" layoutX="29.0" layoutY="46.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@pics/common/bag.png" />
                </image>
             </ImageView>
-            <Button layoutX="29.0" layoutY="46.0" onMouseClicked="#addToCollection" opacity="0" prefHeight="54.0" prefWidth="64.0" style="-fx-cursor: hand;" fx:id="addCardBtn" disable="true"/>
+            <Button fx:id="addCardBtn" disable="true" layoutX="29.0" layoutY="46.0" onMouseClicked="#addToCollection" opacity="0" prefHeight="54.0" prefWidth="64.0" style="-fx-cursor: hand;" />
          </children>
       </Pane>
    </children>

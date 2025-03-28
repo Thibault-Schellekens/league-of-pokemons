@@ -2,13 +2,17 @@ package be.esi.prj.leagueofpokemons.animation;
 
 import javafx.animation.*;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 
+// todo: Make it accept Node ?
+// todo: just make it non static
 public class ScannerAnimation {
-    private static double startY;
+    private static TranslateTransition transition;
 
     public static void addGlowingAnimation(Button btn, ImageView image) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), image);
@@ -20,9 +24,7 @@ public class ScannerAnimation {
     }
 
     public static void scanningLineAnimation(Line line) {
-        startY = line.getTranslateY();
-
-        TranslateTransition transition = new TranslateTransition(Duration.millis(500), line);
+        transition = new TranslateTransition(Duration.millis(500), line);
         transition.setByY(395);
         transition.setAutoReverse(true);
         transition.setCycleCount(Animation.INDEFINITE);
@@ -31,8 +33,35 @@ public class ScannerAnimation {
         transition.play();
     }
 
-    public static void stopScanningLineAnimation(Line line) {
+    public static void stopScanningLineAnimation(Line line, double startY) {
         line.getStyleClass().remove("opacity-item");
-        line.setTranslateY(startY);
+        transition.stop();
+        line.setTranslateY(0);
+        line.setLayoutY(startY);
+    }
+
+    public static void scanCompletedSuccess(ImageView image, Image newImage) {
+        RotateTransition rotator = new RotateTransition(Duration.millis(1000), image);
+        rotator.setAxis(Rotate.Y_AXIS);
+        rotator.setFromAngle(0);
+        rotator.setToAngle(90);
+
+        rotator.setInterpolator(Interpolator.LINEAR);
+
+        RotateTransition rotator2 = new RotateTransition(Duration.millis(1000), image);
+        rotator2.setAxis(Rotate.Y_AXIS);
+        rotator2.setFromAngle(90);
+        rotator2.setToAngle(0);
+        rotator2.setInterpolator(Interpolator.LINEAR);
+
+
+        rotator.setOnFinished(e -> {
+            image.setImage(newImage);
+            rotator2.play();
+
+        });
+
+        rotator.play();
+
     }
 }

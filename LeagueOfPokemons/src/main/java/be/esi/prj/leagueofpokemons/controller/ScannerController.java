@@ -6,10 +6,14 @@ import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.ocr.CardScanResult;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -25,10 +29,15 @@ public class ScannerController {
     private final OCRService ocrService;
     // Field to store the scanned card
 
+    private double lineStartY;
+
     @FXML
     private Button fileExplorerBtn;
     @FXML
     private Button addCardBtn;
+    @FXML
+    private Pane dropZone;
+    @FXML private ImageView cardImage;
     @FXML
     private ImageView glowingHouse;
     @FXML
@@ -47,7 +56,9 @@ public class ScannerController {
 
     public void initialize() {
         System.out.println("Initializing Scanner");
+        lineStartY = lineScanner.getLayoutY();
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);
+        setupDropZone();
     }
 
     public void openFileExplorer() {
@@ -55,7 +66,11 @@ public class ScannerController {
         fileChooser.setTitle("Select Pokémon Card Image");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
         File file = fileChooser.showOpenDialog(fileExplorerBtn.getScene().getWindow());
-        handleCardScan(file);
+        if (file == null) {
+            handleScanFailed();
+        } else {
+            handleCardScan(file);
+        }
     }
 
     public void addToCollection() {
@@ -64,8 +79,8 @@ public class ScannerController {
 
     private void handleCardScan(File file) {
         reset();
-        Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
-
+//        Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
+        ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
             try {
                 BufferedImage imageToScan = ImageIO.read(file);
@@ -80,12 +95,48 @@ public class ScannerController {
                     return;
                 }
                 System.out.println(card);
-                handleScanSuccess();
+                handleScanSuccess(new Image(card.getImageURL()));
                 // todo save card in db
             } catch (IOException | OCRException e) {
                 handleScanFailed();
             }
         }).start();
+    }
+
+    private void setupDropZone() {
+        dropZone.setOnDragOver(this::handleDragOver);
+        dropZone.setOnDragDropped(this::handleDragDropped);
+        dropZone.setOnDragEntered(this::handleDragEntered);
+        dropZone.setOnDragExited(this::handleDragExited);
+    }
+
+    private void handleDragEntered(DragEvent event) {
+        dropZone.getStyleClass().add("drag-over");
+        event.consume();
+    }
+
+    private void handleDragExited(DragEvent event) {
+        dropZone.getStyleClass().remove("drag-over");
+        event.consume();
+    }
+
+    private void handleDragOver(DragEvent event) {
+        if (event.getDragboard().hasFiles()) {
+            event.acceptTransferModes(TransferMode.COPY);
+        }
+        event.consume();
+    }
+
+    private void handleDragDropped(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        if (db.hasFiles()) {
+            File file = db.getFiles().getFirst();
+            handleCardScan(file);
+            success = true;
+        }
+        event.setDropCompleted(success);
+        event.consume();
     }
 
     private void reset() {
@@ -95,17 +146,20 @@ public class ScannerController {
         bag.setOpacity(0.4);
     }
 
-    private void handleScanSuccess() {
+    private void handleScanSuccess(Image newImage) {
         addCardBtn.setDisable(false);
         successText.setOpacity(1.0);
-        ScannerAnimation.stopScanningLineAnimation(lineScanner);
+        failedText.setOpacity(0.0);
+        ScannerAnimation.stopScanningLineAnimation(lineScanner, lineStartY);
         bag.setOpacity(1.0);
+        ScannerAnimation.scanCompletedSuccess(cardImage, newImage);
     }
 
     private void handleScanFailed() {
         addCardBtn.setDisable(true);
         failedText.setOpacity(1.0);
-        ScannerAnimation.stopScanningLineAnimation(lineScanner);
+        successText.setOpacity(0.0);
+        ScannerAnimation.stopScanningLineAnimation(lineScanner, lineStartY);
         bag.setOpacity(0.4);
     }
 
