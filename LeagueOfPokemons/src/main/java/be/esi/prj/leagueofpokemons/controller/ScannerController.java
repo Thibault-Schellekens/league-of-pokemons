@@ -22,12 +22,12 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
-// TODO: Add Drag and Drop
-// TODO: Add Information message (either fail or success)
 public class ScannerController {
     private final OCRService ocrService;
     // Field to store the scanned card
+    private Card scannedCard;
 
     private double lineStartY;
 
@@ -36,12 +36,17 @@ public class ScannerController {
     @FXML
     private Button addCardBtn;
     @FXML
+    private Button cancelCardBtn;
+    @FXML
+    private ImageView addCardImg;
+    @FXML
+    private ImageView cancelCardImg;
+    @FXML
     private Pane dropZone;
-    @FXML private ImageView cardImage;
+    @FXML
+    private ImageView cardImage;
     @FXML
     private ImageView glowingHouse;
-    @FXML
-    private ImageView bag;
     @FXML
     private Line lineScanner;
     @FXML
@@ -66,19 +71,27 @@ public class ScannerController {
         fileChooser.setTitle("Select Pokémon Card Image");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png"));
         File file = fileChooser.showOpenDialog(fileExplorerBtn.getScene().getWindow());
-        if (file == null) {
-            handleScanFailed();
-        } else {
-            handleCardScan(file);
-        }
+        handleCardScan(file);
     }
 
     public void addToCollection() {
         System.out.println("Adding to collection");
+        if (scannedCard != null) {
+            // Add to database
+        }
+        reset();
+    }
+
+    public void cancelCard() {
+        System.out.println("Canceling Card");
+        reset();
     }
 
     private void handleCardScan(File file) {
-        reset();
+        if (file == null) {
+            handleScanFailed();
+            return;
+        }
 //        Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
         ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
@@ -94,9 +107,9 @@ public class ScannerController {
                     handleScanFailed();
                     return;
                 }
+                scannedCard = card;
                 System.out.println(card);
                 handleScanSuccess(new Image(card.getImageURL()));
-                // todo save card in db
             } catch (IOException | OCRException e) {
                 handleScanFailed();
             }
@@ -140,27 +153,38 @@ public class ScannerController {
     }
 
     private void reset() {
-        addCardBtn.setDisable(true);
+        updateCollectionButtons(false);
         successText.setOpacity(0.0);
         failedText.setOpacity(0.0);
-        bag.setOpacity(0.4);
+        ScannerAnimation.scanCompletedSuccess(cardImage,new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/scanner/bulbasaur.png")).toExternalForm()), dropZone );
+        cardImage.getStyleClass().add("drop-image");
+        scannedCard = null;
     }
 
     private void handleScanSuccess(Image newImage) {
-        addCardBtn.setDisable(false);
+        System.out.println("ici");
+        updateCollectionButtons(true);
         successText.setOpacity(1.0);
         failedText.setOpacity(0.0);
         ScannerAnimation.stopScanningLineAnimation(lineScanner, lineStartY);
-        bag.setOpacity(1.0);
-        ScannerAnimation.scanCompletedSuccess(cardImage, newImage);
+        ScannerAnimation.scanCompletedSuccess(cardImage, newImage, dropZone);
     }
 
     private void handleScanFailed() {
-        addCardBtn.setDisable(true);
+        updateCollectionButtons(false);
         failedText.setOpacity(1.0);
         successText.setOpacity(0.0);
         ScannerAnimation.stopScanningLineAnimation(lineScanner, lineStartY);
-        bag.setOpacity(0.4);
     }
+
+    private void updateCollectionButtons(boolean isSuccess) {
+        addCardBtn.setDisable(!isSuccess);
+        cancelCardBtn.setDisable(!isSuccess);
+        double opacity = isSuccess ? 1.0 : 0.4;
+        addCardImg.setOpacity(opacity);
+        cancelCardImg.setOpacity(opacity);
+
+    }
+
 
 }

@@ -27,3 +27,8 @@
     -fx-background-color: transparent;
     -fx-opacity: 0.4;
 }
+
+.no-display {
+    -fx-background-color: transparent;
+    -fx-border-width: 0px;
+}

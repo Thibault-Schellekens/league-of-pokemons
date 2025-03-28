@@ -4,13 +4,14 @@ import javafx.animation.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 
 // todo: Make it accept Node ?
-// todo: just make it non static
+// todo: just make it non static ?
 public class ScannerAnimation {
     private static TranslateTransition transition;
 
@@ -35,20 +36,22 @@ public class ScannerAnimation {
 
     public static void stopScanningLineAnimation(Line line, double startY) {
         line.getStyleClass().remove("opacity-item");
-        transition.stop();
+        if (transition != null) {
+            transition.stop();
+        }
         line.setTranslateY(0);
         line.setLayoutY(startY);
     }
 
-    public static void scanCompletedSuccess(ImageView image, Image newImage) {
-        RotateTransition rotator = new RotateTransition(Duration.millis(1000), image);
+    public static void scanCompletedSuccess(ImageView image, Image newImage, Pane dropZone) {
+        RotateTransition rotator = new RotateTransition(Duration.millis(750), image);
         rotator.setAxis(Rotate.Y_AXIS);
         rotator.setFromAngle(0);
         rotator.setToAngle(90);
 
         rotator.setInterpolator(Interpolator.LINEAR);
 
-        RotateTransition rotator2 = new RotateTransition(Duration.millis(1000), image);
+        RotateTransition rotator2 = new RotateTransition(Duration.millis(750), image);
         rotator2.setAxis(Rotate.Y_AXIS);
         rotator2.setFromAngle(90);
         rotator2.setToAngle(0);
@@ -58,9 +61,16 @@ public class ScannerAnimation {
         rotator.setOnFinished(e -> {
             image.setImage(newImage);
             rotator2.play();
-
         });
 
+        rotator2.setOnFinished(_ -> {
+            dropZone.getStyleClass().remove("no-display");
+            dropZone.getStyleClass().add("drop-zone");
+        });
+
+        image.getStyleClass().remove("drop-image");
+        dropZone.getStyleClass().add("no-display");
+        dropZone.getStyleClass().remove("drop-zone");
         rotator.play();
 
     }
