@@ -89,7 +89,6 @@ public class ScannerController {
 
     private void handleCardScan(File file) {
         if (file == null) {
-            handleScanFailed();
             return;
         }
 //        Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
