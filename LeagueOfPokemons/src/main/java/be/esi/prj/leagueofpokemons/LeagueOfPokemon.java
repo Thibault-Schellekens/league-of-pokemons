@@ -7,10 +7,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class LeagueOfPokemon extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("scanner-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LeagueOfPokemon.class.getResource("mainMenu-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1061, 663);
         stage.setTitle("League of Pokemons");
         stage.setResizable(false);

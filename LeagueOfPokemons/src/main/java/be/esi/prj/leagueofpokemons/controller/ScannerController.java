@@ -92,7 +92,6 @@ public class ScannerController {
     }
 
     private void handleCardScan(File file) {
-//        Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
         ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
             try {
@@ -156,7 +155,7 @@ public class ScannerController {
         updateCollectionButtons(false);
         successText.setOpacity(0.0);
         failedText.setOpacity(0.0);
-        ScannerAnimation.scanCompletedSuccess(cardImage,new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/scanner/bulbasaur.png")).toExternalForm()), dropZone );
+        ScannerAnimation.scanCompletedSuccess(cardImage,new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")).toExternalForm()), dropZone );
         cardImage.getStyleClass().add("drop-image");
         scannedCard = null;
     }

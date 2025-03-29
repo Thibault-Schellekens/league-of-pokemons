@@ -15,7 +15,7 @@
          <children>
             <ImageView fx:id="cardImage" fitHeight="389.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true" styleClass="drop-image">
                <image>
-                  <Image url="@pics/scanner/bulbasaur.png" />
+                  <Image url="@pics/common/emptyCard.png" />
                </image>
             </ImageView>
          </children>
@@ -99,7 +99,7 @@
             </Pane>
             <Pane layoutX="27.0" layoutY="41.0" prefHeight="54.0" prefWidth="54.0">
                <children>
-                  <ImageView fitHeight="54.0" fitWidth="64.0" opacity="0.4" pickOnBounds="true" preserveRatio="true" fx:id="cancelCardImg">
+                  <ImageView fx:id="cancelCardImg" fitHeight="54.0" fitWidth="64.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <Image url="@pics/scanner/delete.png" />
                   </ImageView>
                   <Button fx:id="cancelCardBtn" disable="true" onMouseClicked="#cancelCard" opacity="0" prefHeight="54.0" prefWidth="54.0" style="-fx-cursor: hand;" />
@@ -107,7 +107,7 @@
             </Pane>
             <Pane layoutX="164.0" layoutY="41.0" prefHeight="54.0" prefWidth="54.0">
                <children>
-                  <ImageView fitHeight="54.0" fitWidth="64.0" opacity="0.4" pickOnBounds="true" preserveRatio="true" fx:id="addCardImg">
+                  <ImageView fx:id="addCardImg" fitHeight="54.0" fitWidth="64.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@pics/scanner/add.png" />
                      </image>
