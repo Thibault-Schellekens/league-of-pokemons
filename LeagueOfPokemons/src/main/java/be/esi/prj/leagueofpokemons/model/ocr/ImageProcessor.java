@@ -7,18 +7,12 @@ public class ImageProcessor {
 
     public static BufferedImage preprocessImage(BufferedImage original, String type) {
         BufferedImage newImage = null;
-//        if (type.equals("hp")) {
-//            newImage = extractRegion(original, original.getWidth() - 160, 30, 80, 50);
-//            newImage = convertToGrayscale(newImage);
-//            newImage = resizeImage(newImage, 400, 250);
-//        }
         if (type.equals("pokemonName")) {
             newImage = extractRegion(original, 100, 20, 300, 50);
             newImage = convertToGrayscale(newImage);
         } else if (type.equals("localId")) {
             newImage = extractRegion(original, 90, original.getHeight() - 45, 32, 20);
             newImage = convertToGrayscale(newImage);
-//            newImage = resizeImage(newImage, 400, 250);
         }
 
         return newImage;
@@ -52,20 +46,5 @@ public class ImageProcessor {
         return original.getSubimage(x, y, width, height);
     }
 
-    private static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
-        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, originalImage.getType());
-
-        Graphics2D g2d = resizedImage.createGraphics();
-
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        g2d.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
-
-        g2d.dispose();
-
-        return resizedImage;
-    }
 }
 

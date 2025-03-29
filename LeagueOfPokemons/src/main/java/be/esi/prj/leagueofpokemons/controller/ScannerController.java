@@ -27,10 +27,8 @@ import java.util.Objects;
 public class ScannerController {
     private final OCRService ocrService;
     private final PokeApiService pokeApiService;
-    // Field to store the scanned card
-    private Card scannedCard;
 
-    private double lineStartY;
+    private Card scannedCard;
 
     @FXML
     private Button fileExplorerBtn;
@@ -54,6 +52,8 @@ public class ScannerController {
     private Text successText;
     @FXML
     private Text failedText;
+    private double lineStartY;
+
 
 
     public ScannerController() {
@@ -107,9 +107,9 @@ public class ScannerController {
                     handleScanFailed();
                     return;
                 }
-                scannedCard = card;
                 System.out.println(card);
                 handleScanSuccess(new Image(card.getImageURL()));
+                scannedCard = card;
             } catch (IOException | OCRException e) {
                 handleScanFailed();
             }

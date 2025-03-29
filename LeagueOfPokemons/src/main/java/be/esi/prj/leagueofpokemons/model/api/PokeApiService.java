@@ -1,11 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.api;
 
 import be.esi.prj.leagueofpokemons.model.core.Card;
-import be.esi.prj.leagueofpokemons.model.core.Tier;
 import be.esi.prj.leagueofpokemons.model.core.Type;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.tcgdex.sdk.Extension;
 import net.tcgdex.sdk.Quality;
 import net.tcgdex.sdk.TCGdex;

@@ -1,15 +1,10 @@
 package be.esi.prj.leagueofpokemons.model.ocr;
 
-import be.esi.prj.leagueofpokemons.model.core.Card;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 public class OCRService {
     private ITesseract tesseract;
