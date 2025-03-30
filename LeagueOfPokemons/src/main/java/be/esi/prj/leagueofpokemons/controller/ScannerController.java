@@ -6,6 +6,8 @@ import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.ocr.CardScanResult;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
+import be.esi.prj.leagueofpokemons.util.SceneManager;
+import be.esi.prj.leagueofpokemons.util.SceneView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -68,6 +70,10 @@ public class ScannerController {
         setupDropZone();
     }
 
+    public void back() {
+        SceneManager.switchScene(SceneView.HUB);
+    }
+
     public void openFileExplorer() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Pokémon Card Image");
@@ -92,7 +98,6 @@ public class ScannerController {
     }
 
     private void handleCardScan(File file) {
-//        Platform.runLater(() -> ScannerAnimation.scanningLineAnimation(lineScanner));
         ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
             try {
@@ -156,7 +161,7 @@ public class ScannerController {
         updateCollectionButtons(false);
         successText.setOpacity(0.0);
         failedText.setOpacity(0.0);
-        ScannerAnimation.scanCompletedSuccess(cardImage,new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/scanner/bulbasaur.png")).toExternalForm()), dropZone );
+        ScannerAnimation.scanCompletedSuccess(cardImage,new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")).toExternalForm()), dropZone );
         cardImage.getStyleClass().add("drop-image");
         scannedCard = null;
     }
