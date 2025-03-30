@@ -44,7 +44,7 @@ With each victory up to stage 5, the player unlocks a new tier of Pokémon:
 
 In each battle, the player can use up to **three Pokémon**.
 
-Before entering a battle, the player must assemble a team, ensuring that the selected Pokémon meet the required [**Tier**](#**pokémon-tiers) for that stage.
+Before entering a battle, the player must assemble a team, ensuring that the selected Pokémon meet the required [**Tier**](#pokémon-tiers) for that stage.
 
 ### Battle System
 
@@ -88,7 +88,7 @@ The architecture chosen for this project is model-view-controller.
 
 ## FXML Files Preview
 
-The project has 5 main FXML files
+The project has 5 main FXML files. The following images are just previews from the first demo done.
 
 1. **Main menu**
 ![Main Menu Preview](./pics/main-menu-preview.png)
@@ -159,8 +159,8 @@ The project has 5 main FXML files
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | Implementation of Model      |
-| Thibault | OCR Service      |
+| All      | Implementation of Model + Enhancing views     |
+| Thibault | OCR Service + view animations   |
 | Marian   | DataBase Connection      |
 
 ### Week 3 - 6H
