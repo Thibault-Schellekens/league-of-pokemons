@@ -32,19 +32,19 @@
                   <Font size="23.0" />
                </font></Text>
          </children></Pane>
-      <Pane layoutY="475.0" prefHeight="149.0" prefWidth="172.0">
+      <Pane layoutY="507.0" prefHeight="117.0" prefWidth="149.0">
          <children>
-            <ImageView fitHeight="129.0" fitWidth="114.0" layoutX="36.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="94.0" fitWidth="93.0" layoutX="36.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@pics/common/icons.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="62.0" fitWidth="64.0" layoutX="61.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="40.0" fitWidth="54.0" layoutX="55.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@pics/common/back.png" />
                </image>
             </ImageView>
-            <Button layoutX="55.0" layoutY="51.0" mnemonicParsing="false" onMouseClicked="#back" opacity="0.0" prefHeight="70.0" prefWidth="73.0" style="-fx-cursor: hand;" text="Button" />
+            <Button layoutX="47.0" layoutY="73.0" mnemonicParsing="false" onMouseClicked="#back" opacity="0.0" prefHeight="62.0" prefWidth="64.0" style="-fx-cursor: hand;" text="Button" />
          </children>
       </Pane>
       <Pane layoutX="449.0" layoutY="504.0" prefHeight="149.0" prefWidth="172.0">

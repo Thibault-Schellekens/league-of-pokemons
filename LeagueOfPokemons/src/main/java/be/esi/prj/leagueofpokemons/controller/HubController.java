@@ -13,4 +13,14 @@ public class HubController {
         System.out.println("Opening Scanner");
         SceneManager.switchScene(SceneView.SCANNER);
     }
+
+    public void openCollection() {
+        System.out.println("Opening Collection");
+        SceneManager.switchScene(SceneView.COLLECTION);
+    }
+
+    public void openBattle() {
+        System.out.println("Opening Battle");
+        SceneManager.switchScene(SceneView.BATTLE);
+    }
 }
