@@ -41,7 +41,7 @@ public class ImageProcessor {
         return newImage;
     }
 
-    private static BufferedImage extractRegion(BufferedImage original, int x, int y, int width, int height) {
+    public static BufferedImage extractRegion(BufferedImage original, int x, int y, int width, int height) {
         if (x + width > original.getWidth() || y + height > original.getHeight()) {
             throw new OCRException("Region out of bounds");
         }

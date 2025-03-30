@@ -20,7 +20,7 @@ public class SceneManager {
     // Will come from settings
     private static final boolean SWAP_ANIMATION = false;
 
-    public static void setStage(Stage stage) {
+    private static void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.setResizable(false);
     }
