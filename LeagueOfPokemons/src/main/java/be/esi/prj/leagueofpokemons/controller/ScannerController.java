@@ -6,6 +6,8 @@ import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.ocr.CardScanResult;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
+import be.esi.prj.leagueofpokemons.util.SceneManager;
+import be.esi.prj.leagueofpokemons.util.SceneView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -66,6 +68,10 @@ public class ScannerController {
         lineStartY = lineScanner.getLayoutY();
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);
         setupDropZone();
+    }
+
+    public void back() {
+        SceneManager.switchScene(SceneView.HUB);
     }
 
     public void openFileExplorer() {

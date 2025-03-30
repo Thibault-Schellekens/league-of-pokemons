@@ -1,4 +1,6 @@
-package be.esi.prj.leagueofpokemons.model.ocr;
+package be.esi.prj.leagueofpokemons.util;
+
+import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

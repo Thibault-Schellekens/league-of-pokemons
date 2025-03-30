@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.model.ocr;
 
+import be.esi.prj.leagueofpokemons.util.ImageProcessor;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;

@@ -32,7 +32,7 @@
                   <Font size="23.0" />
                </font></Text>
          </children></Pane>
-      <Pane layoutX="7.0" layoutY="504.0" prefHeight="149.0" prefWidth="172.0">
+      <Pane layoutY="475.0" prefHeight="149.0" prefWidth="172.0">
          <children>
             <ImageView fitHeight="129.0" fitWidth="114.0" layoutX="36.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -44,6 +44,7 @@
                   <Image url="@pics/common/back.png" />
                </image>
             </ImageView>
+            <Button layoutX="55.0" layoutY="51.0" mnemonicParsing="false" onMouseClicked="#back" opacity="0.0" prefHeight="70.0" prefWidth="73.0" style="-fx-cursor: hand;" text="Button" />
          </children>
       </Pane>
       <Pane layoutX="449.0" layoutY="504.0" prefHeight="149.0" prefWidth="172.0">
