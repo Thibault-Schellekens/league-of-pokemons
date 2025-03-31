@@ -95,7 +95,7 @@ public class SwapSceneAnimation {
 
         rightTransition.setOnFinished(event -> downTransitionRight.play());
 
-        downTransitionLeft.setOnFinished(_ -> {
+        downTransitionLeft.setOnFinished(e -> {
             nextRoot.getChildren().removeAll(leftCurtain, rightCurtain);
         });
     }

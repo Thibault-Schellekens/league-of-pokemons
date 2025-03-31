@@ -7,6 +7,9 @@ public class Team {
     private int maxSize;
     private Tier maxTier;
 
+    public Team(){
+
+    }
     public boolean addPokemon(Pokemon pokemon) {
         return false;
     }

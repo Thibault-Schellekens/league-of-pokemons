@@ -62,7 +62,7 @@ public class ScannerAnimation {
             rotator2.play();
         });
 
-        rotator2.setOnFinished(_ -> {
+        rotator2.setOnFinished(e -> {
             dropZone.getStyleClass().remove("no-display");
             dropZone.getStyleClass().add("drop-zone");
         });

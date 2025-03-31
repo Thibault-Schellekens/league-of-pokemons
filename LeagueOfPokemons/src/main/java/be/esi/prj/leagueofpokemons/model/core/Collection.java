@@ -5,8 +5,7 @@ import java.util.Set;
 // Singleton Pattern ?
 public class Collection {
     private Set<Card> availableCards;
-    private Tier currentTier;
-
+    //removed tier form collection
     public boolean addCard(Card card) {
         return false;
     }
