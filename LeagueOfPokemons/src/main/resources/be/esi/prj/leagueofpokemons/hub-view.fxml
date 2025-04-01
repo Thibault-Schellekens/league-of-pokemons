@@ -95,7 +95,7 @@
       </Pane>
       <ImageView fitHeight="331.0" fitWidth="462.0" layoutX="599.0" layoutY="238.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@pics/hub/bigBoardWood.png" />
+            <Image url="@pics/common/bigBoardWood.png" />
          </image>
       </ImageView>
       <Text fill="WHITE" layoutX="173.0" layoutY="253.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="1.5" styleClass="text-rog" text="Lvl. 10 ">
@@ -138,5 +138,20 @@
             <Image url="@pics/hub/branch.png" />
          </image>
       </ImageView>
+      <Pane layoutX="-31.0" layoutY="528.0" prefHeight="141.0" prefWidth="141.0">
+         <children>
+            <ImageView fitHeight="113.0" fitWidth="89.0" layoutX="36.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/icons.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="44.0" fitWidth="56.0" layoutX="55.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/back.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="51.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#back" opacity="0.0" prefHeight="60.0" prefWidth="59.0" style="-fx-cursor: hand;" text="Button" />
+         </children>
+      </Pane>
    </children>
 </Pane>

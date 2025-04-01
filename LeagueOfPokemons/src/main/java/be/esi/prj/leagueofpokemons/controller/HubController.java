@@ -23,4 +23,8 @@ public class HubController {
         System.out.println("Opening Battle");
         SceneManager.switchScene(SceneView.BATTLE);
     }
+
+    public void back() {
+        SceneManager.switchScene(SceneView.MAINMENU);
+    }
 }
