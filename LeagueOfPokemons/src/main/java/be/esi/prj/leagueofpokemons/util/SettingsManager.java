@@ -3,12 +3,12 @@ package be.esi.prj.leagueofpokemons.util;
 public class SettingsManager {
     private static SettingsManager instance;
 
-    private double volume;
+    private int volume;
     private boolean skipAnimation;
     private double animationSpeed;
 
     private SettingsManager() {
-        volume = 1.0;
+        volume = 100;
         skipAnimation = false;
         animationSpeed = 1.0;
     }
@@ -20,11 +20,11 @@ public class SettingsManager {
         return instance;
     }
 
-    public double getVolume() {
+    public int getVolume() {
         return volume;
     }
 
-    public void setVolume(double volume) {
+    public void setVolume(int volume) {
         this.volume = volume;
     }
 

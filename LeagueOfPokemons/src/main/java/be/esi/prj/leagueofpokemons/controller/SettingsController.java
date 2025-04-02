@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.CheckBox;
+import javafx.scene.text.Text;
 
 public class SettingsController {
 
@@ -14,9 +15,13 @@ public class SettingsController {
     @FXML
     private Slider volumeSlider;
     @FXML
+    private Text volumeText;
+    @FXML
     private CheckBox skipAnimationCheckbox;
     @FXML
     private Slider animationSpeedSlider;
+    @FXML
+    private Text animationSpeedText;
     @FXML
     private Pane settingsPane;
 
@@ -29,23 +34,24 @@ public class SettingsController {
     }
 
     private void setupValues() {
-        volumeSlider.setValue(settingsManager.getVolume() * 100);
+        volumeSlider.setValue(settingsManager.getVolume());
+        updateVolume(settingsManager.getVolume());
         skipAnimationCheckbox.setSelected(settingsManager.isSkipAnimation());
-        animationSpeedSlider.setValue(settingsManager.getAnimationSpeed() * 100);
+        animationSpeedSlider.setValue(settingsManager.getAnimationSpeed());
+        updateAnimationSpeed(settingsManager.getAnimationSpeed());
 
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            settingsManager.setVolume(newValue.doubleValue() / 100);
-            updateVolume();
+            int volume = newValue.intValue();
+            updateVolume(volume);
         });
 
         skipAnimationCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            settingsManager.setSkipAnimation(newValue);
-            updateSkipAnimation();
+            updateSkipAnimation(newValue);
         });
 
         animationSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            settingsManager.setAnimationSpeed(newValue.doubleValue() / 100);
-            updateAnimationSpeed();
+            double speed = (newValue.doubleValue() / 100) + 1;
+            updateAnimationSpeed(speed);
 
         });
     }
@@ -60,19 +66,20 @@ public class SettingsController {
         if (settingsPane.getParent() != null) {
             settingsPane.getParent().toBack();
         }
-//        settingsPane.getParent().toFront();
     }
 
-    private void updateVolume() {
-        System.out.println("Updating Volume");
+    private void updateVolume(int volume) {
+        volumeText.setText(volume + "%");
+        settingsManager.setVolume(volume);
     }
 
-    private void updateSkipAnimation() {
-        System.out.println("Updating Skip Animation");
+    private void updateSkipAnimation(boolean skipAnimation) {
+        settingsManager.setSkipAnimation(skipAnimation);
     }
 
-    private void updateAnimationSpeed() {
-        System.out.println("Updating Animation Speed");
+    private void updateAnimationSpeed(double speed) {
+        animationSpeedText.setText("x" + String.format("%.02f", speed));
+        settingsManager.setAnimationSpeed(speed);
     }
 
 
