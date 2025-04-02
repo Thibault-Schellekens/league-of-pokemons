@@ -60,7 +60,9 @@ public class ScannerController {
 
     private SettingsManager settingsManager;
 
+    // Special class for audio ?
     private AudioClip successSound;
+    private AudioClip wobbleSound;
 
     public ScannerController() {
         ocrService = new OCRService();
@@ -107,6 +109,8 @@ public class ScannerController {
     }
 
     private void handleCardScan(File file) {
+        // FIXME : sound is delayed
+        wobbleSound.play();
         ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
             try {
@@ -199,8 +203,12 @@ public class ScannerController {
     }
 
     private void initSound() {
-        String soundFile = getClass().getResource("/be/esi/prj/leagueofpokemons/sounds/scanner_add.wav").toString();
-        successSound = new AudioClip(soundFile);
+        String successSoundFile = getClass().getResource("/be/esi/prj/leagueofpokemons/sounds/scanner_add.wav").toString();
+        successSound = new AudioClip(successSoundFile);
         successSound.setVolume((double) settingsManager.getVolume() / 100);
+
+        String wobbleSoundFile = getClass().getResource("/be/esi/prj/leagueofpokemons/sounds/pokeball_wobble.wav").toString();
+        wobbleSound = new AudioClip(wobbleSoundFile);
+        wobbleSound.setVolume((double) settingsManager.getVolume() / 100);
     }
 }
