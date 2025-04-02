@@ -7,10 +7,13 @@ public class SettingsManager {
     private boolean skipAnimation;
     private double animationSpeed;
 
+    private final double maxAnimationSpeed;
+
     private SettingsManager() {
         volume = 100;
         skipAnimation = false;
         animationSpeed = 1.0;
+        maxAnimationSpeed = 5.0;
     }
 
     public static SettingsManager getInstance() {
@@ -42,5 +45,9 @@ public class SettingsManager {
 
     public void setAnimationSpeed(double animationSpeed) {
         this.animationSpeed = animationSpeed;
+    }
+
+    public double getMaxAnimationSpeed() {
+        return maxAnimationSpeed;
     }
 }

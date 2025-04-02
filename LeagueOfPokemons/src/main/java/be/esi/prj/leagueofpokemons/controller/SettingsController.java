@@ -10,7 +10,7 @@ import javafx.scene.text.Text;
 
 public class SettingsController {
 
-    SettingsManager settingsManager;
+    private SettingsManager settingsManager;
 
     @FXML
     private Slider volumeSlider;
@@ -50,7 +50,7 @@ public class SettingsController {
         });
 
         animationSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            double speed = (newValue.doubleValue() / 100) + 1;
+            double speed = 1 + (newValue.doubleValue() / 100) * (settingsManager.getMaxAnimationSpeed() - 1);
             updateAnimationSpeed(speed);
 
         });

@@ -46,7 +46,7 @@ public class SceneManager {
                 Pane mainRoot = new Pane();
                 Node previousRoot = scene.getRoot();
 
-                SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot);
+                SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot, settingsManager.getAnimationSpeed());
             }
             primaryStage.show();
         } catch (IOException e) {

@@ -20,7 +20,7 @@ import java.util.Random;
 public class SwapSceneAnimation {
     private static final int WIDTH = 1061;
     private static final int HEIGHT = 660;
-    private static final int LEAF_COUNT = 300;
+    private static final int LEAF_COUNT = 400;
     private static final Color[] LEAF_COLORS = {
             // Green
             Color.web("#4CAF50"), Color.web("#388E3C"), Color.web("#2E7D32"), Color.web("#1B5E20"),
@@ -34,7 +34,7 @@ public class SwapSceneAnimation {
             Color.web("#FBC02D"), Color.web("#F9A825"), Color.web("#F57F17")  // Jaunes dorés
     };
 
-    public static void swapSceneTransition(Scene scene, Pane mainRoot, Pane nextRoot, Node previousRoot) {
+    public static void swapSceneTransition(Scene scene, Pane mainRoot, Pane nextRoot, Node previousRoot, double speed) {
         mainRoot.getChildren().add(previousRoot);
 
         Group leftCurtain = new Group();
@@ -42,20 +42,20 @@ public class SwapSceneAnimation {
         leftCurtain.setTranslateX(0);
         rightCurtain.setTranslateX(WIDTH);
 
-        createLeaves(leftCurtain, rightCurtain);
+        createLeaves(leftCurtain, rightCurtain, speed);
 
         mainRoot.getChildren().addAll(leftCurtain, rightCurtain);
         scene.setRoot(mainRoot);
 
-        playHorizontalCurtainAnimation(scene, leftCurtain, rightCurtain, nextRoot);
+        playHorizontalCurtainAnimation(scene, leftCurtain, rightCurtain, nextRoot, speed);
     }
 
-    private static void playHorizontalCurtainAnimation(Scene scene, Group leftCurtain, Group rightCurtain, Pane nextRoot) {
-        TranslateTransition leftTransition = createHorizontalTransition(leftCurtain, WIDTH * 0.2);
-        TranslateTransition rightTransition = createHorizontalTransition(rightCurtain, -WIDTH * 0.2);
+    private static void playHorizontalCurtainAnimation(Scene scene, Group leftCurtain, Group rightCurtain, Pane nextRoot, double speed) {
+        TranslateTransition leftTransition = createHorizontalTransition(leftCurtain, WIDTH * 0.2, speed);
+        TranslateTransition rightTransition = createHorizontalTransition(rightCurtain, -WIDTH * 0.2, speed);
 
-        TranslateTransition downTransitionLeft = createVerticalTransition(leftCurtain);
-        TranslateTransition downTransitionRight = createVerticalTransition(rightCurtain);
+        TranslateTransition downTransitionLeft = createVerticalTransition(leftCurtain, speed);
+        TranslateTransition downTransitionRight = createVerticalTransition(rightCurtain, speed);
 
         setupAnimationChain(scene, leftCurtain, rightCurtain, nextRoot,
                 leftTransition, rightTransition,
@@ -65,16 +65,16 @@ public class SwapSceneAnimation {
         rightTransition.play();
     }
 
-    private static TranslateTransition createHorizontalTransition(Group curtain, double offsetX) {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3), curtain);
+    private static TranslateTransition createHorizontalTransition(Group curtain, double offsetX, double speed) {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(3000 / speed), curtain);
         transition.setByX(offsetX);
         transition.setInterpolator(Interpolator.EASE_BOTH);
-        transition.setDelay(Duration.seconds(1));
+        transition.setDelay(Duration.millis(1000 / speed));
         return transition;
     }
 
-    private static TranslateTransition createVerticalTransition(Group curtain) {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3), curtain);
+    private static TranslateTransition createVerticalTransition(Group curtain, double speed) {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(3000 / speed), curtain);
         transition.setByY(HEIGHT + 150);
         transition.setInterpolator(Interpolator.EASE_BOTH);
         transition.setDelay(Duration.seconds(0.25));
@@ -100,16 +100,16 @@ public class SwapSceneAnimation {
         });
     }
 
-    private static void createLeaves(Group leftCurtain, Group rightCurtain) {
+    private static void createLeaves(Group leftCurtain, Group rightCurtain, double speed) {
         Random random = new Random();
 
         for (int i = 0; i < LEAF_COUNT; i++) {
-            createLeafWithDelay(leftCurtain, rightCurtain, i, random);
+            createLeafWithDelay(leftCurtain, rightCurtain, i, random, speed);
         }
     }
 
-    private static void createLeafWithDelay(Group leftCurtain, Group rightCurtain, int index, Random random) {
-        double creationDelay = random.nextDouble(0, 2);
+    private static void createLeafWithDelay(Group leftCurtain, Group rightCurtain, int index, Random random, double speed) {
+        double creationDelay = random.nextDouble(0, 2 / speed);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(creationDelay));
         delay.setOnFinished(event -> {
