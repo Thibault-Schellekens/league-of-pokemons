@@ -7,6 +7,9 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="1061.0" stylesheets="@style/global.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.HubController">
    <children>
+      <Pane layoutX="364.0" layoutY="214.0" prefHeight="240.0" prefWidth="345.0">
+         <fx:include source="include/settings-component.fxml" fx:id="settingsMenu"/>
+      </Pane>
       <ImageView fx:id="background" fitHeight="742.0" fitWidth="1446.0" layoutX="-190.0" layoutY="-43.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@pics/hub/hub_background.png" />
@@ -151,6 +154,28 @@
                </image>
             </ImageView>
             <Button layoutX="51.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#back" opacity="0.0" prefHeight="60.0" prefWidth="59.0" style="-fx-cursor: hand;" text="Button" />
+         </children>
+      </Pane>
+      <Pane layoutX="39.0" layoutY="30.0">
+         <children>
+            <ImageView fitHeight="82.0" fitWidth="88.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/icons.png"/>
+               </image>
+            </ImageView>
+            <ImageView fitHeight="40.0" fitWidth="51.0" layoutX="18.0" layoutY="19.0" pickOnBounds="true"
+                       preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/settingIcon.png"/>
+               </image>
+            </ImageView>
+            <Button fx:id="settingsBtn" layoutX="13.0" layoutY="15.0" mnemonicParsing="false"
+                    onMouseClicked="#openSettings" opacity="0.0" prefHeight="49.0" prefWidth="48.0"
+                    style="-fx-cursor: hand;" text="settingsBtn">
+               <font>
+                  <Font size="10.0"/>
+               </font>
+            </Button>
          </children>
       </Pane>
    </children>

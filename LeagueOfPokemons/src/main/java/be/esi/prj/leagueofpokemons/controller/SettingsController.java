@@ -2,7 +2,6 @@ package be.esi.prj.leagueofpokemons.controller;
 
 import be.esi.prj.leagueofpokemons.util.SettingsManager;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.CheckBox;
@@ -37,7 +36,7 @@ public class SettingsController {
         volumeSlider.setValue(settingsManager.getVolume());
         updateVolume(settingsManager.getVolume());
         skipAnimationCheckbox.setSelected(settingsManager.isSkipAnimation());
-        animationSpeedSlider.setValue(settingsManager.getAnimationSpeed());
+        animationSpeedSlider.setValue(((settingsManager.getAnimationSpeed() - 1) / (settingsManager.getMaxAnimationSpeed() - 1)) * 100);
         updateAnimationSpeed(settingsManager.getAnimationSpeed());
 
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
