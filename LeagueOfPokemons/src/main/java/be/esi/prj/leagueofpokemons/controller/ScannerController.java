@@ -8,6 +8,7 @@ import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.util.SettingsManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -16,6 +17,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -56,7 +58,9 @@ public class ScannerController {
     private Text failedText;
     private double lineStartY;
 
+    private SettingsManager settingsManager;
 
+    private AudioClip successSound;
 
     public ScannerController() {
         ocrService = new OCRService();
@@ -65,9 +69,12 @@ public class ScannerController {
 
     public void initialize() {
         System.out.println("Initializing Scanner");
+        settingsManager = SettingsManager.getInstance();
         lineStartY = lineScanner.getLayoutY();
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);
         setupDropZone();
+
+        initSound();
     }
 
     public void back() {
@@ -88,6 +95,8 @@ public class ScannerController {
         System.out.println("Adding to collection");
         if (scannedCard != null) {
             // Add to database
+
+            successSound.play();
         }
         reset();
     }
@@ -189,5 +198,9 @@ public class ScannerController {
         cancelCardImg.setOpacity(opacity);
     }
 
-
+    private void initSound() {
+        String soundFile = getClass().getResource("/be/esi/prj/leagueofpokemons/sounds/scanner_add.wav").toString();
+        successSound = new AudioClip(soundFile);
+        successSound.setVolume((double) settingsManager.getVolume() / 100);
+    }
 }
