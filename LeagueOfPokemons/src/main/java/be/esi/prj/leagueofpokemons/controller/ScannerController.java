@@ -6,9 +6,7 @@ import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.ocr.CardScanResult;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
-import be.esi.prj.leagueofpokemons.util.SceneManager;
-import be.esi.prj.leagueofpokemons.util.SceneView;
-import be.esi.prj.leagueofpokemons.util.SettingsManager;
+import be.esi.prj.leagueofpokemons.util.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -29,6 +27,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ScannerController {
+    private final AudioManager audioManager;
     private final OCRService ocrService;
     private final PokeApiService pokeApiService;
 
@@ -56,27 +55,21 @@ public class ScannerController {
     private Text successText;
     @FXML
     private Text failedText;
+
     private double lineStartY;
-
-    private SettingsManager settingsManager;
-
-    // Special class for audio ?
-    private AudioClip successSound;
-    private AudioClip wobbleSound;
+    
 
     public ScannerController() {
         ocrService = new OCRService();
         pokeApiService = new PokeApiService();
+        audioManager = AudioManager.getInstance();
     }
 
     public void initialize() {
         System.out.println("Initializing Scanner");
-        settingsManager = SettingsManager.getInstance();
         lineStartY = lineScanner.getLayoutY();
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);
         setupDropZone();
-
-        initSound();
     }
 
     public void back() {
@@ -98,7 +91,7 @@ public class ScannerController {
         if (scannedCard != null) {
             // Add to database
 
-            successSound.play();
+            audioManager.playSound(AudioSound.SCANNER_ADD);
         }
         reset();
     }
@@ -109,8 +102,7 @@ public class ScannerController {
     }
 
     private void handleCardScan(File file) {
-        // FIXME : sound is delayed
-        wobbleSound.play();
+        audioManager.playSound(AudioSound.POKEBALL_WOBBLE);
         ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
             try {
@@ -174,7 +166,7 @@ public class ScannerController {
         updateCollectionButtons(false);
         successText.setOpacity(0.0);
         failedText.setOpacity(0.0);
-        ScannerAnimation.scanCompletedSuccess(cardImage,new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")).toExternalForm()), dropZone );
+        ScannerAnimation.scanCompletedSuccess(cardImage, new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")).toExternalForm()), dropZone);
         cardImage.getStyleClass().add("drop-image");
         scannedCard = null;
     }
@@ -200,15 +192,5 @@ public class ScannerController {
         double opacity = isSuccess ? 1.0 : 0.4;
         addCardImg.setOpacity(opacity);
         cancelCardImg.setOpacity(opacity);
-    }
-
-    private void initSound() {
-        String successSoundFile = getClass().getResource("/be/esi/prj/leagueofpokemons/sounds/scanner_add.wav").toString();
-        successSound = new AudioClip(successSoundFile);
-        successSound.setVolume((double) settingsManager.getVolume() / 100);
-
-        String wobbleSoundFile = getClass().getResource("/be/esi/prj/leagueofpokemons/sounds/pokeball_wobble.wav").toString();
-        wobbleSound = new AudioClip(wobbleSoundFile);
-        wobbleSound.setVolume((double) settingsManager.getVolume() / 100);
     }
 }
