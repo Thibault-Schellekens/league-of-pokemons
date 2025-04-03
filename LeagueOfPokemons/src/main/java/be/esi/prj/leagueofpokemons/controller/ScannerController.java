@@ -6,8 +6,7 @@ import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.ocr.CardScanResult;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
-import be.esi.prj.leagueofpokemons.util.SceneManager;
-import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.util.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -16,6 +15,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ScannerController {
+    private final AudioManager audioManager;
     private final OCRService ocrService;
     private final PokeApiService pokeApiService;
 
@@ -54,13 +55,14 @@ public class ScannerController {
     private Text successText;
     @FXML
     private Text failedText;
+
     private double lineStartY;
-
-
+    
 
     public ScannerController() {
         ocrService = new OCRService();
         pokeApiService = new PokeApiService();
+        audioManager = AudioManager.getInstance();
     }
 
     public void initialize() {
@@ -88,6 +90,8 @@ public class ScannerController {
         System.out.println("Adding to collection");
         if (scannedCard != null) {
             // Add to database
+
+            audioManager.playSound(AudioSound.SCANNER_ADD);
         }
         reset();
     }
@@ -98,6 +102,7 @@ public class ScannerController {
     }
 
     private void handleCardScan(File file) {
+        audioManager.playSound(AudioSound.POKEBALL_WOBBLE);
         ScannerAnimation.scanningLineAnimation(lineScanner);
         new Thread(() -> {
             try {
@@ -161,7 +166,7 @@ public class ScannerController {
         updateCollectionButtons(false);
         successText.setOpacity(0.0);
         failedText.setOpacity(0.0);
-        ScannerAnimation.scanCompletedSuccess(cardImage,new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")).toExternalForm()), dropZone );
+        ScannerAnimation.scanCompletedSuccess(cardImage, new Image(Objects.requireNonNull(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")).toExternalForm()), dropZone);
         cardImage.getStyleClass().add("drop-image");
         scannedCard = null;
     }
@@ -188,6 +193,4 @@ public class ScannerController {
         addCardImg.setOpacity(opacity);
         cancelCardImg.setOpacity(opacity);
     }
-
-
 }

@@ -17,12 +17,12 @@ public class SceneManager {
     private static final int WIDTH = 1061;
     private static final int HEIGHT = 663;
 
-    // Will come from settings
-    private static final boolean SWAP_ANIMATION = false;
+    private static SettingsManager settingsManager;
 
     private static void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.setResizable(false);
+        settingsManager = SettingsManager.getInstance();
     }
 
     public static void start() {
@@ -35,10 +35,9 @@ public class SceneManager {
 
     public static void switchScene(SceneView view) {
         try {
-
             FXMLLoader fxmlLoader = new FXMLLoader(SceneManager.class.getResource("/be/esi/prj/leagueofpokemons/" + view.name().toLowerCase() + "-view.fxml"));
             // Loading main menu
-            if (scene == null || !SWAP_ANIMATION) {
+            if (scene == null || settingsManager.isSkipAnimation()) {
                 Parent root = fxmlLoader.load();
                 scene = new Scene(root, WIDTH, HEIGHT);
                 primaryStage.setScene(scene);
@@ -47,7 +46,7 @@ public class SceneManager {
                 Pane mainRoot = new Pane();
                 Node previousRoot = scene.getRoot();
 
-                SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot);
+                SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot, settingsManager.getAnimationSpeed());
             }
             primaryStage.show();
         } catch (IOException e) {
