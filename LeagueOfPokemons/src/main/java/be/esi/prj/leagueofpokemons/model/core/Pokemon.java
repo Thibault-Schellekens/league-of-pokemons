@@ -7,6 +7,8 @@ public class Pokemon {
     Attack specialAttack;
     // Might have currentEffect on him
 
+
+
     public AttackResult attack(boolean special, Pokemon defender) {
         return null;
     }

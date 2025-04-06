@@ -12,4 +12,5 @@ public class CollectionController {
     public void back() {
         SceneManager.switchScene(SceneView.HUB);
     }
+
 }

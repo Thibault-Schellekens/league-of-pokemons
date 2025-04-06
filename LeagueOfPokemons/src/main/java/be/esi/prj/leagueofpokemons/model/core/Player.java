@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Player extends CombatEntity {
+    private int id;
     //no
     private List<Card> inventory;
 
@@ -16,13 +17,12 @@ public class Player extends CombatEntity {
     }
 
     public Player(){
-        //nothing here
-    }
 
-    public void loadPlayer(List<Card> loadedInventory, int loadedId, String loadedName){
-        inventory = loadedInventory;
-        this.id = loadedId;
-        this.name = loadedName;
+    }
+    public void loadPlayer(int id, String name,List<Card> inventory){
+        this.id = id;
+        this.name = name;
+        this.inventory = inventory;
     }
 
     public String getName(){
@@ -31,7 +31,6 @@ public class Player extends CombatEntity {
     public List<Card> getInventory() {
         return inventory;
     }
-
     public int getId(){
         return id;
     }
@@ -44,8 +43,16 @@ public class Player extends CombatEntity {
 
     }
 
-    public boolean selectTeam(List<Card> cards) {
-        return false;
+    public boolean selectTeam() {
+        if (inventory.size() < 3){
+            System.out.println("Player doesnt have the required number of pokemons in his team");
+            return false;
+        } else {
+            for (Card card : inventory){
+                // too
+            }
+        }
+        return true;
     }
 
 

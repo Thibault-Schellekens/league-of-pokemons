@@ -1,6 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
 import java.util.List;
+import java.util.Set;
 
 public class Game {
     private Player player;
@@ -10,18 +11,11 @@ public class Game {
     private Battle currentBattle;
 
     // new game constructor
-    public Game(int newPlayerId, String playerName) {
-        player = new Player(newPlayerId,playerName);
-        collection = new Collection(); //there should be a CollectionManager.getDefaultCollection()
-        currentStage = 0;
+    public Game(Player newPlayer, Collection newCollection, int currentStage) {
+        this.player = newPlayer;
+        this.collection = newCollection;
+        this.currentStage = currentStage;
     }
-
-    public void loadGame(int loadedPlayerId, String loadedPlayerName, Collection loadedCollection, List<Card> loadedInventory){
-        player = new Player();
-        player.loadPlayer(loadedInventory,loadedPlayerId,loadedPlayerName);
-        collection = loadedCollection;
-    }
-
     public void nextStage() {
     }
 

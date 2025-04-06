@@ -18,7 +18,7 @@ public class SceneManager {
     private static final int HEIGHT = 663;
 
     // Will come from settings
-    private static final boolean SWAP_ANIMATION = false;
+    private static final boolean SWAP_ANIMATION = true;
 
     private static void setStage(Stage stage) {
         primaryStage = stage;
