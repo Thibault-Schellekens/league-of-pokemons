@@ -7,6 +7,10 @@ public class Team {
     private int maxSize;
     private Tier maxTier;
 
+    public Pokemon getFirstPokemon() {
+        return pokemons.getFirst();
+    }
+
     public boolean addPokemon(Pokemon pokemon) {
         return false;
     }

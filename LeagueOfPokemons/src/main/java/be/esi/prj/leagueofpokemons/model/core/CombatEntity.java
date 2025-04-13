@@ -6,8 +6,19 @@ public abstract class CombatEntity {
     protected Team team;
     protected Pokemon activePokemon;
 
+//    public CombatEntity(int id, String name, Team team) {
+//        this.id = id;
+//        this.name = name;
+//        this.team = team;
+//        this.activePokemon = team.getFirstPokemon();
+//    }
+
     public Pokemon getActivePokemon() {
         return activePokemon;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean swapActivePokemon(Pokemon pokemon) {
