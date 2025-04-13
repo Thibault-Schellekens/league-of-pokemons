@@ -1,16 +1,25 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
 import java.util.List;
+import java.util.Set;
 
 public class Game {
+    private int id;
     private Player player;
     private List<Opponent> opponents;
     private Collection collection;
     private int currentStage;
     private Battle currentBattle;
 
-    public void nextStage() {
+    // new game constructor
+    public Game(int gameId, Player newPlayer, Collection newCollection, int currentStage) {
+        id = gameId;
+        this.player = newPlayer;
+        this.collection = newCollection;
+        this.currentStage = currentStage;
+    }
 
+    public void nextStage() {
     }
 
     public void startBattle() {
@@ -24,4 +33,26 @@ public class Game {
     public boolean isGameOver() {
         return false;
     }
+
+
+
+
+
+    //SETTERS AND GETTERS
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Collection getCollection() {
+        return collection;
+    }
+
+    public int getCurrentStage() {
+        return currentStage;
+    }
+
+    public int getId(){
+        return id;
+    }
+
 }

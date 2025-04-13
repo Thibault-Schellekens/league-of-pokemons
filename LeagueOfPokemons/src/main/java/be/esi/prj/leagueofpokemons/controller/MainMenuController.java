@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.controller;
 
+import be.esi.prj.leagueofpokemons.util.GameManager;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ public class MainMenuController {
 
     public void initialize() {
         System.out.println("Initializing MainMenu Controller");
+        System.out.println("Initialized with player id : ");
     }
 
     public void openSettings() {
@@ -30,7 +32,7 @@ public class MainMenuController {
     }
 
     public void save() {
-        System.out.println("Saving");
+        GameManager.getInstance().saveGame();
     }
 
     public void load() {

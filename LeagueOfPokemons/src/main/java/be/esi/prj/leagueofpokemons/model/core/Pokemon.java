@@ -19,6 +19,8 @@ public class Pokemon {
         return card.getType();
     }
 
+
+
     public AttackResult attack(boolean special, Pokemon defender) {
         Attack attack = special ? specialAttack : basicAttack;
 
