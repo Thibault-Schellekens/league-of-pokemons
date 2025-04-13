@@ -25,7 +25,9 @@ public class Collection {
 
     public void loadCards(Set<Card> baseSetCards, Set<Card> loadedCards){
         availableCards = baseSetCards;
-        availableCards.addAll(loadedCards);
+        if (!Objects.isNull(loadedCards)) {
+            availableCards.addAll(loadedCards);
+        }
     }
 
 

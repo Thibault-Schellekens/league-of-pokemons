@@ -34,10 +34,13 @@ public class GameManager {
 
     }
     public void newGame(String name){
-        Collection currCollection = new Collection(0);
+        System.out.println("League of legends : Initializing game");
+        Collection currCollection = new Collection(gameRepository.getNewGameId());
         currCollection.loadCards(collectionRepository.loadBaseSet(),null);
         Player currPlayer = new Player(0, name);
-        game = new Game(0, currPlayer, currCollection,1);
+
+        game = new Game(gameRepository.getNewGameId(), currPlayer, currCollection,1);
+        System.out.println("GameID : " + game.getId() + " PlayerID : " + game.getPlayer().getId() + " CollectionID : " + game.getCollection().getId());
     }
 
     //SaveGame is fairly tested
