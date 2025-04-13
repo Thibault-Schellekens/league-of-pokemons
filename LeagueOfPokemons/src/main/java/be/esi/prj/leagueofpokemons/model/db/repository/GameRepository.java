@@ -1,19 +1,17 @@
 package be.esi.prj.leagueofpokemons.model.db.repository;
 
-import be.esi.prj.leagueofpokemons.model.core.Collection;
+import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.core.Game;
-import be.esi.prj.leagueofpokemons.model.core.Player;
+import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 
-import javax.swing.text.html.Option;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public class GameRepository implements Repository<Integer, Game> {
+public class GameRepository implements Repository<Integer, GameDto> {
 
     private Connection connection;
 
@@ -21,40 +19,27 @@ public class GameRepository implements Repository<Integer, Game> {
         this.connection = ConnectionManager.getConnection();
     }
 
-
-    public boolean exists(Integer id){
-        String sql =" Select * from GameSaves where playerID = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setInt(1,id);{
-                ResultSet rs = preparedStatement.executeQuery();
-                if (rs.next()){
-                    return true;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return false;
-    }
-
-
-
-
     @Override
-    public Optional<Game> findById(Integer playerId) {
-        Player plr;
-        Collection collection;
+    public Optional<GameDto> findById(Integer gameId) {
         PlayerRepository plrRep = new PlayerRepository();
         CollectionRepository colRep = new CollectionRepository();
         String sql = "Select * from GameSaves where playerID = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, playerId);
+            preparedStatement.setInt(1, gameId);
             try(ResultSet rs = preparedStatement.executeQuery()){
+
                 if (rs.next()){
-                    plr = plrRep.findById(playerId).orElseThrow(() -> new RuntimeException("Player not found"));
-                    collection = colRep.findById(playerId).orElse(null);
-                    int currStage = rs.getInt(4);
-                    return Optional.of(new Game(plr,collection,currStage));
+                    return Optional.of(
+                            new GameDto(
+                                    gameId,
+                                    rs.getInt(2),
+                                    rs.getString(3),
+                                    rs.getString(4),
+                                    rs.getString(5),
+                                    rs.getInt(6),
+                                    rs.getInt(7)
+                            )
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -63,40 +48,89 @@ public class GameRepository implements Repository<Integer, Game> {
         return Optional.empty();
     }
 
+
     @Override
-    public void save(Game game) {
-        System.out.println("League Of Pokemons : Saving new game ...");
-        String sql = "INSERT into GameSaves(playerID, collectionID, currentStage)values(?,?,?)";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setInt(1,game.getPlayer().getId());
-            preparedStatement.setInt(2,game.getPlayer().getId());
-            preparedStatement.setInt(3,game.getCurrentStage());
-            preparedStatement.executeUpdate();
+    public void save(GameDto gameDto) {
+        String findGame = "Select * from GameSaves where id = " + gameDto.gameID();
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(findGame);
+            if (rs.next()) {
+                System.out.println("League Of Pokemons : updating save ...");
+                update(gameDto);
+            } else{
+                System.out.println("League Of Pokemons : Saving new game ...");
+                String sql = "INSERT into GameSaves(playerID, collectionID, currentStage)values(?,?,?)";
+                try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+                    preparedStatement.setInt(1,gameDto.playerID());
+                    preparedStatement.setInt(2,gameDto.gameID());
+                    preparedStatement.setInt(3,gameDto.currentStage());
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    public void update(int playerId, int currentStage){
-        System.out.println("League Of Pokemons : Updating current game save ...");
-        //we only update currentStage
+    private void update(GameDto gameDto){
+        System.out.println("League Of Pokemons : Updating current gameDto save ...");
         //Player's inventory and collection cards are already being dealt with
-        //Since we know we only update this gameSave, the playerID and collectionID wont change whatsoever
-        String sql = "UPDATE GameSaves SET currentStage = ? WHERE playerID = ?";
+        //Since we know we only update this gameSave, the playerID and collectionID won't change whatsoever
+        String sql = "UPDATE GameSaves SET slot1ID = ?, slot2ID = ?, slot3ID = ?, currentStage = ? WHERE gameID = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             //deso thibault je sais que ca m'a pris longtemps :((
-            preparedStatement.setInt(1,currentStage);
-            preparedStatement.setInt(2,playerId);
+            preparedStatement.setString(1,gameDto.slot1ID());
+            preparedStatement.setString(2,gameDto.slot2ID());
+            preparedStatement.setString(3,gameDto.slot3ID());
+            preparedStatement.setInt(4,gameDto.currentStage());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    //i dont really wanna use these,
-    //creating game objects, having to loadthem everytime, kinda boring and yuck
     @Override
-    public Set<Game> findAll() {
-        return null;
+    public Set<GameDto> findAll() {
+        Set<GameDto> gameSaves = new HashSet<>();
+        String sql = "Select * from GameSaves";
+        try(Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                gameSaves.add(
+                        new GameDto(
+                                rs.getInt(1),
+                                rs.getInt(2),
+                                rs.getString(3),
+                                rs.getString(4),
+                                rs.getString(5),
+                                rs.getInt(6),
+                                rs.getInt(7)
+                        )
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return gameSaves;
+    }
+
+
+    public int getNewGameId(){
+        String sql = "SELECT max(gameID) from GameSaves";
+        try(Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1) + 1;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+    }
+    @Override
+    public void delete(GameDto entity) {
+
     }
 }

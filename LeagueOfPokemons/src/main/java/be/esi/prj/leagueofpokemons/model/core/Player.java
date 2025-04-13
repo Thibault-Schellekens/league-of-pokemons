@@ -19,9 +19,7 @@ public class Player extends CombatEntity {
     public Player(){
 
     }
-    public void loadPlayer(int id, String name,List<Card> inventory){
-        this.id = id;
-        this.name = name;
+    public void loadPlayerInventory(List<Card> inventory){
         this.inventory = inventory;
     }
 

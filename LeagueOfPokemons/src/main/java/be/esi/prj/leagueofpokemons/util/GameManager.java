@@ -4,10 +4,10 @@ import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.core.Collection;
 import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.core.Player;
-import be.esi.prj.leagueofpokemons.model.db.repository.CardRepository;
-import be.esi.prj.leagueofpokemons.model.db.repository.CollectionRepository;
-import be.esi.prj.leagueofpokemons.model.db.repository.GameRepository;
-import be.esi.prj.leagueofpokemons.model.db.repository.PlayerRepository;
+import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
+import be.esi.prj.leagueofpokemons.model.db.repository.*;
+
+import java.util.*;
 
 public class GameManager {
     private static GameManager instance;
@@ -24,51 +24,59 @@ public class GameManager {
     PlayerRepository playerRepository;
     GameRepository gameRepository;
     private Game game;
-    private Collection currCollection;
-    private int currPlayerId;
 
     public GameManager(){
         cardRepository = new CardRepository();
         collectionRepository = new CollectionRepository();
         playerRepository = new PlayerRepository();
         gameRepository = new GameRepository();
-        currCollection = new Collection();
-        currCollection.loadBaseSet(collectionRepository.loadBaseSet());
-        currPlayerId = playerRepository.getNewPlayerID();
-//        currPlayer =  new Player(playerRepository.getNewPlayerID(), playerName);
-    }
 
+
+    }
     public void newGame(String name){
-        Player player = new Player(currPlayerId, name);
-        game = new Game(player, currCollection,0);
+        Collection currCollection = new Collection(0);
+        currCollection.loadCards(collectionRepository.loadBaseSet(),null);
+        Player currPlayer = new Player(0, name);
+        game = new Game(0, currPlayer, currCollection,1);
     }
 
-    //SaveGame is fairly tested, i need to
+    //SaveGame is fairly tested
     public void saveGame(){
-        //Step 1 : add all collection cards to the Card table
-        for (Card card : collectionRepository.getCache()){
+
+        GameDto gameDto = new GameDto(
+                game.getId(),
+                game.getPlayer().getId(),
+                game.getPlayer().getInventory().get(0).getId(),
+                game.getPlayer().getInventory().get(1).getId(),
+                game.getPlayer().getInventory().get(2).getId(),
+                game.getCollection().getId(),
+                game.getCurrentStage()
+                );
+
+        for (Card card : game.getCollection().getImportedCards()){
             cardRepository.save(card);
         }
-        //Step 2
-        //We add the collection(if any cards imported) to the Collection Table
-        //Here again it doesnt matter, since we will not update a line, only add
-        collectionRepository.save(currPlayerId);
-        //Step 3
-        //if there already exists a gameSave for this player then update player
-        if (gameRepository.exists(currPlayerId)){
-            gameRepository.update(currPlayerId,game.getCurrentStage());
-            playerRepository.updatePlayer(game.getPlayer());
-        }else {
-            gameRepository.save(game);
-            collectionRepository.save(currPlayerId);
-            playerRepository.save(game.getPlayer());
+        collectionRepository.save(game.getCollection());
+        gameRepository.save(gameDto);
+        playerRepository.save(game.getPlayer());
 
-        }
     }
 
-    public int getCurrPlayerId() {
-        return currPlayerId;
-    }
+    public void loadGame(int gameId) {
+        List<Card> playerInventory = new ArrayList<>();
+        GameDto gameDto = gameRepository.findById(gameId).orElse(null);
+        Collection collection = collectionRepository.findById(gameDto.collectionID()).orElse(null);
+        Player player = playerRepository.findById(gameDto.playerID()).orElse(null);
+
+        Card slot1 = cardRepository.findById(gameDto.slot1ID()).orElse(null);
+        Card slot2 = cardRepository.findById(gameDto.slot2ID()).orElse(null);
+        Card slot3 = cardRepository.findById(gameDto.slot3ID()).orElse(null);
+
+        playerInventory.addAll(List.of(slot1,slot2,slot3));
+        player.loadPlayerInventory(playerInventory);
+        game = new Game(gameDto.gameID(),player,collection,gameDto.currentStage());
+;    }
+}
 
     /*
     TODO:
@@ -83,5 +91,3 @@ public class GameManager {
         -----------------------------------------
 
      */
-
-}

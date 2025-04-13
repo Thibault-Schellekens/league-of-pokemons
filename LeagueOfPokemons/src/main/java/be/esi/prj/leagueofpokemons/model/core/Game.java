@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Game {
+    private int id;
     private Player player;
     private List<Opponent> opponents;
     private Collection collection;
@@ -11,11 +12,13 @@ public class Game {
     private Battle currentBattle;
 
     // new game constructor
-    public Game(Player newPlayer, Collection newCollection, int currentStage) {
+    public Game(int gameId, Player newPlayer, Collection newCollection, int currentStage) {
+        id = gameId;
         this.player = newPlayer;
         this.collection = newCollection;
         this.currentStage = currentStage;
     }
+
     public void nextStage() {
     }
 
@@ -46,6 +49,10 @@ public class Game {
 
     public int getCurrentStage() {
         return currentStage;
+    }
+
+    public int getId(){
+        return id;
     }
 
 }

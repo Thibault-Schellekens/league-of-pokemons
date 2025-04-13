@@ -2,60 +2,109 @@ package be.esi.prj.leagueofpokemons.model.db.repository;
 
 import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.core.Collection;
-import be.esi.prj.leagueofpokemons.model.db.dao.CollectionDao;
-import be.esi.prj.leagueofpokemons.util.GameManager;
+import be.esi.prj.leagueofpokemons.model.core.Game;
+import be.esi.prj.leagueofpokemons.model.core.Type;
+import be.esi.prj.leagueofpokemons.model.db.repository.CardRepository;
+import be.esi.prj.leagueofpokemons.model.db.repository.Repository;
+import be.esi.prj.leagueofpokemons.model.db.repository.RepositoryException;
+import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 
-import java.sql.SQLOutput;
+import java.sql.*;
 import java.util.*;
 
 public class CollectionRepository implements Repository<Integer, Collection> {
-    private final CollectionDao collectionDao;
-    private static Set<Card> currentCache = null;
+    private final Connection connection;
 
     public CollectionRepository() {
-        this.collectionDao = new CollectionDao();
-        this.currentCache = new HashSet<>();
+        this.connection = ConnectionManager.getConnection();
     }
 
+    @Override
+    public Optional<Collection> findById(Integer id) {
+        CardRepository cardRepository = new CardRepository();
+        Set<Card> cards = new HashSet<>();
+        String sql = "SELECT * FROM Collection WHERE colId = ?";
 
-    public void save(int colID){
-        collectionDao.save(colID, currentCache);
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String cardId = rs.getString("pokemonID");
+                    cardRepository.findById(cardId).ifPresent(cards::add);
+                }
+                Collection collection = new Collection(id);
+                collection.loadCards(loadBaseSet(), cards);
+                return Optional.of(collection);
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error retrieving collection with id: " + id, e);
+        }
     }
-
-    public Set<Card> loadBaseSet(){
-        return collectionDao.loadBaseSet();
-    }
-
-    public static void saveInCache(Card card){
-        System.out.println("Saving "+ card.getName() + " in cache");
-        if (currentCache.contains(card)){
-            System.out.println("This card already exists in the collection");
-        } else {
-            currentCache.add(card);
-            System.out.println("Card : " + card.getName() + " was added successfully");
+    @Override
+    public void save(Collection collection) {
+        String sql = "INSERT INTO Collection (colId, pokemonID) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (Card card : collection.getImportedCards()) {
+                stmt.setInt(1, collection.getId());
+                stmt.setString(2, card.getId());
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error saving collection", e);
         }
     }
 
-    public Set<Card> getCache(){
-        return currentCache;
-    }
-    @Override
-    public Optional<Collection> findById(Integer id) {
-        return Optional.ofNullable(collectionDao.findById(id).orElse(null));
-    }
 
-
-
-    //we dont really need this
-    @Override
-    public void save(Collection collection) {
-        collectionDao.save(collection);
-    }
-
-    //we dont really need this
     @Override
     public Set<Collection> findAll() {
-        return Collections.emptySet();
+        Set<Collection> collections = null;
+        String sql = "Select * from Collection";
+        try(Statement statement= connection.createStatement()){
+            try(ResultSet rs = statement.executeQuery(sql)){
+                while(rs.next()){
+                    // todo
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return collections;
     }
 
+    @Override
+    public void delete(Collection collection) {
+        String sql = "DELETE FROM Collection WHERE colId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, collection.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RepositoryException("Error deleting collection with id: " + collection.getId(), e);
+        }
+    }
+
+
+    public Set<Card> loadBaseSet() {
+        Set<Card> cards = new HashSet<>();
+        String sql = "SELECT * FROM BaseSet";
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Card card = Optional.of(new Card(
+                                rs.getString("pokID"),
+                                rs.getString("pokName"),
+                                rs.getInt("pokMaxHP"),
+                                rs.getString("pokUrl"),
+                                Type.valueOf(rs.getString("pokType"))
+                        )).orElse(null);
+                cards.add(card);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return cards;
+    }
+
+
 }
+
+

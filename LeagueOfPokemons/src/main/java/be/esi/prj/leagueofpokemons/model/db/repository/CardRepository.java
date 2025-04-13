@@ -5,10 +5,8 @@ import be.esi.prj.leagueofpokemons.model.core.Type;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 import be.esi.prj.leagueofpokemons.util.GameManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -47,41 +45,53 @@ public class CardRepository implements Repository<String, Card> {
 
     @Override
     public void save(Card card) {
-        if (!cardExists(card.getId())) {
-            String sql = "INSERT INTO Cards (pokID, pokName, pokType, pokMaxHP, pokTier, pokUrl) VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, card.getId());
-                stmt.setString(2, card.getName());
-                stmt.setString(3, card.getType().toString());
-                stmt.setInt(4, card.getMaxHP());
-                stmt.setString(5, card.getTier().toString());
-                stmt.setString(6, card.getImageURL());
-                stmt.executeUpdate();
-            } catch (SQLException e) {
-                throw new RepositoryException("Error saving card", e);
-            }
-            System.out.println("Card already exists in the encyclopedia");
+        String sql = "INSERT INTO Cards (pokID, pokName, pokType, pokMaxHP, pokTier, pokUrl) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, card.getId());
+            stmt.setString(2, card.getName());
+            stmt.setString(3, card.getType().toString());
+            stmt.setInt(4, card.getMaxHP());
+            stmt.setString(5, card.getTier().toString());
+            stmt.setString(6, card.getImageURL());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RepositoryException(" Card : " + card.getId()+ " already exists ", e);
         }
+
     }
 
-    public boolean cardExists(String id){
-        String sql =" Select count(*) from Cards where pokID = ?";
-        boolean found = false;
-        try (PreparedStatement stmt = connection.prepareStatement(sql)){
-            stmt.setString(1,id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
-                found = rs.getInt(1) > 1;
+
+    @Override
+    public Set<Card> findAll() {
+        Set<Card> cards = new HashSet<>();
+        String sql = "SELECT * from Cards";
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                cards.add(
+                        new Card(
+                                rs.getString("pokID"),
+                                rs.getString("pokName"),
+                                rs.getInt("pokMaxHP"),
+                                rs.getString("pokUrl"),
+                                Type.valueOf(rs.getString("pokType"))
+                        ));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return found;
+        return cards;
     }
 
     @Override
-    public Set<Card> findAll() {
-        return null;
+    public void delete(Card card) {
+        String sql = "DELETE FROM Card WHERE pokID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, card.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RepositoryException("Error deleting collection with id: " + card.getId(), e);
+        }
     }
 
 

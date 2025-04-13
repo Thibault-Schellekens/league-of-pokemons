@@ -8,7 +8,7 @@ public class MainMenuController {
 
     public void initialize() {
         System.out.println("Initializing MainMenu Controller");
-        System.out.println("Initialized with player id : " + GameManager.getInstance().getCurrPlayerId());
+        System.out.println("Initialized with player id : ");
     }
 
     public void openSettings() {
