@@ -8,7 +8,9 @@ public class Opponent extends CombatEntity {
 //    }
 
     public void createTeam() {
-
+        team = new Team();
+        team.addPokemon(new Pokemon(new Card("swsh1-31", "Scorbunny", 70, "https://assets.tcgdex.net/en/swsh/swsh1/31/high.png", Type.FIRE)));
+        activePokemon = team.getPokemon(0);
     }
 
     public ActionType determineAction() {
@@ -16,7 +18,7 @@ public class Opponent extends CombatEntity {
     }
 
     @Override
-    public void performAction(ActionType actionType, CombatEntity enemy) {
+    public AttackResult performAction(ActionType actionType, CombatEntity enemy) {
         switch (actionType) {
             case SWAP -> {
 
@@ -26,9 +28,11 @@ public class Opponent extends CombatEntity {
                 AttackResult result = activePokemon.attack(isSpecial, enemy.getActivePokemon());
             }
         }
+
+        return null;
     }
 
     public ActionType think() {
-        return null;
+        return ActionType.BASIC_ATTACK;
     }
 }

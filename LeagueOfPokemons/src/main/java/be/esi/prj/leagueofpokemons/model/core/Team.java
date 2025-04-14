@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Team {
@@ -8,9 +9,20 @@ public class Team {
     private Tier maxTier;
 
     public Team(){
-
+        pokemons = new ArrayList<>();
+        this.maxSize = 3;
     }
+
+    public Pokemon getPokemon(int index) {
+        return pokemons.get(index);
+    }
+
+    public int getMaxSize() {
+        return maxSize;
+    }
+
     public boolean addPokemon(Pokemon pokemon) {
+        pokemons.add(pokemon);
         return false;
     }
 

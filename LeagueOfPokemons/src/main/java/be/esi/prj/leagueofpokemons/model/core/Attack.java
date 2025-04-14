@@ -9,11 +9,11 @@ public class Attack {
 
     public Attack(Type type, Tier tier, boolean special) {
         this.type = type;
-        this.damage = 0;
+        this.damage = 10;
     }
 
     public int calculateDamage(Type enemyType) {
-        return 0;
+        return damage;
     }
 
     public boolean hasEffect(boolean special, Type defenderType) {

@@ -31,8 +31,8 @@ public class Pokemon {
             attack.applyEffect(defender);
         }
 
-
-        return new AttackResult();
+        System.out.println(defender.currentHP);
+        return new AttackResult(damage);
     }
 
     public void takeDamage(int damage) {
@@ -51,4 +51,22 @@ public class Pokemon {
     public void setCurrentEffect(Effect currentEffect) {
         this.currentEffect = currentEffect;
     }
+
+    public String getName() {
+        return card.getName();
+    }
+
+    public int getCurrentHP() {
+        return currentHP;
+    }
+
+    public int getMaxHP() {
+        return card.getMaxHP();
+    }
+
+    public String getImageUrl() {
+        return card.getImageURL();
+    }
+
+
 }

@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="663.0" prefWidth="1061.0" stylesheets="@style/battle_scene.css, @style/global.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.BattleController">
+<AnchorPane prefHeight="663.0" prefWidth="1061.0" stylesheets="@style/battle_scene.css, @style/global.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.BattleController">
 
     <ImageView fitHeight="546.0" fitWidth="1062.0" pickOnBounds="true" preserveRatio="true">
         <Image url="@pics/battle/battle_background.png" />
@@ -26,8 +17,8 @@
         <Pane fx:id="attackPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
          <children>
             <Button layoutX="850.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#swapToSelectionPane" prefHeight="65.0" prefWidth="83.0" text="back" />
-            <Button onMouseClicked="#normalAttack" layoutX="111.0" layoutY="45.0" mnemonicParsing="false" text="Normal Attack" />
-            <Button onMouseClicked="#specialAttack" layoutX="285.0" layoutY="45.0" mnemonicParsing="false" text="Special Attack" />
+            <Button layoutX="111.0" layoutY="45.0" mnemonicParsing="false" onMouseClicked="#normalAttack" text="Normal Attack" />
+            <Button layoutX="285.0" layoutY="45.0" mnemonicParsing="false" onMouseClicked="#specialAttack" text="Special Attack" />
          </children>
       </Pane>
         <Pane fx:id="selectionPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0">
@@ -60,7 +51,7 @@
                                 <Font size="20.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="51.0" prefWidth="194.0" style="-fx-cursor: hand;" text="POKéMON" textFill="WHITE" GridPane.rowIndex="1">
+                        <Button mnemonicParsing="false" onMouseClicked="#swapToTeamPane" prefHeight="51.0" prefWidth="194.0" style="-fx-cursor: hand;" text="POKéMON" textFill="WHITE" GridPane.rowIndex="1">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -87,57 +78,120 @@
                                 <Font size="24.0" />
                             </font>
                         </Label>
-                        <Label prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="Charmander do?" textFill="WHITE">
+                        <Label fx:id="currentPokemonNameLabel" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="Charmander" textFill="WHITE">
                             <font>
                                 <Font size="24.0" />
                             </font>
                         </Label>
+                  <Label layoutX="10.0" layoutY="63.0" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="do?" textFill="WHITE">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
                     </children>
                 </VBox>
             </children>
         </Pane>
+      <Pane fx:id="teamPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
+         <children>
+            <Button layoutX="850.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#swapToSelectionPane" prefHeight="65.0" prefWidth="83.0" style="-fx-cursor: hand;" text="cancel" />
+            <Pane layoutX="43.0" layoutY="11.0" prefHeight="93.0" prefWidth="336.0">
+               <children>
+                  <Button layoutX="264.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#swapSlot1Pokemon" prefHeight="93.0" prefWidth="72.0" style="-fx-cursor: hand;" text="swap" />
+                  <Label fx:id="slot1PokemonNameLabel" layoutX="26.0" layoutY="47.0" styleClass="text-rog" text="slot 1" textFill="WHITE">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ProgressBar fx:id="slot1PokemonCurrentHPBar" layoutX="26.0" layoutY="14.0" prefHeight="25.0" prefWidth="211.0" progress="1.0" styleClass="hp-bar" />
+               </children>
+            </Pane>
+            <Pane layoutX="415.0" layoutY="11.0" prefHeight="93.0" prefWidth="336.0">
+               <children>
+                  <Button layoutX="264.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#swapSlot2Pokemon" prefHeight="93.0" prefWidth="72.0" text="swap" />
+                  <Label fx:id="slot2PokemonNameLabel" layoutX="26.0" layoutY="47.0" styleClass="text-rog" text="slot 2" textFill="WHITE">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ProgressBar fx:id="slot2PokemonCurrentHPBar" layoutX="26.0" layoutY="14.0" prefHeight="25.0" prefWidth="211.0" progress="1.0" styleClass="hp-bar" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
     </AnchorPane>
     <Pane layoutX="88.0" layoutY="189.0" prefHeight="309.0" prefWidth="407.0">
         <children>
 
             <!--    Player's Pokémon-->
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="103.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@pics/battle/charmander.png" />
+            <ImageView fx:id="playerPokemonImage" fitHeight="150.0" fitWidth="200.0" layoutX="103.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@pics/common/emptyCard.png" />
                 <clip>
                     <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
                 </clip>
             </ImageView>
-            <Label layoutX="103.0" layoutY="65.0" styleClass="text-rog" text="Charmander" textFill="WHITE">
+            <Label fx:id="playerPokemonNameLabel" layoutX="103.0" layoutY="65.0" styleClass="text-rog" text="Charmander" textFill="WHITE">
                 <font>
                     <Font size="24.0" />
                 </font>
             </Label>
 
             <!-- HP Bar -->
-            <ProgressBar fx:id="playerHPBar" layoutX="56.0" layoutY="112.0" prefHeight="25.0" prefWidth="300" progress="0.8" styleClass="hp-bar" />
-
-            <!-- HP Text -->
-            <Label layoutX="163.0" layoutY="116.0" styleClass="text-rog" text="180 / 225" textFill="YELLOW">
-            </Label>
+            <ProgressBar fx:id="playerPokemonCurrentHPBar" layoutX="56.0" layoutY="112.0" prefHeight="25.0" prefWidth="300" progress="1.0" styleClass="hp-bar" />
+         <HBox layoutX="164.0" layoutY="114.0">
+            <children>
+               <Text fx:id="playerPokemonCurrentHPText" fill="YELLOW" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" text="165">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Text>
+               <Text fill="YELLOW" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" text="/">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Text>
+               <Text fx:id="playerPokemonMaxHPText" fill="YELLOW" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" text="235">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Text>
+            </children>
+         </HBox>
         </children>
     </Pane>
     <Pane layoutX="496.0" layoutY="64.0" prefHeight="249.0" prefWidth="407.0">
         <children>
             <!--    Defender's Pokémon-->
-            <ImageView fx:id="defender_pokemon" fitHeight="150.0" fitWidth="200.0" layoutX="104.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@pics/battle/bulbasaur.png" />
+            <ImageView fx:id="opponentPokemonImage" fitHeight="150.0" fitWidth="200.0" layoutX="104.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@pics/common/emptyCard.png" />
                 <clip>
                     <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
                 </clip>
             </ImageView>
 
             <!-- HP Bar -->
-            <ProgressBar fx:id="enemyHPBar" layoutX="54.0" layoutY="64.0" prefHeight="25.0" prefWidth="300" progress="0.7" styleClass="enemy-hp-bar" />
+            <ProgressBar fx:id="opponentPokemonCurrentHPBar" layoutX="54.0" layoutY="64.0" prefHeight="25.0" prefWidth="300" progress="1.0" styleClass="enemy-hp-bar" />
+         <HBox layoutX="166.0" layoutY="66.0">
+            <children>
+               <Text fx:id="opponentPokemonCurrentHPText" fill="YELLOW" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" text="165">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Text>
+               <Text fill="YELLOW" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" text="/">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Text>
+               <Text fx:id="opponentPokemonMaxHPText" fill="YELLOW" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" text="235">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Text>
+            </children>
+         </HBox>
 
-            <!-- HP Text -->
-            <Label layoutX="166.0" layoutY="68.0" styleClass="text-rog" text="165 / 235" textFill="YELLOW" />
-
-            <Label layoutX="118.0" layoutY="14.0" styleClass="text-rog" text="Bulbasaur" textFill="WHITE">
+            <Label fx:id="opponentPokemonNameLabel" layoutX="118.0" layoutY="14.0" styleClass="text-rog" text="Bulbasaur" textFill="WHITE">
                 <font>
                     <Font size="24.0" />
                 </font>

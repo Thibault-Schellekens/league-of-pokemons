@@ -13,6 +13,7 @@
 
 .enemy-hp-bar .bar {
     -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+    -fx-background-radius: 10;
 }
 
 .progress-bar .track {

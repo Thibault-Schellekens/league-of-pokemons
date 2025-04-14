@@ -15,10 +15,19 @@ public class Battle {
     public Battle(Player player, Opponent opponent) {
         this.player = player;
         this.opponent = opponent;
-        currentTurn = (new Random().nextBoolean()) ? player : opponent;
+//        currentTurn = (new Random().nextBoolean()) ? player : opponent;
+        currentTurn = player;
         status = BattleStatus.NOT_STARTED;
 
         pcs = new PropertyChangeSupport(this);
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Opponent getOpponent() {
+        return opponent;
     }
 
     public void start() {
@@ -26,19 +35,23 @@ public class Battle {
             throw new ModelException("Battle already started: " + status);
         }
         status = BattleStatus.IN_PROGRESS;
-        System.out.println("Battle started");
-        System.out.println("Current turn: " + currentTurn.getName());
+
+        pcs.firePropertyChange("playerCurrentPokemon", null, player.getActivePokemon());
+        pcs.firePropertyChange("opponentCurrentPokemon", null, opponent.getActivePokemon());
+
     }
 
-    public TurnResult playTurn() {
+    public TurnResult playTurn(ActionType action) {
         if (status != BattleStatus.IN_PROGRESS) {
             throw new ModelException("Battle must be in progress: " + status);
         }
 
         if (currentTurn == player) {
-
+            TurnResult result = executeTurn(player, opponent, action);
+            pcs.firePropertyChange("turn", null, result);
         } else {
-
+            TurnResult result = executeTurn(opponent, player, action);
+            pcs.firePropertyChange("turn", null, result);
         }
 
         if (player.isDefeated()) {
@@ -52,6 +65,21 @@ public class Battle {
         }
 
         return null;
+    }
+
+    private TurnResult handlePlayerTurn() {
+
+        return null;
+    }
+
+    private TurnResult handleOpponentTurn() {
+
+        return null;
+    }
+
+    private TurnResult executeTurn(CombatEntity attacker, CombatEntity defender, ActionType actionType) {
+        AttackResult result = attacker.performAction(actionType, defender);
+        return new TurnResult(defender.activePokemon.getCurrentHP(), attacker, defender);
     }
 
     public boolean isOver() {
@@ -70,22 +98,6 @@ public class Battle {
 
     private void switchTurn()  {
         currentTurn = (currentTurn == player) ? opponent : player;
-    }
-
-    private TurnResult handlePlayerTurn() {
-
-        return null;
-    }
-
-    private TurnResult handleOpponentTurn() {
-
-        return null;
-    }
-
-    private TurnResult executeTurn(CombatEntity attacker, CombatEntity defender, ActionType actionType) {
-        attacker.performAction(actionType, defender);
-
-        return null;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

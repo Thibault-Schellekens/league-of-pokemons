@@ -45,7 +45,7 @@ public class SceneManager {
                 Pane nextRoot = fxmlLoader.load();
                 Pane mainRoot = new Pane();
                 Node previousRoot = scene.getRoot();
-
+                
                 SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot, settingsManager.getAnimationSpeed());
             }
             primaryStage.show();

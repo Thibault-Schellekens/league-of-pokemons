@@ -17,11 +17,35 @@ public abstract class CombatEntity {
         return activePokemon;
     }
 
+    public Pokemon getSlot1Pokemon() {
+        return getInactivePokemonByIndex(1);
+    }
+
+    public Pokemon getSlot2Pokemon() {
+        return getInactivePokemonByIndex(2);
+    }
+
+    private Pokemon getInactivePokemonByIndex(int index) {
+        int count = 0;
+        for (int i = 0; i < team.getMaxSize(); i++) {
+            Pokemon pokemon = team.getPokemon(i);
+            if (pokemon != activePokemon) {
+                count++;
+                if (count == index) {
+                    return pokemon;
+                }
+            }
+        }
+        return null;
+    }
+
+
     public String getName() {
         return name;
     }
 
     public boolean swapActivePokemon(Pokemon pokemon) {
+        activePokemon = pokemon;
         return false;
     }
 
@@ -29,5 +53,10 @@ public abstract class CombatEntity {
         return false;
     }
 
-    public abstract void performAction(ActionType actionType, CombatEntity enemy);
+    public String getCardUrl() {
+        return activePokemon.getImageUrl();
+    }
+
+    public abstract AttackResult performAction(ActionType actionType, CombatEntity enemy);
+
 }
