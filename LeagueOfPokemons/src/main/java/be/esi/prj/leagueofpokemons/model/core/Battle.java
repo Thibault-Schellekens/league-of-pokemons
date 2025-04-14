@@ -41,6 +41,18 @@ public class Battle {
 
     }
 
+    public void swap(Pokemon nextPokemon) {
+        if (status != BattleStatus.IN_PROGRESS) {
+            throw new ModelException("Battle must be in progress: " + status);
+        }
+
+        Pokemon oldPokemon = currentTurn.activePokemon;
+        currentTurn.swap(nextPokemon);
+        pcs.firePropertyChange("swap", oldPokemon, nextPokemon);
+
+        switchTurn();
+    }
+
     public TurnResult playTurn(ActionType action) {
         if (status != BattleStatus.IN_PROGRESS) {
             throw new ModelException("Battle must be in progress: " + status);

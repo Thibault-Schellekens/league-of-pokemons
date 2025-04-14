@@ -39,14 +39,8 @@ public abstract class CombatEntity {
         return null;
     }
 
-
     public String getName() {
         return name;
-    }
-
-    public boolean swapActivePokemon(Pokemon pokemon) {
-        activePokemon = pokemon;
-        return false;
     }
 
     public boolean isDefeated() {
@@ -58,5 +52,10 @@ public abstract class CombatEntity {
     }
 
     public abstract AttackResult performAction(ActionType actionType, CombatEntity enemy);
+
+    boolean swap(Pokemon nextPokemon) {
+        activePokemon = nextPokemon;
+        return false;
+    }
 
 }

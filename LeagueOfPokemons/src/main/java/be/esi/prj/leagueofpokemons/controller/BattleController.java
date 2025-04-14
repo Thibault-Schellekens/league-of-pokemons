@@ -21,7 +21,6 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.CompletableFuture;
 
 public class BattleController implements PropertyChangeListener {
 
@@ -82,18 +81,25 @@ public class BattleController implements PropertyChangeListener {
     }
 
     private void initializeSlotsPokemon() {
-        Pokemon pokemonSlot1 = player.getSlot1Pokemon();
-        slot1PokemonNameLabel.setText(pokemonSlot1.getName());
-        slot1PokemonCurrentHPBar.setProgress((double) pokemonSlot1.getCurrentHP() / pokemonSlot1.getMaxHP());
-        Pokemon pokemonSlot2 = player.getSlot2Pokemon();
-        slot2PokemonNameLabel.setText(pokemonSlot2.getName());
-        slot2PokemonCurrentHPBar.setProgress((double) pokemonSlot2.getCurrentHP() / pokemonSlot2.getMaxHP());
+        updateSlotPokemon(player.getSlot1Pokemon(), 1);
+        updateSlotPokemon(player.getSlot2Pokemon(), 2);
     }
 
-    private void updatePokemonInfo(Pokemon pokemon, Label nameLabel, Text currentHPText, Text maxHPText) {
+    private void updateSlotPokemon(Pokemon newSlotPokemon, int slot) {
+        if (slot == 1) {
+            slot1PokemonNameLabel.setText(newSlotPokemon.getName());
+            slot1PokemonCurrentHPBar.setProgress((double) newSlotPokemon.getCurrentHP() / newSlotPokemon.getMaxHP());
+        } else if (slot == 2) {
+            slot2PokemonNameLabel.setText(newSlotPokemon.getName());
+            slot2PokemonCurrentHPBar.setProgress((double) newSlotPokemon.getCurrentHP() / newSlotPokemon.getMaxHP());
+        }
+    }
+
+    private void updatePokemonInfo(Pokemon pokemon, Label nameLabel, Text currentHPText, Text maxHPText, ProgressBar hpBar) {
         nameLabel.setText(pokemon.getName());
         currentHPText.setText(String.valueOf(pokemon.getCurrentHP()));
         maxHPText.setText(String.valueOf(pokemon.getMaxHP()));
+        hpBar.setProgress((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
     }
 
     private Image buildPokemonImage(String imageUrl) {
@@ -112,11 +118,11 @@ public class BattleController implements PropertyChangeListener {
             Image pokemonImage = buildPokemonImage(imageUrl);
             Platform.runLater(() -> {
                 if (isPlayerPokemon) {
-                    updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText);
+                    updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText, playerPokemonCurrentHPBar);
                     playerPokemonImage.setImage(pokemonImage);
                     currentPokemonNameLabel.setText(pokemon.getName());
                 } else {
-                    updatePokemonInfo(pokemon, opponentPokemonNameLabel, opponentPokemonCurrentHPText, opponentPokemonMaxHPText);
+                    updatePokemonInfo(pokemon, opponentPokemonNameLabel, opponentPokemonCurrentHPText, opponentPokemonMaxHPText, opponentPokemonCurrentHPBar);
                     opponentPokemonImage.setImage(pokemonImage);
                 }
             });
@@ -156,19 +162,23 @@ public class BattleController implements PropertyChangeListener {
 
     public void swapSlot1Pokemon() {
         Pokemon pokemonSlot1 = player.getSlot1Pokemon();
-        player.swapActivePokemon(pokemonSlot1);
+        Pokemon newSlotPokemon = player.getActivePokemon();
+        battle.swap(pokemonSlot1);
+        updateSlotPokemon(newSlotPokemon, 1);
     }
 
     public void swapSlot2Pokemon() {
         Pokemon pokemonSlot2 = player.getSlot2Pokemon();
-        player.swapActivePokemon(pokemonSlot2);
+        Pokemon newSlotPokemon = player.getActivePokemon();
+        battle.swap(pokemonSlot2);
+        updateSlotPokemon(newSlotPokemon, 2);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Object newValue = evt.getNewValue();
         switch (evt.getPropertyName()) {
-            case "playerCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, true);
+            case "playerCurrentPokemon", "swap" -> handlePokemonChangeEvent((Pokemon) newValue, true);
             case "opponentCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, false);
             case "turn" -> handleTurnEvent((TurnResult) newValue);
         }
