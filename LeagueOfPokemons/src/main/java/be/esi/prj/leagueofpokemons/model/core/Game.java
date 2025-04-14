@@ -54,11 +54,11 @@ public class Game {
     public void nextStage() {
     }
 
-    public Battle startBattle() {
-        currentBattle = new Battle(player, opponents.get(currentStage));
-
-        return currentBattle;
-    }
+//    public Battle startBattle() {
+//        currentBattle = new Battle(player, opponents.get(currentStage));
+//
+//        return currentBattle;
+//    }
 
     public GameResult endGame() {
         return null;
