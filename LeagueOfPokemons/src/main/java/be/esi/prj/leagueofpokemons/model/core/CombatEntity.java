@@ -54,8 +54,23 @@ public abstract class CombatEntity {
     public abstract AttackResult performAction(ActionType actionType, CombatEntity enemy);
 
     boolean swap(Pokemon nextPokemon) {
+        if (nextPokemon == null || nextPokemon == activePokemon) {
+            return false;
+        }
+
+        int activeIndex = team.indexOf(activePokemon);
+        int nextIndex = team.indexOf(nextPokemon);
+
+        if (activeIndex == -1 || nextIndex == -1) {
+            return false;
+        }
+
+        team.setPokemon(activeIndex, nextPokemon);
+        team.setPokemon(nextIndex, activePokemon);
+
         activePokemon = nextPokemon;
-        return false;
+
+        return true;
     }
 
 }

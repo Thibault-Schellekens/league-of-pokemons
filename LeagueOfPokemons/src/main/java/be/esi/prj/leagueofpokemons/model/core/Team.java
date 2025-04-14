@@ -26,6 +26,14 @@ public class Team {
         return false;
     }
 
+    public void setPokemon(int index, Pokemon pokemon) {
+        pokemons.set(index, pokemon);
+    }
+
+    public int indexOf(Pokemon pokemon) {
+        return pokemons.indexOf(pokemon);
+    }
+
     public boolean removePokemon(Pokemon pokemon) {
         return false;
     }

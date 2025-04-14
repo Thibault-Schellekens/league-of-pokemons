@@ -30,7 +30,9 @@ public class BattleController implements PropertyChangeListener {
     private Opponent opponent;
 
     @FXML
-    private Label currentPokemonNameLabel;
+    private Label playerCurrentPokemonNameLabel;
+    @FXML
+    private Label opponentCurrentPokemonNameLabel;
     @FXML
     private ImageView playerPokemonImage;
     @FXML
@@ -66,6 +68,9 @@ public class BattleController implements PropertyChangeListener {
     private Pane attackPane;
     @FXML
     private Pane teamPane;
+    @FXML
+    private Pane opponentPane;
+
 
     public void initialize() {
         System.out.println("Battle Controller Initialized");
@@ -77,7 +82,13 @@ public class BattleController implements PropertyChangeListener {
         opponent = battle.getOpponent();
 
         initializeSlotsPokemon();
+        initNameLabels();
         battle.start();
+    }
+
+    private void initNameLabels() {
+        playerCurrentPokemonNameLabel.textProperty().bind(playerPokemonNameLabel.textProperty());
+        opponentCurrentPokemonNameLabel.textProperty().bind(opponentPokemonNameLabel.textProperty());
     }
 
     private void initializeSlotsPokemon() {
@@ -120,7 +131,6 @@ public class BattleController implements PropertyChangeListener {
                 if (isPlayerPokemon) {
                     updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText, playerPokemonCurrentHPBar);
                     playerPokemonImage.setImage(pokemonImage);
-                    currentPokemonNameLabel.setText(pokemon.getName());
                 } else {
                     updatePokemonInfo(pokemon, opponentPokemonNameLabel, opponentPokemonCurrentHPText, opponentPokemonMaxHPText, opponentPokemonCurrentHPBar);
                     opponentPokemonImage.setImage(pokemonImage);
@@ -148,8 +158,10 @@ public class BattleController implements PropertyChangeListener {
         selectionPane.setVisible(true);
         attackPane.setVisible(false);
         teamPane.setVisible(false);
+        opponentPane.setVisible(false);
     }
 
+    // Refactor these to take a Pane as parameters
     public void swapToAttackPane() {
         selectionPane.setVisible(false);
         attackPane.setVisible(true);
@@ -160,27 +172,65 @@ public class BattleController implements PropertyChangeListener {
         teamPane.setVisible(true);
     }
 
+    private void swapToOpponentPane() {
+        selectionPane.setVisible(false);
+        attackPane.setVisible(false);
+        teamPane.setVisible(false);
+        opponentPane.setVisible(true);
+    }
+
     public void swapSlot1Pokemon() {
         Pokemon pokemonSlot1 = player.getSlot1Pokemon();
-        Pokemon newSlotPokemon = player.getActivePokemon();
         battle.swap(pokemonSlot1);
-        updateSlotPokemon(newSlotPokemon, 1);
     }
 
     public void swapSlot2Pokemon() {
         Pokemon pokemonSlot2 = player.getSlot2Pokemon();
-        Pokemon newSlotPokemon = player.getActivePokemon();
         battle.swap(pokemonSlot2);
-        updateSlotPokemon(newSlotPokemon, 2);
+    }
+
+    public void handleOpponentTurn() {
+        ActionType action = opponent.think();
+        switch (action) {
+            case SWAP -> {
+                Pokemon nextPokemon = opponent.getNextPokemon();
+                battle.swap(nextPokemon);
+            }
+            case BASIC_ATTACK, SPECIAL_ATTACK -> battle.playTurn(action);
+        }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Object newValue = evt.getNewValue();
         switch (evt.getPropertyName()) {
-            case "playerCurrentPokemon", "swap" -> handlePokemonChangeEvent((Pokemon) newValue, true);
+            case "playerCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, true);
             case "opponentCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, false);
+            case "swap" ->
+                    handleSwapEvent((Pokemon) newValue, (Pokemon) evt.getOldValue(), player.getActivePokemon().equals(newValue));
+
             case "turn" -> handleTurnEvent((TurnResult) newValue);
+            case "turnChanged" -> handleTurnChangedEvent((CombatEntity) newValue);
+        }
+    }
+
+    private void handleTurnChangedEvent(CombatEntity newTurn) {
+        if (newTurn == player) {
+            swapToSelectionPane();
+        } else {
+            swapToOpponentPane();
+        }
+    }
+
+    private void handleSwapEvent(Pokemon newPokemon, Pokemon oldPokemon, boolean isPlayerSwap) {
+        handlePokemonChangeEvent(newPokemon, isPlayerSwap);
+
+        if (isPlayerSwap) {
+            if (oldPokemon.equals(player.getSlot1Pokemon())) {
+                updateSlotPokemon(oldPokemon, 1);
+            } else if (oldPokemon.equals(player.getSlot2Pokemon())) {
+                updateSlotPokemon(oldPokemon, 2);
+            }
         }
     }
 

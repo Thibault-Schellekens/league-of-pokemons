@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Random;
@@ -48,6 +49,7 @@ public class Battle {
 
         Pokemon oldPokemon = currentTurn.activePokemon;
         currentTurn.swap(nextPokemon);
+
         pcs.firePropertyChange("swap", oldPokemon, nextPokemon);
 
         switchTurn();
@@ -58,13 +60,14 @@ public class Battle {
             throw new ModelException("Battle must be in progress: " + status);
         }
 
+        TurnResult result;
         if (currentTurn == player) {
-            TurnResult result = executeTurn(player, opponent, action);
-            pcs.firePropertyChange("turn", null, result);
+            result = executeTurn(player, opponent, action);
         } else {
-            TurnResult result = executeTurn(opponent, player, action);
-            pcs.firePropertyChange("turn", null, result);
+            result = executeTurn(opponent, player, action);
         }
+
+        pcs.firePropertyChange("turn", null, result);
 
         if (player.isDefeated()) {
             status = BattleStatus.OPPONENT_WON;
@@ -76,7 +79,7 @@ public class Battle {
             switchTurn();
         }
 
-        return null;
+        return result;
     }
 
     private TurnResult handlePlayerTurn() {
@@ -109,7 +112,10 @@ public class Battle {
     }
 
     private void switchTurn()  {
+        CombatEntity previousTurn = currentTurn;
         currentTurn = (currentTurn == player) ? opponent : player;
+
+        pcs.firePropertyChange("turnChanged", previousTurn, currentTurn);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

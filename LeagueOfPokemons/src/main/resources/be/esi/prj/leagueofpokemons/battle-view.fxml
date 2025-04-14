@@ -71,14 +71,14 @@
                         </Button>
                     </children>
                 </GridPane>
-                <VBox layoutY="10.200000047683716" prefHeight="99.0" prefWidth="430.0">
+                <VBox layoutY="10.2" prefHeight="99.0" prefWidth="430.0">
                     <children>
                         <Label prefHeight="54.0" prefWidth="431.0" styleClass="text-rog" text="What will" textFill="WHITE">
                             <font>
                                 <Font size="24.0" />
                             </font>
                         </Label>
-                        <Label fx:id="currentPokemonNameLabel" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="Charmander" textFill="WHITE">
+                        <Label fx:id="playerCurrentPokemonNameLabel" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="Charmander" textFill="WHITE">
                             <font>
                                 <Font size="24.0" />
                             </font>
@@ -117,6 +117,30 @@
                   <ProgressBar fx:id="slot2PokemonCurrentHPBar" layoutX="26.0" layoutY="14.0" prefHeight="25.0" prefWidth="211.0" progress="1.0" styleClass="hp-bar" />
                </children>
             </Pane>
+         </children>
+      </Pane>
+      <Pane fx:id="opponentPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
+         <children>
+            <Button layoutX="850.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#handleOpponentTurn" prefHeight="65.0" prefWidth="83.0" style="-fx-cursor: hand;" text="Enter" />
+            <VBox layoutY="10.2" prefHeight="99.0" prefWidth="430.0">
+               <children>
+                  <Label prefHeight="54.0" prefWidth="431.0" styleClass="text-rog" text="Opponent's" textFill="WHITE">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="opponentCurrentPokemonNameLabel" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="bulbasaur" textFill="WHITE">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="63.0" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="is thinking..." textFill="WHITE">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
          </children>
       </Pane>
     </AnchorPane>

@@ -1,5 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.util.Objects;
+
 public class Pokemon {
     private Card card;
     private int currentHP;
@@ -69,4 +71,15 @@ public class Pokemon {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Pokemon pokemon = (Pokemon) o;
+        return currentHP == pokemon.currentHP && Objects.equals(card, pokemon.card) && Objects.equals(basicAttack, pokemon.basicAttack) && Objects.equals(specialAttack, pokemon.specialAttack) && Objects.equals(currentEffect, pokemon.currentEffect);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(card, currentHP, basicAttack, specialAttack, currentEffect);
+    }
 }

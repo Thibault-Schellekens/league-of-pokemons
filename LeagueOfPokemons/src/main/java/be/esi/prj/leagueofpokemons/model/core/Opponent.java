@@ -13,10 +13,6 @@ public class Opponent extends CombatEntity {
         activePokemon = team.getPokemon(0);
     }
 
-    public ActionType determineAction() {
-        return null;
-    }
-
     @Override
     public AttackResult performAction(ActionType actionType, CombatEntity enemy) {
         switch (actionType) {
@@ -34,5 +30,13 @@ public class Opponent extends CombatEntity {
 
     public ActionType think() {
         return ActionType.BASIC_ATTACK;
+    }
+
+    public Pokemon getNextPokemon() {
+        if (activePokemon == team.getPokemon(0)) {
+            return team.getPokemon(1);
+        } else {
+            return team.getPokemon(0);
+        }
     }
 }
