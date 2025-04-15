@@ -48,7 +48,7 @@ public abstract class CombatEntity {
     }
 
     public boolean isDefeated() {
-        return false;
+        return team.isDefeated();
     }
 
     public String getCardUrl() {

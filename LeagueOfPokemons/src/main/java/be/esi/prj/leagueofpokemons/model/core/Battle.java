@@ -56,7 +56,8 @@ public class Battle {
 
         pcs.firePropertyChange("swap", oldPokemon, nextPokemon);
 
-        if (!oldPokemon.isDefeated()) {
+        // Only works if opponent is second to play
+        if (oldPokemon.isDefeated() && currentTurn == opponent) {
             switchTurn();
         }
 
@@ -79,16 +80,15 @@ public class Battle {
 
         if (player.isDefeated()) {
             status = BattleStatus.OPPONENT_WON;
-            System.out.println("Opponent won");
+            pcs.firePropertyChange("battleOver", null, opponent.getName());
         } else if (opponent.isDefeated()) {
             status = BattleStatus.PLAYER_WON;
-            System.out.println("Player won");
+            pcs.firePropertyChange("battleOver", null, player.getName());
         } else if (result.isPokemonDefeated()) {
             switchTurn();
             pcs.firePropertyChange("pokemonDefeated", null, result.defender());
         } else {
             switchTurn();
-
         }
 
         return result;

@@ -43,6 +43,6 @@ public class Team {
     }
 
     public boolean isDefeated() {
-        return false;
+        return pokemons.stream().allMatch(Pokemon::isDefeated);
     }
 }

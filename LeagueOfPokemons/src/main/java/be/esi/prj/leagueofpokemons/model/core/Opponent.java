@@ -10,6 +10,7 @@ public class Opponent extends CombatEntity {
     public void createTeam() {
         team = new Team();
         team.addPokemon(new Pokemon(new Card("swsh1-31", "Scorbunny", 70, "https://assets.tcgdex.net/en/swsh/swsh1/31/high.png", Type.FIRE)));
+        team.addPokemon(new Pokemon(new Card("swsh3-94", "Hippowdon", 150, "https://assets.tcgdex.net/en/swsh/swsh3/94/high.png", Type.FIGHTING)));
         activePokemon = team.getPokemon(0);
     }
 
@@ -29,6 +30,9 @@ public class Opponent extends CombatEntity {
     }
 
     public ActionType think() {
+        if (activePokemon.isDefeated()) {
+            return ActionType.SWAP;
+        }
         return ActionType.BASIC_ATTACK;
     }
 

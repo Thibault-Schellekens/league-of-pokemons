@@ -64,6 +64,8 @@ public class BattleController implements PropertyChangeListener {
     private Label slot2PokemonNameLabel;
     @FXML
     private ProgressBar slot2PokemonCurrentHPBar;
+    @FXML
+    private Label winnerNameLabel;
 
     @FXML
     private Pane selectionPane;
@@ -73,6 +75,8 @@ public class BattleController implements PropertyChangeListener {
     private Pane teamPane;
     @FXML
     private Pane opponentPane;
+    @FXML
+    private Pane battleOverPane;
 
 
     // Might encapsulate into its own Controller
@@ -164,6 +168,10 @@ public class BattleController implements PropertyChangeListener {
         SceneManager.switchScene(SceneView.HUB);
     }
 
+    public void backToHub() {
+        SceneManager.switchScene(SceneView.HUB);
+    }
+
     public void swapToSelectionPane() {
         hidePanes();
         selectionPane.setVisible(true);
@@ -183,6 +191,11 @@ public class BattleController implements PropertyChangeListener {
     private void swapToOpponentPane() {
         hidePanes();
         opponentPane.setVisible(true);
+    }
+
+    private void swapToBattleOverPane() {
+        hidePanes();
+        battleOverPane.setVisible(true);
     }
 
     private void hidePanes() {
@@ -242,7 +255,14 @@ public class BattleController implements PropertyChangeListener {
             case "turnChanged" -> handleTurnChangedEvent((CombatEntity) newValue);
 
             case "pokemonDefeated" -> handlePokemonDefeatedEvent((CombatEntity) newValue);
+
+            case "battleOver" -> handleBattleOverEvent((String) newValue);
         }
+    }
+
+    private void handleBattleOverEvent(String winnerName) {
+        winnerNameLabel.setText(winnerName);
+        swapToBattleOverPane();
     }
 
     private void handlePokemonDefeatedEvent(CombatEntity defender) {
