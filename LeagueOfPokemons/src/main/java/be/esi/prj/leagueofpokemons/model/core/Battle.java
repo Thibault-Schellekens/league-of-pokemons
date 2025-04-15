@@ -46,13 +46,20 @@ public class Battle {
         if (status != BattleStatus.IN_PROGRESS) {
             throw new ModelException("Battle must be in progress: " + status);
         }
+        if (nextPokemon.isDefeated()) {
+            throw new ModelException("You can not swap to a dead pokemon");
+        }
 
-        Pokemon oldPokemon = currentTurn.activePokemon;
+        Pokemon oldPokemon = currentTurn.getActivePokemon();
+
         currentTurn.swap(nextPokemon);
 
         pcs.firePropertyChange("swap", oldPokemon, nextPokemon);
 
-        switchTurn();
+        if (!oldPokemon.isDefeated()) {
+            switchTurn();
+        }
+
     }
 
     public TurnResult playTurn(ActionType action) {
@@ -69,14 +76,19 @@ public class Battle {
 
         pcs.firePropertyChange("turn", null, result);
 
+
         if (player.isDefeated()) {
             status = BattleStatus.OPPONENT_WON;
             System.out.println("Opponent won");
         } else if (opponent.isDefeated()) {
             status = BattleStatus.PLAYER_WON;
             System.out.println("Player won");
+        } else if (result.isPokemonDefeated()) {
+            switchTurn();
+            pcs.firePropertyChange("pokemonDefeated", null, result.defender());
         } else {
             switchTurn();
+
         }
 
         return result;
@@ -93,8 +105,13 @@ public class Battle {
     }
 
     private TurnResult executeTurn(CombatEntity attacker, CombatEntity defender, ActionType actionType) {
+        if ((actionType == ActionType.BASIC_ATTACK || actionType == ActionType.SPECIAL_ATTACK)
+                && attacker.isActivePokemonDead()) {
+            throw new ModelException("You can not attack with a dead pokemon!");
+        }
+
         AttackResult result = attacker.performAction(actionType, defender);
-        return new TurnResult(defender.activePokemon.getCurrentHP(), attacker, defender);
+        return new TurnResult(attacker, defender, defender.getActivePokemon().getCurrentHP(), defender.isActivePokemonDead());
     }
 
     public boolean isOver() {
@@ -111,7 +128,7 @@ public class Battle {
         return null;
     }
 
-    private void switchTurn()  {
+    private void switchTurn() {
         CombatEntity previousTurn = currentTurn;
         currentTurn = (currentTurn == player) ? opponent : player;
 

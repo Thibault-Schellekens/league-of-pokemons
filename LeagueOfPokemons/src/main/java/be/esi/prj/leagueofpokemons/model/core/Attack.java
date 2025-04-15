@@ -9,7 +9,10 @@ public class Attack {
 
     public Attack(Type type, Tier tier, boolean special) {
         this.type = type;
-        this.damage = 10;
+        this.damage = 50;
+        if (special) {
+            this.damage = 0;
+        }
     }
 
     public int calculateDamage(Type enemyType) {

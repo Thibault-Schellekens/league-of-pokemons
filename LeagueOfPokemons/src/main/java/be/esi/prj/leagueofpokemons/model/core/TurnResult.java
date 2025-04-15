@@ -1,5 +1,5 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
-public record TurnResult(int defenderHP, CombatEntity attacker, CombatEntity defender) {
+public record TurnResult(CombatEntity attacker, CombatEntity defender, int defenderHP, boolean isPokemonDefeated) {
 
 }

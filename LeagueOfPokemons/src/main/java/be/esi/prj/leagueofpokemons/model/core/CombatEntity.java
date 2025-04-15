@@ -17,6 +17,10 @@ public abstract class CombatEntity {
         return activePokemon;
     }
 
+    public boolean isActivePokemonDead() {
+        return activePokemon.isDefeated();
+    }
+
     public Pokemon getSlot1Pokemon() {
         return getInactivePokemonByIndex(1);
     }

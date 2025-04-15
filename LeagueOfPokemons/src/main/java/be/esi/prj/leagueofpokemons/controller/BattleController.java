@@ -4,6 +4,7 @@ import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.ImageProcessor;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -70,6 +72,13 @@ public class BattleController implements PropertyChangeListener {
     private Pane teamPane;
     @FXML
     private Pane opponentPane;
+
+
+    // Might encapsulate into its own Controller
+    @FXML
+    private Pane errorPane;
+    @FXML
+    private Label errorLabel;
 
 
     public void initialize() {
@@ -141,12 +150,12 @@ public class BattleController implements PropertyChangeListener {
 
     public void normalAttack() {
         System.out.println("Normal attack");
-        battle.playTurn(ActionType.BASIC_ATTACK);
+        playTurnHandler(ActionType.BASIC_ATTACK);
     }
 
     public void specialAttack() {
         System.out.println("Special attack");
-        battle.playTurn(ActionType.SPECIAL_ATTACK);
+        playTurnHandler(ActionType.SPECIAL_ATTACK);
     }
 
     public void escape() {
@@ -155,38 +164,41 @@ public class BattleController implements PropertyChangeListener {
     }
 
     public void swapToSelectionPane() {
+        hidePanes();
         selectionPane.setVisible(true);
+    }
+
+    // Refactor these to take a Pane as parameters
+    public void swapToAttackPane() {
+        hidePanes();
+        attackPane.setVisible(true);
+    }
+
+    public void swapToTeamPane() {
+        hidePanes();
+        teamPane.setVisible(true);
+    }
+
+    private void swapToOpponentPane() {
+        hidePanes();
+        opponentPane.setVisible(true);
+    }
+
+    private void hidePanes() {
+        selectionPane.setVisible(false);
         attackPane.setVisible(false);
         teamPane.setVisible(false);
         opponentPane.setVisible(false);
     }
 
-    // Refactor these to take a Pane as parameters
-    public void swapToAttackPane() {
-        selectionPane.setVisible(false);
-        attackPane.setVisible(true);
-    }
-
-    public void swapToTeamPane() {
-        selectionPane.setVisible(false);
-        teamPane.setVisible(true);
-    }
-
-    private void swapToOpponentPane() {
-        selectionPane.setVisible(false);
-        attackPane.setVisible(false);
-        teamPane.setVisible(false);
-        opponentPane.setVisible(true);
-    }
-
     public void swapSlot1Pokemon() {
         Pokemon pokemonSlot1 = player.getSlot1Pokemon();
-        battle.swap(pokemonSlot1);
+        swapHandler(pokemonSlot1);
     }
 
     public void swapSlot2Pokemon() {
         Pokemon pokemonSlot2 = player.getSlot2Pokemon();
-        battle.swap(pokemonSlot2);
+        swapHandler(pokemonSlot2);
     }
 
     public void handleOpponentTurn() {
@@ -194,9 +206,25 @@ public class BattleController implements PropertyChangeListener {
         switch (action) {
             case SWAP -> {
                 Pokemon nextPokemon = opponent.getNextPokemon();
-                battle.swap(nextPokemon);
+                swapHandler(nextPokemon);
             }
-            case BASIC_ATTACK, SPECIAL_ATTACK -> battle.playTurn(action);
+            case BASIC_ATTACK, SPECIAL_ATTACK -> playTurnHandler(action);
+        }
+    }
+
+    private void playTurnHandler(ActionType action) {
+        try {
+            battle.playTurn(action);
+        } catch (ModelException e) {
+            displayError(e.getMessage());
+        }
+    }
+
+    private void swapHandler(Pokemon nextPokemon) {
+        try {
+            battle.swap(nextPokemon);
+        } catch (ModelException e) {
+            displayError(e.getMessage());
         }
     }
 
@@ -211,6 +239,14 @@ public class BattleController implements PropertyChangeListener {
 
             case "turn" -> handleTurnEvent((TurnResult) newValue);
             case "turnChanged" -> handleTurnChangedEvent((CombatEntity) newValue);
+
+            case "pokemonDefeated" -> handlePokemonDefeatedEvent((CombatEntity) newValue);
+        }
+    }
+
+    private void handlePokemonDefeatedEvent(CombatEntity defender) {
+        if (defender == player) {
+            swapToTeamPane();
         }
     }
 
@@ -242,5 +278,17 @@ public class BattleController implements PropertyChangeListener {
             playerPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
             playerPokemonCurrentHPBar.setProgress((double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP());
         }
+    }
+
+    private void displayError(String message) {
+        errorPane.setVisible(true);
+        errorLabel.setText(message);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(5));
+        pause.setOnFinished(e -> {
+            errorPane.setVisible(false);
+            errorLabel.setText("");
+        });
+        pause.play();
     }
 }
