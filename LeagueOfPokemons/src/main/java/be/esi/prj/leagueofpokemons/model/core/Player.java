@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class Player extends CombatEntity {
     private int id;
-    //no
     private List<Card> inventory;
 
     //if new game, inventory empty/ player id = size of PlayerDB +  1 / name hard coded for now
@@ -36,12 +35,23 @@ public class Player extends CombatEntity {
         return id;
     }
 
-    public boolean addCard(Card card) {
-        return false;
+    public void addCard(int index, Card card) {
+        if (inventory.size() == 3){
+            throw new ModelException("You already have 3 cards sin inventory");
+        }
+
+        else if (inventory.contains(card)){
+            throw new ModelException("Can't have duplicates in inventory");
+        }
+        inventory.add(index, card);
+
     }
 
-    public void removeCard(Card card) {
-
+    public int removeCard(String id) {
+        Card toRemove = inventory.stream().filter(c -> c.getId().equals(id)).findFirst().orElseThrow(() -> new ModelException("There's no card with id: " + id));
+        int pos = inventory.indexOf(toRemove);
+        inventory.remove(toRemove);
+        return pos;
     }
 
     public boolean selectTeam() {
@@ -56,6 +66,9 @@ public class Player extends CombatEntity {
         return true;
     }
 
+    public int getInventorySize(){
+        return inventory.size();
+    }
 
     @Override
     public void performAction(ActionType actionType, CombatEntity enemy) {

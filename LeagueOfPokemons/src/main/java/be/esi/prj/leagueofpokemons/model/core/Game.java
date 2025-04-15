@@ -40,7 +40,6 @@ public class Game {
     private void buildOpponents() {
         Opponent first = new Opponent();
         first.createTeam();
-
         opponents.add(first);
     }
 
@@ -86,4 +85,8 @@ public class Game {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+        collection.setId(id);
+    }
 }

@@ -50,7 +50,7 @@ public class GameRepository implements Repository<Integer, GameDto> {
 
     @Override
     public Integer save(GameDto gameDto) {
-        String findGame = "Select * from GameSaves where id = " + gameDto.gameID();
+        String findGame = "Select * from GameSaves where gameID = " + gameDto.gameID();
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(findGame);
             if (rs.next()) {
@@ -58,15 +58,19 @@ public class GameRepository implements Repository<Integer, GameDto> {
                 update(gameDto);
             } else{
                 System.out.println("League Of Pokemons : Saving new game ...");
-                String sql = "INSERT into GameSaves(playerID,, slot1ID, slot2ID, slot3ID, currentStage)values(?,?,?,?,?)";
+                String sql = "INSERT into GameSaves(playerID, slot1ID, slot2ID, slot3ID, currentStage)values(?,?,?,?,?)";
                 try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                     preparedStatement.setInt(1,gameDto.playerID());
-                    preparedStatement.setInt(2,gameDto.gameID());
-                    preparedStatement.setInt(3,gameDto.currentStage());
+                    preparedStatement.setString(2,gameDto.slot1ID());
+                    preparedStatement.setString(3,gameDto.slot2ID());
+                    preparedStatement.setString(4,gameDto.slot3ID());
+                    preparedStatement.setInt(5, gameDto.currentStage());
                     preparedStatement.executeUpdate();
-                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                         if (generatedKeys.next()) {
                             return generatedKeys.getInt(1);
+                        } else{
+                            System.out.println("Cant return generatedKey");
                         }
                     }
                 } catch (SQLException e) {

@@ -44,7 +44,6 @@ public class GameManager {
 
     //SaveGame is fairly tested
     public void saveGame(){
-
         GameDto gameDto = new GameDto(
                 game.getId(),
                 game.getPlayer().getId(),
@@ -57,11 +56,12 @@ public class GameManager {
         for (Card card : game.getCollection().getImportedCards()){
             cardRepository.save(card);
         }
+        System.out.println("LOP : saving with id : " + game.getId());
+        System.out.println("Saving with team : " + game.getPlayer().getSlot(2).getName());
         int gameId = gameRepository.save(gameDto);
-        game.getCollection().setId(gameId);
+        game.setId(gameId);
+        ;
         collectionRepository.save(game.getCollection());
-        playerRepository.save(game.getPlayer());
-
     }
 
     public void loadGame(int gameId) {
