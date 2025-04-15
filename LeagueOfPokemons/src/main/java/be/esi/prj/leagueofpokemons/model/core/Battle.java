@@ -74,7 +74,7 @@ public class Battle {
             result = executeTurn(opponent, player, action);
         }
 
-        pcs.firePropertyChange("turn", null, result);
+        pcs.firePropertyChange("attackTurn", null, result);
 
 
         if (player.isDefeated()) {

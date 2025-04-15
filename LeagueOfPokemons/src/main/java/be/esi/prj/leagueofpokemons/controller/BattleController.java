@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.controller;
 
+import be.esi.prj.leagueofpokemons.animation.BattleAnimation;
 import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.ImageProcessor;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
@@ -237,7 +238,7 @@ public class BattleController implements PropertyChangeListener {
             case "swap" ->
                     handleSwapEvent((Pokemon) newValue, (Pokemon) evt.getOldValue(), player.getActivePokemon().equals(newValue));
 
-            case "turn" -> handleTurnEvent((TurnResult) newValue);
+            case "attackTurn" -> handleAttackTurnEvent((TurnResult) newValue);
             case "turnChanged" -> handleTurnChangedEvent((CombatEntity) newValue);
 
             case "pokemonDefeated" -> handlePokemonDefeatedEvent((CombatEntity) newValue);
@@ -270,13 +271,14 @@ public class BattleController implements PropertyChangeListener {
         }
     }
 
-    private void handleTurnEvent(TurnResult turnResultEvent) {
+    private void handleAttackTurnEvent(TurnResult turnResultEvent) {
+        double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
         if (turnResultEvent.attacker() == player) {
-            opponentPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
-            opponentPokemonCurrentHPBar.setProgress((double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP());
+//            opponentPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
+            BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
         } else {
-            playerPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
-            playerPokemonCurrentHPBar.setProgress((double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP());
+//            playerPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
+            BattleAnimation.playDamageAnimation(playerPokemonImage, playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.defenderHP());
         }
     }
 
