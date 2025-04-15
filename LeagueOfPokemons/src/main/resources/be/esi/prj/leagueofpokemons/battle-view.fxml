@@ -30,11 +30,29 @@
     </ImageView>
 
     <AnchorPane layoutY="582.0" prefHeight="133.0" prefWidth="1062.0" styleClass="battle-text-box" AnchorPane.bottomAnchor="-12.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <Pane fx:id="attackPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
+        <Pane fx:id="attackPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0">
          <children>
             <Button layoutX="850.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#swapToSelectionPane" prefHeight="65.0" prefWidth="83.0" text="back" />
-            <Button layoutX="111.0" layoutY="45.0" mnemonicParsing="false" onMouseClicked="#normalAttack" text="Normal Attack" />
-            <Button layoutX="285.0" layoutY="45.0" mnemonicParsing="false" onMouseClicked="#specialAttack" text="Special Attack" />
+            <HBox alignment="CENTER" layoutX="106.0" layoutY="41.0" spacing="20.0">
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#normalAttack" text="Normal Attack" />
+                  <Label fx:id="basicAttackRemainingUseLabel" styleClass="text-rog" text="20" textFill="WHITE">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="474.0" layoutY="41.0" spacing="20.0">
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#specialAttack" text="Special Attack" />
+                  <Label fx:id="specialAttackRemainingUseLabel" styleClass="text-rog" text="3" textFill="WHITE">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
          </children>
       </Pane>
       <Pane fx:id="teamPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
@@ -107,7 +125,7 @@
             <Button layoutX="671.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#backToHub" prefHeight="110.0" prefWidth="275.0" text="BACK TO HUB" />
          </children>
       </Pane>
-        <Pane fx:id="selectionPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0">
+        <Pane fx:id="selectionPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
             <children>
                 <GridPane hgap="3" layoutX="570.0" layoutY="3.200000047683716" prefHeight="110.0" prefWidth="313.0" vgap="1">
                     <columnConstraints>

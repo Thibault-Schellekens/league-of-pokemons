@@ -70,6 +70,10 @@ public class BattleController implements PropertyChangeListener {
     private ProgressBar slot2PokemonCurrentHPBar;
     @FXML
     private Label winnerNameLabel;
+    @FXML
+    private Label basicAttackRemainingUseLabel;
+    @FXML
+    private Label specialAttackRemainingUseLabel;
 
     @FXML
     private Pane selectionPane;
@@ -117,6 +121,11 @@ public class BattleController implements PropertyChangeListener {
         initNameLabels();
         initPokemonIndicators();
         battle.start();
+    }
+
+    private void updateRemainingUseLabel(Pokemon pokemon) {
+        basicAttackRemainingUseLabel.textProperty().bind(pokemon.remainingUseProperty(false).asString());
+        specialAttackRemainingUseLabel.textProperty().bind(pokemon.remainingUseProperty(true).asString());
     }
 
     private void initPokemonIndicators() {
@@ -183,6 +192,7 @@ public class BattleController implements PropertyChangeListener {
             Image pokemonImage = buildPokemonImage(imageUrl);
             Platform.runLater(() -> {
                 if (isPlayerPokemon) {
+                    updateRemainingUseLabel(pokemon);
                     updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText, playerPokemonCurrentHPBar);
                     playerPokemonImage.setImage(pokemonImage);
                 } else {
@@ -205,10 +215,12 @@ public class BattleController implements PropertyChangeListener {
 
     public void escape() {
         System.out.println("Escape");
+        battle.removePropertyChangeListener(this);
         SceneManager.switchScene(SceneView.HUB);
     }
 
     public void backToHub() {
+        battle.removePropertyChangeListener(this);
         SceneManager.switchScene(SceneView.HUB);
     }
 
