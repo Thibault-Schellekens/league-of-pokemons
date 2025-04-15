@@ -33,12 +33,11 @@ public class GameManager {
 
     public void newGame(String name){
         System.out.println("League of legends : Initializing game");
-        Collection currCollection = new Collection(gameRepository.getNewGameId());
+        Collection currCollection = new Collection(-1);
         currCollection.loadCards(collectionRepository.loadBaseSet(),null);
         Player currPlayer = new Player(0, name);
-
         // getNewGameId feels wrong, game shouldn't need an id until saved
-        Game.initialize(gameRepository.getNewGameId(), currPlayer, currCollection);
+        Game.initialize(-1, currPlayer, currCollection);
         game = Game.getInstance();
         System.out.println("GameID : " + game.getId() + " PlayerID : " + game.getPlayer().getId() + " CollectionID : " + game.getCollection().getId());
     }
@@ -49,18 +48,18 @@ public class GameManager {
         GameDto gameDto = new GameDto(
                 game.getId(),
                 game.getPlayer().getId(),
-                game.getPlayer().getInventory().get(0).getId(),
-                game.getPlayer().getInventory().get(1).getId(),
-                game.getPlayer().getInventory().get(2).getId(),
-                game.getCollection().getId(),
+                game.getPlayer().getSlot(0).getId(),
+                game.getPlayer().getSlot(1).getId(),
+                game.getPlayer().getSlot(2).getId(),
                 game.getCurrentStage()
                 );
 
         for (Card card : game.getCollection().getImportedCards()){
             cardRepository.save(card);
         }
+        int gameId = gameRepository.save(gameDto);
+        game.getCollection().setId(gameId);
         collectionRepository.save(game.getCollection());
-        gameRepository.save(gameDto);
         playerRepository.save(game.getPlayer());
 
     }
@@ -68,7 +67,7 @@ public class GameManager {
     public void loadGame(int gameId) {
         List<Card> playerInventory = new ArrayList<>();
         GameDto gameDto = gameRepository.findById(gameId).orElse(null);
-        Collection collection = collectionRepository.findById(gameDto.collectionID()).orElse(null);
+        Collection collection = collectionRepository.findById(gameDto.gameID()).orElse(null);
         Player player = playerRepository.findById(gameDto.playerID()).orElse(null);
 
         Card slot1 = cardRepository.findById(gameDto.slot1ID()).orElse(null);
@@ -78,7 +77,11 @@ public class GameManager {
         playerInventory.addAll(List.of(slot1,slot2,slot3));
         player.loadPlayerInventory(playerInventory);
         game.loadGame(gameDto.gameID(), player, collection, gameDto.currentStage());
-;    }
+    }
+
+    public Game getGame() {
+        return game;
+    }
 }
 
     /*

@@ -26,18 +26,21 @@ public class Player extends CombatEntity {
     public String getName(){
         return name;
     }
-    public List<Card> getInventory() {
-        return inventory;
+    public Card getSlot(int index) {
+        if (index >= 3 || index < 0){
+            throw new IndexOutOfBoundsException("out of bounds broski");
+        }
+        return inventory.get(index);
     }
     public int getId(){
         return id;
     }
 
-    public boolean buyCard(Card card) {
+    public boolean addCard(Card card) {
         return false;
     }
 
-    public void sellCard(Card card) {
+    public void removeCard(Card card) {
 
     }
 

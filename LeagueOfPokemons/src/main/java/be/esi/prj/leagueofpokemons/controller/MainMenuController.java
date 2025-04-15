@@ -5,10 +5,9 @@ import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
 
 public class MainMenuController {
-
+    GameManager gameManager;
     public void initialize() {
-        System.out.println("Initializing MainMenu Controller");
-        System.out.println("Initialized with player id : ");
+        gameManager = GameManager.getInstance();
     }
 
     public void openSettings() {
@@ -25,7 +24,9 @@ public class MainMenuController {
     }
 
     public void save() {
-        GameManager.getInstance().saveGame();
+            GameManager.getInstance().saveGame();
+
+
     }
 
     public void load() {

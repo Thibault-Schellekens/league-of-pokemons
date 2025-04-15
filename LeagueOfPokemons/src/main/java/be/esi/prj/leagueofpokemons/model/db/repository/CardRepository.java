@@ -44,7 +44,7 @@ public class CardRepository implements Repository<String, Card> {
     }
 
     @Override
-    public void save(Card card) {
+    public String save(Card card) {
         String sql = "INSERT INTO Cards (pokID, pokName, pokType, pokMaxHP, pokTier, pokUrl) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, card.getId());
@@ -57,7 +57,7 @@ public class CardRepository implements Repository<String, Card> {
         } catch (SQLException e) {
             throw new RepositoryException(" Card : " + card.getId()+ " already exists ", e);
         }
-
+        return card.getId();
     }
 
 
