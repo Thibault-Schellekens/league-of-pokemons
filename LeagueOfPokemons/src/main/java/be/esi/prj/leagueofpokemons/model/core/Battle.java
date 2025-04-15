@@ -57,7 +57,7 @@ public class Battle {
         pcs.firePropertyChange("swap", oldPokemon, nextPokemon);
 
         // Only works if opponent is second to play
-        if (oldPokemon.isDefeated() && currentTurn == opponent) {
+        if (!oldPokemon.isDefeated() || oldPokemon.isDefeated() && currentTurn == opponent) {
             switchTurn();
         }
 

@@ -7,6 +7,8 @@ import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,6 +16,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -79,11 +83,25 @@ public class BattleController implements PropertyChangeListener {
     private Pane battleOverPane;
 
 
-    // Might encapsulate into its own Controller
+    // Might encapsulate into its own FXML + Controller
     @FXML
     private Pane errorPane;
     @FXML
     private Label errorLabel;
+
+    // Might encapsulate into its own FXML + Controller
+    @FXML
+    private Circle playerSlot1Indicator;
+    @FXML
+    private Circle playerSlot2Indicator;
+    @FXML
+    private Circle playerSlot3Indicator;
+    @FXML
+    private Circle opponentSlot1Indicator;
+    @FXML
+    private Circle opponentSlot2Indicator;
+    @FXML
+    private Circle opponentSlot3Indicator;
 
 
     public void initialize() {
@@ -97,7 +115,29 @@ public class BattleController implements PropertyChangeListener {
 
         initializeSlotsPokemon();
         initNameLabels();
+        initPokemonIndicators();
         battle.start();
+    }
+
+    private void initPokemonIndicators() {
+        updatePokemonIndicator(playerSlot1Indicator, player.getActivePokemon());
+        updatePokemonIndicator(playerSlot2Indicator, player.getSlot1Pokemon());
+        updatePokemonIndicator(playerSlot3Indicator, player.getSlot2Pokemon());
+        updatePokemonIndicator(opponentSlot1Indicator, opponent.getActivePokemon());
+        updatePokemonIndicator(opponentSlot2Indicator, opponent.getSlot1Pokemon());
+        updatePokemonIndicator(opponentSlot3Indicator, opponent.getSlot2Pokemon());
+    }
+
+    private void updatePokemonIndicator(Circle indicator, Pokemon pokemon) {
+        if (pokemon == null) {
+            indicator.setFill(Color.TRANSPARENT);
+        } else {
+            ObjectBinding<Color> fillBinding = Bindings.createObjectBinding(() ->
+                pokemon.isDefeated() ? Color.GRAY : Color.RED,
+                pokemon.defeatedProperty()
+            );
+            indicator.fillProperty().bind(fillBinding);
+        }
     }
 
     private void initNameLabels() {
@@ -266,6 +306,7 @@ public class BattleController implements PropertyChangeListener {
     }
 
     private void handlePokemonDefeatedEvent(CombatEntity defender) {
+
         if (defender == player) {
             swapToTeamPane();
         }

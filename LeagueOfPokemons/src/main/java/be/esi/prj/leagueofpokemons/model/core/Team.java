@@ -14,6 +14,9 @@ public class Team {
     }
 
     public Pokemon getPokemon(int index) {
+        if (index < 0 || index >= pokemons.size()) {
+            return null;
+        }
         return pokemons.get(index);
     }
 

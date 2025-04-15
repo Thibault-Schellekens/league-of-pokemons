@@ -1,5 +1,8 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import java.util.Objects;
 
 public class Pokemon {
@@ -9,19 +12,24 @@ public class Pokemon {
     private Attack specialAttack;
     private Effect currentEffect;
 
+    private BooleanProperty defeated;
+
     public Pokemon(Card card) {
         this.card = card;
         this.currentHP = card.getMaxHP();
         this.basicAttack = new Attack(card.getType(), card.getTier(), false);
         this.specialAttack = new Attack(card.getType(), card.getTier(), true);
         this.currentEffect = null;
+        this.defeated = new SimpleBooleanProperty(false);
     }
 
     public Type getType() {
         return card.getType();
     }
 
-
+    public BooleanProperty defeatedProperty() {
+        return defeated;
+    }
 
     public AttackResult attack(boolean special, Pokemon defender) {
         Attack attack = special ? specialAttack : basicAttack;
@@ -39,6 +47,9 @@ public class Pokemon {
 
     public void takeDamage(int damage) {
         currentHP = Math.max(0, currentHP - damage);
+        if (currentHP <= 0) {
+            defeated.set(true);
+        }
     }
 
     public boolean isDefeated() {
@@ -48,6 +59,7 @@ public class Pokemon {
     // Might replace int amount by Potion
     public void heal(int amount) {
         currentHP = Math.min(currentHP, amount + currentHP);
+        defeated.set(false);
     }
 
     public void setCurrentEffect(Effect currentEffect) {
