@@ -3,15 +3,22 @@ package be.esi.prj.leagueofpokemons.controller;
 import be.esi.prj.leagueofpokemons.util.GameManager;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import javafx.fxml.FXML;
 
 public class MainMenuController {
+    @FXML
+    private SettingsController settingsMenuController;
     GameManager gameManager;
     public void initialize() {
-        gameManager = GameManager.getInstance();
+        System.out.println("Initializing MainMenu Controller");
     }
 
     public void openSettings() {
         System.out.println("Settings");
+        if (settingsMenuController != null) {
+            System.out.println("Settings opened");
+            settingsMenuController.showSettings();
+        }
     }
 
     public void play() {
@@ -24,8 +31,7 @@ public class MainMenuController {
     }
 
     public void save() {
-            GameManager.getInstance().saveGame();
-
+        GameManager.getInstance().saveGame();
 
     }
 

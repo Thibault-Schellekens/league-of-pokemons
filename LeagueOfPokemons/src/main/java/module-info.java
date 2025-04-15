@@ -6,8 +6,8 @@ module be.esi.prj.leagueofpokemons {
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
     requires java.sdk;
+    requires javafx.media;
     requires java.sql;
-
 
     opens be.esi.prj.leagueofpokemons to javafx.fxml;
     opens be.esi.prj.leagueofpokemons.controller to javafx.fxml;

@@ -2,8 +2,11 @@ package be.esi.prj.leagueofpokemons.controller;
 
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import javafx.fxml.FXML;
 
 public class HubController {
+    @FXML
+    private SettingsController settingsMenuController;
 
     public void initialize() {
         System.out.println("Initializing Hub Controller");
@@ -22,5 +25,17 @@ public class HubController {
     public void openBattle() {
         System.out.println("Opening Battle");
         SceneManager.switchScene(SceneView.BATTLE);
+    }
+
+    public void openSettings() {
+        System.out.println("Settings");
+        if (settingsMenuController != null) {
+            System.out.println("Settings opened");
+            settingsMenuController.showSettings();
+        }
+    }
+
+    public void back() {
+        SceneManager.switchScene(SceneView.MAINMENU);
     }
 }
