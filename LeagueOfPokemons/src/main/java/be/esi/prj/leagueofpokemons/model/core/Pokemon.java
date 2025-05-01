@@ -126,7 +126,8 @@ public class Pokemon {
         return false;
     }
 
-    public void takeDamage(int damage) {
+    // Non-private to use in tests
+    void takeDamage(int damage) {
         currentHP = Math.max(0, currentHP - damage);
         if (currentHP == 0) {
             defeated.set(true);

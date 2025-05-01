@@ -24,7 +24,7 @@ public class Player extends CombatEntity {
     }
 
     public Player(){
-        this(0, "");
+        this(0, "Player");
     }
 
     public void loadPlayerInventory(List<Card> inventory){

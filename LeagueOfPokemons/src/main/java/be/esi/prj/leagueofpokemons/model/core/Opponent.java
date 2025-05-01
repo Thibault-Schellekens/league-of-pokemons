@@ -7,6 +7,14 @@ public class Opponent extends CombatEntity {
 //        super(id, name, new Team());
 //    }
 
+    public Opponent(String name) {
+        this.name = name;
+    }
+
+    public Opponent() {
+        this("Opponent");
+    }
+
     public void createTeam() {
         team = new Team();
         team.addPokemon(new Pokemon(new Card("swsh1-31", "Scorbunny", 70, "https://assets.tcgdex.net/en/swsh/swsh1/31/high.png", Type.FIRE)));

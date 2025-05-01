@@ -58,24 +58,26 @@ public abstract class CombatEntity {
     //TODO: make it not abstract, and take a boolean isSpecial
     public abstract AttackResult performAction(ActionType actionType, CombatEntity enemy);
 
-    boolean swap(Pokemon nextPokemon) {
-        if (nextPokemon == null || nextPokemon == activePokemon) {
-            return false;
+    void swap(Pokemon nextPokemon) {
+        if (nextPokemon == null) {
+            throw new ModelException("Next pokemon is null!");
+        }
+
+        if (nextPokemon.equals(activePokemon)) {
+            throw new ModelException("You can not swap to the same pokemon!");
         }
 
         int activeIndex = team.indexOf(activePokemon);
         int nextIndex = team.indexOf(nextPokemon);
 
         if (activeIndex == -1 || nextIndex == -1) {
-            return false;
+            throw new ModelException("You can not swap to a Pokemon not in your team!");
         }
 
         team.setPokemon(activeIndex, nextPokemon);
         team.setPokemon(nextIndex, activePokemon);
 
         activePokemon = nextPokemon;
-
-        return true;
     }
 
 }

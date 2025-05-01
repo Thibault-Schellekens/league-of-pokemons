@@ -20,6 +20,8 @@ public class Team {
         return pokemons.get(index);
     }
 
+
+
     public int getMaxSize() {
         return maxSize;
     }

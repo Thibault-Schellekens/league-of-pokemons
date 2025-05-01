@@ -14,7 +14,6 @@ public class Battle {
     public Battle(Player player, Opponent opponent) {
         this.player = player;
         this.opponent = opponent;
-//        currentTurn = (new Random().nextBoolean()) ? player : opponent;
         currentTurn = player;
         status = BattleStatus.NOT_STARTED;
 
@@ -57,7 +56,10 @@ public class Battle {
         if (!oldPokemon.isDefeated() || oldPokemon.isDefeated() && currentTurn == opponent) {
             switchTurn();
         }
+    }
 
+    public String getCurrentTurnName() {
+        return currentTurn.getName();
     }
 
     public void playTurn(ActionType action) {
@@ -90,16 +92,6 @@ public class Battle {
 
     }
 
-    private TurnResult handlePlayerTurn() {
-
-        return null;
-    }
-
-    private TurnResult handleOpponentTurn() {
-
-        return null;
-    }
-
     private TurnResult executeTurn(CombatEntity attacker, CombatEntity defender, ActionType actionType) {
         if ((actionType == ActionType.BASIC_ATTACK || actionType == ActionType.SPECIAL_ATTACK)
                 && attacker.isActivePokemonDead()) {
@@ -116,11 +108,11 @@ public class Battle {
     }
 
     // Might have to just return the id/name
-    public CombatEntity getWinner() {
+    public String getWinner() {
         if (status == BattleStatus.PLAYER_WON) {
-            return player;
+            return player.getName();
         } else if (status == BattleStatus.OPPONENT_WON) {
-            return opponent;
+            return opponent.getName();
         }
         return null;
     }
