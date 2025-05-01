@@ -55,6 +55,7 @@ public abstract class CombatEntity {
         return activePokemon.getImageUrl();
     }
 
+    //TODO: make it not abstract, and take a boolean isSpecial
     public abstract AttackResult performAction(ActionType actionType, CombatEntity enemy);
 
     boolean swap(Pokemon nextPokemon) {

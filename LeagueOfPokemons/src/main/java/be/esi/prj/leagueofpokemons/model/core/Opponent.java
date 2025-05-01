@@ -16,17 +16,18 @@ public class Opponent extends CombatEntity {
 
     @Override
     public AttackResult performAction(ActionType actionType, CombatEntity enemy) {
+        AttackResult attackResult = new AttackResult(0);
         switch (actionType) {
             case SWAP -> {
 
             }
             case BASIC_ATTACK, SPECIAL_ATTACK -> {
                 boolean isSpecial = actionType == ActionType.SPECIAL_ATTACK;
-                AttackResult result = activePokemon.attack(isSpecial, enemy.getActivePokemon());
+                attackResult = activePokemon.attack(isSpecial, enemy.getActivePokemon());
             }
         }
 
-        return null;
+        return attackResult;
     }
 
     public ActionType think() {

@@ -24,8 +24,9 @@ public class Player extends CombatEntity {
     }
 
     public Player(){
-
+        this(0, "");
     }
+
     public void loadPlayerInventory(List<Card> inventory){
         this.inventory = inventory;
     }
@@ -60,19 +61,19 @@ public class Player extends CombatEntity {
         return true;
     }
 
-
     @Override
     public AttackResult performAction(ActionType actionType, CombatEntity enemy) {
-        Pokemon enemyPokemon = enemy.getActivePokemon();
+        AttackResult attackResult = new AttackResult(0);
         switch (actionType) {
-            case BASIC_ATTACK -> {
-                activePokemon.attack(false, enemyPokemon);
+            case SWAP -> {
+
             }
-            case SPECIAL_ATTACK -> {
-                activePokemon.attack(true, enemyPokemon);
+            case BASIC_ATTACK, SPECIAL_ATTACK -> {
+                boolean isSpecial = actionType == ActionType.SPECIAL_ATTACK;
+                attackResult = activePokemon.attack(isSpecial, enemy.getActivePokemon());
             }
         }
 
-        return null;
+        return attackResult;
     }
 }

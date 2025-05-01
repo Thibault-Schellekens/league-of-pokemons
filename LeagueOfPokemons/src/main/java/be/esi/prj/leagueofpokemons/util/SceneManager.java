@@ -19,6 +19,8 @@ public class SceneManager {
 
     private static SettingsManager settingsManager;
 
+    private SceneManager() {}
+
     private static void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.setResizable(false);

@@ -1,9 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Random;
 
 public class Battle {
     private Player player;
@@ -39,7 +37,6 @@ public class Battle {
 
         pcs.firePropertyChange("playerCurrentPokemon", null, player.getActivePokemon());
         pcs.firePropertyChange("opponentCurrentPokemon", null, opponent.getActivePokemon());
-
     }
 
     public void swap(Pokemon nextPokemon) {
@@ -63,7 +60,7 @@ public class Battle {
 
     }
 
-    public TurnResult playTurn(ActionType action) {
+    public void playTurn(ActionType action) {
         if (status != BattleStatus.IN_PROGRESS) {
             throw new ModelException("Battle must be in progress: " + status);
         }
@@ -91,7 +88,6 @@ public class Battle {
             switchTurn();
         }
 
-        return result;
     }
 
     private TurnResult handlePlayerTurn() {
@@ -111,6 +107,7 @@ public class Battle {
         }
 
         AttackResult result = attacker.performAction(actionType, defender);
+        System.out.println(result.message());
         return new TurnResult(attacker, defender, defender.getActivePokemon().getCurrentHP(), defender.isActivePokemonDead());
     }
 
