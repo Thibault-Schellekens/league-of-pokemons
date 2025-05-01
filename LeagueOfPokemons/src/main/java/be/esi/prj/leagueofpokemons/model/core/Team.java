@@ -11,6 +11,7 @@ public class Team {
     public Team(){
         pokemons = new ArrayList<>();
         this.maxSize = 3;
+        this.maxTier = Tier.TIER_III;
     }
 
     public Pokemon getPokemon(int index) {
@@ -26,9 +27,11 @@ public class Team {
         return maxSize;
     }
 
-    public boolean addPokemon(Pokemon pokemon) {
+    public void addPokemon(Pokemon pokemon) {
+        if (!canAddPokemon(pokemon)) {
+            throw new ModelException("Can not add this pokemon: " + pokemon);
+        }
         pokemons.add(pokemon);
-        return false;
     }
 
     public void setPokemon(int index, Pokemon pokemon) {
@@ -43,8 +46,18 @@ public class Team {
         return false;
     }
 
-    public boolean canAddPokemon(Pokemon pokemon) {
-        return false;
+    private boolean canAddPokemon(Pokemon pokemon) {
+        if (pokemons.size() >= maxSize) {
+            return false;
+        }
+        if (pokemons.contains(pokemon)) {
+            return false;
+        }
+        if (pokemon.getTier().isGreater(maxTier)) {
+            return false;
+        }
+
+        return true;
     }
 
     public boolean isDefeated() {

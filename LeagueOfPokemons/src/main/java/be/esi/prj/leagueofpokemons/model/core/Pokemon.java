@@ -34,6 +34,10 @@ public class Pokemon {
         return card.getType();
     }
 
+    public Tier getTier() {
+        return card.getTier();
+    }
+
     public Effect getCurrentEffect() {
         return currentEffect;
     }
