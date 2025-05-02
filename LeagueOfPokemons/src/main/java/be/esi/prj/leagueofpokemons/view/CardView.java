@@ -37,6 +37,15 @@ public class CardView extends StackPane {
         setup(context);
     }
 
+    public CardView(StackPane placeholder) {
+        this.card = null;
+        this.imageView = null;
+        this.selectButton = null;
+        this.cropped = null;
+        this.controller = null;
+        this.getChildren().add(placeholder);
+    }
+
     private void setup(CardContext context) {
         imageView.setFitWidth(165);
         imageView.setFitHeight(113);
@@ -59,5 +68,29 @@ public class CardView extends StackPane {
 
     public Card getCard() {
         return card;
+    }
+    public static CardView createEmptySlot() {
+        StackPane placeholder = new StackPane();
+        placeholder.setPrefSize(165, 113);
+        placeholder.setStyle("-fx-background-color: #cccccc; -fx-border-color: black; -fx-border-width: 1;");
+
+        // Optional: Add a small icon/text
+        javafx.scene.text.Text emptyText = new javafx.scene.text.Text("Empty");
+        emptyText.setStyle("-fx-font-size: 14px; -fx-fill: gray;");
+        placeholder.getChildren().add(emptyText);
+
+        return new CardView(placeholder);
+    }
+
+
+    @Override
+    public String toString() {
+        return "CardView{" +
+                "card=" + card +
+                ", imageView=" + imageView +
+                ", selectButton=" + selectButton +
+                ", cropped=" + cropped +
+                ", controller=" + controller +
+                '}';
     }
 }

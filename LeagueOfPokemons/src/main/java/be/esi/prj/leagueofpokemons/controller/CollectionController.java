@@ -9,84 +9,77 @@ import be.esi.prj.leagueofpokemons.util.SceneView;
 import be.esi.prj.leagueofpokemons.view.CardContext;
 import be.esi.prj.leagueofpokemons.view.CardView;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class CollectionController {
-    Game game = Game.getInstance();
+    private Game game;
     private int page = 1;
-    private int inventoryIndex;
     private Tier tier = Tier.TIER_I;
     private final int CARDS_PER_PAGE = 6;
 
     @FXML
-    GridPane collectionGrid;
+    private GridPane collectionGrid;
     @FXML
-    GridPane inventoryGrid;
+    private GridPane inventoryGrid;
     @FXML
-    Button tier1btn;
+    private Button tier1btn;
     @FXML
-    Button tier2btn;
+    private Button tier2btn;
     @FXML
-    Button tier3btn;
+    private Button tier3btn;
     @FXML
-    Button tier4btn;
+    private Button tier4btn;
     @FXML
-    Button tier5btn;
-    private List<Card> collectionCards;
-    private List<Card> filteredCards;
-    // will be needed when filtered by type or name
+    private Button tier5btn;
+    private static Map<String, CardView> collectionCardViews = new HashMap<>();
 
-    private List<Card> inventoryCards;
+
+
 
     public void initialize() {
         System.out.println("Initializing Collection Controller");
-        collectionCards = new ArrayList<>(game.getCollection().getAvailableCards());
-        System.out.println("Card List Size : " + collectionCards.size());
-        inventoryCards = new ArrayList<>();
+        game = Game.getInstance();
+        System.out.println("Initialized with inventory size : " + game.getPlayer().getInventorySize());
 
-        for (int i = 0; i < game.getPlayer().getInventorySize(); i++) {
-            inventoryCards.add(Objects.requireNonNullElse(game.getPlayer().getSlot(i), null));
-        }
-        if (!inventoryCards.isEmpty()) {
-            System.out.println("Initialized inventory with cards : "
-                    + inventoryCards.get(0).getName() + " | "
-                    + inventoryCards.get(1).getName() + " | "
-                    + inventoryCards.get(2).getName());
-        }
-        if (game.getPlayer().getInventorySize() == 0) {
-            inventoryIndex = 0;
-        } else {
-            inventoryIndex = game.getPlayer().getInventorySize() - 1;
-        }
         tier1btn.setOnAction(e -> setTierAndReload(Tier.TIER_I));
         tier2btn.setOnAction(e -> setTierAndReload(Tier.TIER_II));
         tier3btn.setOnAction(e -> setTierAndReload(Tier.TIER_III));
         tier4btn.setOnAction(e -> setTierAndReload(Tier.TIER_IV));
         tier5btn.setOnAction(e -> setTierAndReload(Tier.TIER_V));
-        
-        loadCollectionPage(); 
+        loadCardViews();
+        loadCollectionPage();
         loadInventory();
-        
-
     }
-    // change this in future so that it creates cardView by grabing the selected cardView's cropped image
+
+
+    // change this in the future so that it creates cardView by grabing the selected cardView's cropped image
     // -> skip image processing for better performance
     private void loadInventory() {
+        System.out.println("UPDATING INVENTORY");
+        System.out.println("collections view card static");
+
+
         inventoryGrid.getChildren().clear();
         int row = 0;
-        for (Card card : inventoryCards) {
-            if (card == null) continue;
-            CardView cardView = new CardView(card, this, CardContext.INVENTORY);
+        System.out.print("Cards in inventory : ");
+
+        for (Card card : game.getPlayerInventory()) {
+            CardView cardView = new CardView(collectionCardViews.get(card.getId()), this, CardContext.INVENTORY);;
+            System.out.println();
+            System.out.println(cardView + "cardview");
+            System.out.println("row: " + row);
+
             inventoryGrid.add(cardView, 0, row);
+            System.out.print(card.getName() + ", ");
             row++;
         }
+        System.out.println(" .");
+        System.out.println(inventoryGrid.getChildren());
     }
 
     private void setTierAndReload(Tier selectedTier) {
@@ -97,32 +90,26 @@ public class CollectionController {
 
     public void loadCollectionPage() {
         collectionGrid.getChildren().clear();
-        collectionCards = filteredCards();
-        System.out.println("Filtered Card List Size : " + collectionCards.size());
+        List<CardView> filtered = filteredCardViews();
         int start = (page - 1) * CARDS_PER_PAGE;
-        int end = Math.min(start + CARDS_PER_PAGE, collectionCards.size());
-
+        int end = Math.min(start + CARDS_PER_PAGE, filtered.size());
+        List<CardView> pageCards = filtered.subList(start, end);
         int col = 0, row = 0;
-        for (int i = start; i < end; i++) {
-            Card card = collectionCards.get(i);
-            CardView cardView = new CardView(card, this, CardContext.COLLECTION);
-            collectionGrid.add(cardView, col, row);
-
+        for (CardView cardview : pageCards) {
+            collectionGrid.add(cardview, col, row);
             col++;
             if (col == 2) {
                 col = 0;
                 row++;
             }
         }
-
     }
 
 
-    private List<Card> filteredCards() {
-        return game.getCollection()
-                .getAvailableCards()
+    private List<CardView> filteredCardViews() {
+        return collectionCardViews.values()
                 .stream()
-                .filter(card -> card.getTier() == tier)
+                .filter(view -> view.getCard().getTier() == tier)
                 .toList();
     }
 
@@ -132,9 +119,7 @@ public class CollectionController {
 
     public void onCollectionCardSelected(CardView card) {
         try {
-            game.getPlayer().addCard(inventoryIndex, card.getCard());
-            inventoryCards.add(inventoryIndex,card.getCard());
-            inventoryIndex++;
+            game.addCardInPlayer(card.getCard());
             loadInventory();
             System.out.println("Added Card " + card.getCard().getName());
         } catch (ModelException e) {
@@ -144,12 +129,23 @@ public class CollectionController {
 
     public void onInventoryCardSelected(Card card) {
         try{
-            inventoryIndex = game.getPlayer().removeCard(card.getId());
-            inventoryCards.remove(inventoryIndex);
+            game.removeCardInPlayer(card);
+            System.out.println(card.getName() + " got removed");
             loadInventory();
-            System.out.println("Removed Card " + card.getName());
         } catch (ModelException e){
             System.out.println("Cannot remove card: " + e.getMessage());
+        }
+    }
+
+
+    private void loadCardViews (){
+        System.out.println("LOADING ALL CARDVIEWS");
+        Set<Card> collection = game.getCollection().getAvailableCards();
+        for (Card card : collection ){
+            if (!collectionCardViews.containsKey(card.getId())) {
+                System.out.println("Card : " + card.getId() + " | name : " + card.getName() + " is getting added");
+                collectionCardViews.put(card.getId(), new CardView(card, this, CardContext.COLLECTION));
+            }
         }
     }
 }

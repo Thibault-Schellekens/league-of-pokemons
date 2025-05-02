@@ -1,6 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class Player extends CombatEntity {
         return id;
     }
 
-    public void addCard(int index, Card card) {
+    public void addCard(Card card) {
         if (inventory.size() == 3){
             throw new ModelException("You already have 3 cards sin inventory");
         }
@@ -43,15 +44,12 @@ public class Player extends CombatEntity {
         else if (inventory.contains(card)){
             throw new ModelException("Can't have duplicates in inventory");
         }
-        inventory.add(index, card);
+        inventory.add(card);
 
     }
 
-    public int removeCard(String id) {
-        Card toRemove = inventory.stream().filter(c -> c.getId().equals(id)).findFirst().orElseThrow(() -> new ModelException("There's no card with id: " + id));
-        int pos = inventory.indexOf(toRemove);
-        inventory.remove(toRemove);
-        return pos;
+    public void removeCard(Card card) {
+        inventory.remove(card);
     }
 
     public boolean selectTeam() {
@@ -68,6 +66,10 @@ public class Player extends CombatEntity {
 
     public int getInventorySize(){
         return inventory.size();
+    }
+
+    public List<Card> getInventory() {
+        return Collections.unmodifiableList(inventory);
     }
 
     @Override
