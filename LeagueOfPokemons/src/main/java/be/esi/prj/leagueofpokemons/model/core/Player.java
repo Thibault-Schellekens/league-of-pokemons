@@ -1,6 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,19 +27,18 @@ public class Player extends CombatEntity {
     public Player(){
         this(0, "Player");
     }
+
     public void loadPlayerInventory(List<Card> inventory){
         this.inventory = inventory;
     }
 
-    public String getName(){
-        return name;
-    }
     public Card getSlot(int index) {
         if (index >= 3 || index < 0){
             throw new IndexOutOfBoundsException("out of bounds broski");
         }
         return inventory.get(index);
     }
+
     public int getId(){
         return id;
     }
@@ -58,6 +58,15 @@ public class Player extends CombatEntity {
     public void removeCard(Card card) {
         inventory.remove(card);
     }
+
+    public int getInventorySize(){
+        return inventory.size();
+    }
+
+    public List<Card> getInventory() {
+        return Collections.unmodifiableList(inventory);
+    }
+
 
     public boolean selectTeam() {
         if (inventory.size() < 3){
