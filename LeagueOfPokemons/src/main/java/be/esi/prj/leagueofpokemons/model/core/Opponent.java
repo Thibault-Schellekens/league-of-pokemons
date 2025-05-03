@@ -1,55 +1,79 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Opponent extends CombatEntity {
     private int difficulty;
+    private TeamBuilder teamBuilder;
 
-//    public Opponent(int id, String name, int difficulty) {
-//        super(id, name, new Team());
-//    }
-
-    public Opponent(String name) {
-        this.name = name;
+    public Opponent(String name, int difficulty) {
+        super(name);
+        this.difficulty = difficulty;
+        this.teamBuilder = new TeamBuilder();
     }
 
     public Opponent() {
-        this("Opponent");
-    }
-
-    public void createTeam() {
-        team = new Team();
-        team.addPokemon(new Pokemon(new Card("swsh1-31", "Scorbunny", 70, "https://assets.tcgdex.net/en/swsh/swsh1/31/high.png", Type.FIRE)));
-        team.addPokemon(new Pokemon(new Card("swsh3-94", "Hippowdon", 150, "https://assets.tcgdex.net/en/swsh/swsh3/94/high.png", Type.FIGHTING)));
-        activePokemon = team.getPokemon(0);
+        this("Opponent", 0);
     }
 
     @Override
-    public AttackResult performAction(ActionType actionType, CombatEntity enemy) {
-        AttackResult attackResult = new AttackResult(0);
-        switch (actionType) {
-            case SWAP -> {
-
-            }
-            case BASIC_ATTACK, SPECIAL_ATTACK -> {
-                boolean isSpecial = actionType == ActionType.SPECIAL_ATTACK;
-                attackResult = activePokemon.attack(isSpecial, enemy.getActivePokemon());
-            }
-        }
-
-        return attackResult;
+    public void selectTeam(Tier maxTier) {
+        team = teamBuilder.buildTeam(difficulty, maxTier);
+        activePokemon = team.getPokemon(0);
     }
 
-    public ActionType think() {
+    public ActionType think(Pokemon enemyPokemon) {
         if (activePokemon.isDefeated()) {
             return ActionType.SWAP;
         }
+        Type activeType = activePokemon.getType();
+        Type enemyType = enemyPokemon.getType();
+        if (activeType.isWeakAgainst(enemyType)) {
+            for (Pokemon pokemon : getNonActivePokemons()) {
+                if (pokemon.getType().isEffectiveAgainst(enemyType)) {
+                    return ActionType.SWAP;
+                }
+            }
+        }
+
+        if (!activeType.isWeakAgainst(enemyType) && activePokemon.getRemainingUse(true) > 0) {
+            return ActionType.SPECIAL_ATTACK;
+        }
+
         return ActionType.BASIC_ATTACK;
     }
 
-    public Pokemon getNextPokemon() {
-        if (activePokemon == team.getPokemon(0)) {
-            return team.getPokemon(1);
-        } else {
-            return team.getPokemon(0);
+    public Pokemon getNextPokemon(Pokemon enemyPokemon) {
+        Type enemyType = enemyPokemon.getType();
+        Pokemon fallback = null;
+
+        for (Pokemon pokemon : getNonActivePokemons()) {
+            if (pokemon.getType().isEffectiveAgainst(enemyType)) {
+                return pokemon;
+            }
+
+            if (!pokemon.getType().isWeakAgainst(enemyType)) {
+                fallback = pokemon;
+            }
+
+            if (fallback == null) {
+                fallback = pokemon;
+            }
+
         }
+
+        return fallback;
+    }
+
+    private List<Pokemon> getNonActivePokemons() {
+        List<Pokemon> pokemons = new ArrayList<>();
+        for (int i = 0; i < team.getTeamSize(); i++) {
+            Pokemon pokemon = team.getPokemon(i);
+            if (pokemon != activePokemon && !pokemon.isDefeated()) {
+                pokemons.add(pokemon);
+            }
+        }
+        return pokemons;
     }
 }

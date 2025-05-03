@@ -97,10 +97,9 @@ public class Battle {
                 && attacker.isActivePokemonDead()) {
             throw new ModelException("You can not attack with a dead pokemon!");
         }
-
-        AttackResult result = attacker.performAction(actionType, defender);
-        System.out.println(result.message());
-        return new TurnResult(attacker, defender, defender.getActivePokemon().getCurrentHP(), defender.isActivePokemonDead());
+        boolean special = actionType == ActionType.SPECIAL_ATTACK;
+        AttackResult result = attacker.performAttack(special, defender);
+        return new TurnResult(attacker, defender, defender.getActivePokemon().getCurrentHP(), defender.isActivePokemonDead(), result.effectType());
     }
 
     public boolean isOver() {

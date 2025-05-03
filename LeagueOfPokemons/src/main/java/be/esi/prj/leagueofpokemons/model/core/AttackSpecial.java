@@ -26,7 +26,6 @@ public class AttackSpecial extends Attack {
     public void applyEffect(Pokemon attacker, Pokemon defender) {
         effect = new Effect(type, tier);
         Effect.EffectType effectType = effect.getEffectType();
-        System.out.println("Applying effect: " + effectType);
         switch (effectType) {
             case DODGE, DRAIN, CRIT -> attacker.setCurrentEffect(effect);
             case BURN, PARALYZE -> defender.setCurrentEffect(effect);

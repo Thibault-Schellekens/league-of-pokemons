@@ -5,11 +5,13 @@ import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
 import javafx.fxml.FXML;
 
-public class MainMenuController {
+public class MainMenuController implements ControllerFXML{
     @FXML
     private SettingsController settingsMenuController;
     GameManager gameManager;
-    public void initialize() {
+
+    @Override
+    public void init() {
         System.out.println("Initializing MainMenu Controller");
     }
 

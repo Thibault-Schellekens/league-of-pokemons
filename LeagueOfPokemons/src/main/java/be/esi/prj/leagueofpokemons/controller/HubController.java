@@ -1,15 +1,28 @@
 package be.esi.prj.leagueofpokemons.controller;
 
+import be.esi.prj.leagueofpokemons.model.core.Game;
+import be.esi.prj.leagueofpokemons.model.core.ModelException;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
 import javafx.fxml.FXML;
+import javafx.scene.text.Text;
 
-public class HubController {
+public class HubController implements ControllerFXML {
     @FXML
     private SettingsController settingsMenuController;
+    @FXML
+    private ErrorController errorPanelController;
 
-    public void initialize() {
+    @FXML
+    private Text stageText;
+
+    private Game game;
+
+    @Override
+    public void init() {
         System.out.println("Initializing Hub Controller");
+        game = Game.getInstance();
+        stageText.setText("Lvl. " + game.getCurrentStage());
     }
 
     public void openScanner() {
@@ -23,8 +36,13 @@ public class HubController {
     }
 
     public void openBattle() {
-        System.out.println("Opening Battle");
-        SceneManager.switchScene(SceneView.BATTLE);
+        try {
+            System.out.println("Opening Battle");
+            SceneManager.switchScene(SceneView.BATTLE);
+        } catch (ModelException e) {
+            System.out.println(e.getMessage());
+            errorPanelController.displayError(e.getMessage());
+        }
     }
 
     public void openSettings() {

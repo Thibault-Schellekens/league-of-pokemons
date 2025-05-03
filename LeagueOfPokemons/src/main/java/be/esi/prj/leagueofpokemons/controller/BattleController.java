@@ -5,7 +5,6 @@ import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.ImageProcessor;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -19,7 +18,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,7 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class BattleController implements PropertyChangeListener {
+public class BattleController implements ControllerFXML, PropertyChangeListener {
 
     private Game game;
     private Battle battle;
@@ -87,11 +85,8 @@ public class BattleController implements PropertyChangeListener {
     private Pane battleOverPane;
 
 
-    // Might encapsulate into its own FXML + Controller
     @FXML
-    private Pane errorPane;
-    @FXML
-    private Label errorLabel;
+    private ErrorController errorPanelController;
 
     // Might encapsulate into its own FXML + Controller
     @FXML
@@ -107,8 +102,8 @@ public class BattleController implements PropertyChangeListener {
     @FXML
     private Circle opponentSlot3Indicator;
 
-
-    public void initialize() {
+    @Override
+    public void init() {
         System.out.println("Battle Controller Initialized");
         game = Game.getInstance();
         battle = game.startBattle();
@@ -204,12 +199,10 @@ public class BattleController implements PropertyChangeListener {
     }
 
     public void normalAttack() {
-        System.out.println("Normal attack");
         playTurnHandler(ActionType.BASIC_ATTACK);
     }
 
     public void specialAttack() {
-        System.out.println("Special attack");
         playTurnHandler(ActionType.SPECIAL_ATTACK);
     }
 
@@ -221,6 +214,7 @@ public class BattleController implements PropertyChangeListener {
 
     public void backToHub() {
         battle.removePropertyChangeListener(this);
+        game.nextStage();
         SceneManager.switchScene(SceneView.HUB);
     }
 
@@ -268,10 +262,11 @@ public class BattleController implements PropertyChangeListener {
     }
 
     public void handleOpponentTurn() {
-        ActionType action = opponent.think();
+        ActionType action = opponent.think(player.getActivePokemon());
+        System.out.println("Opponent choses " + action);
         switch (action) {
             case SWAP -> {
-                Pokemon nextPokemon = opponent.getNextPokemon();
+                Pokemon nextPokemon = opponent.getNextPokemon(player.getActivePokemon());
                 swapHandler(nextPokemon);
             }
             case BASIC_ATTACK, SPECIAL_ATTACK -> playTurnHandler(action);
@@ -282,7 +277,7 @@ public class BattleController implements PropertyChangeListener {
         try {
             battle.playTurn(action);
         } catch (ModelException e) {
-            displayError(e.getMessage());
+            errorPanelController.displayError(e.getMessage());
         }
     }
 
@@ -290,7 +285,7 @@ public class BattleController implements PropertyChangeListener {
         try {
             battle.swap(nextPokemon);
         } catch (ModelException e) {
-            displayError(e.getMessage());
+            errorPanelController.displayError(e.getMessage());
         }
     }
 
@@ -353,17 +348,9 @@ public class BattleController implements PropertyChangeListener {
 //            playerPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
             BattleAnimation.playDamageAnimation(playerPokemonImage, playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.defenderHP());
         }
+
+        System.out.println(turnResultEvent.effectType());
     }
 
-    private void displayError(String message) {
-        errorPane.setVisible(true);
-        errorLabel.setText(message);
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(5));
-        pause.setOnFinished(e -> {
-            errorPane.setVisible(false);
-            errorLabel.setText("");
-        });
-        pause.play();
-    }
 }

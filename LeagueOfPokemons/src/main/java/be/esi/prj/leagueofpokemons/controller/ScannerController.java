@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ScannerController {
+public class ScannerController implements ControllerFXML {
     private final AudioManager audioManager;
     private final OCRService ocrService;
     private final PokeApiService pokeApiService;
@@ -58,7 +58,6 @@ public class ScannerController {
     private Text failedText;
 
     private double lineStartY;
-    
 
     public ScannerController() {
         ocrService = new OCRService();
@@ -66,7 +65,8 @@ public class ScannerController {
         audioManager = AudioManager.getInstance();
     }
 
-    public void initialize() {
+    @Override
+    public void init() {
         System.out.println("Initializing Scanner");
         lineStartY = lineScanner.getLayoutY();
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);

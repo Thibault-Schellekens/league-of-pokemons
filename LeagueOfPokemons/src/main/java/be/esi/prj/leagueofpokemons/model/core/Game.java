@@ -1,9 +1,9 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import javafx.beans.property.IntegerProperty;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class Game {
     private static Game instance;
@@ -39,9 +39,11 @@ public class Game {
     }
 
     private void buildOpponents() {
-        Opponent first = new Opponent();
-        first.createTeam();
-        opponents.add(first);
+        for (int i = 0; i < 5; i++) {
+            Opponent opponent = new Opponent("Opponent " + (i + 1), i);
+            opponent.selectTeam(Tier.values()[i]);
+            opponents.add(opponent);
+        }
     }
 
     public void loadGame(int gameId, Player newPlayer, Collection newCollection, int currentStage) {
@@ -52,9 +54,15 @@ public class Game {
     }
 
     public void nextStage() {
+        if (!currentBattle.isOver()) {
+            throw new ModelException("Current Battle must be over!");
+        }
+
+        currentStage++;
     }
 
     public Battle startBattle() {
+        player.selectTeam(Tier.values()[currentStage]);
         currentBattle = new Battle(player, opponents.get(currentStage));
 
         return currentBattle;

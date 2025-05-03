@@ -14,8 +14,17 @@ class BattleTest {
     @BeforeEach
     void setUp() {
         player = new Player();
+        Card card1 = new Card("test1", "test1", 100, "url", Type.FIRE);
+        Card card2 = new Card("test2", "test2", 100, "url", Type.FIRE);
+        Card card3 = new Card("test3", "test3", 100, "url", Type.FIRE);
+
+        player.addCard(card1);
+        player.addCard(card2);
+        player.addCard(card3);
+        player.selectTeam(Tier.TIER_V);
+
         opponent = new Opponent();
-        opponent.createTeam();
+        opponent.selectTeam(Tier.TIER_V);
         battle = new Battle(player, opponent);
     }
 

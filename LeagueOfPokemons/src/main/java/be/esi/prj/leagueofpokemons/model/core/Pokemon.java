@@ -50,6 +50,10 @@ public class Pokemon {
         return special ? attackSpecial.remainingUseProperty() : attackBasic.remainingUseProperty();
     }
 
+    public int getRemainingUse(boolean special) {
+        return special ? attackSpecial.remainingUseProperty().get() : attackBasic.remainingUseProperty().get();
+    }
+
     public boolean hasEffect(Effect.EffectType effectType) {
         return hasAnyEffect() &&
                 currentEffect.getEffectType() == effectType;
@@ -72,6 +76,7 @@ public class Pokemon {
             consumeEffect();
         }
 
+        Effect.EffectType effectType = null;
         String message = "";
         int damage = attack.use(defender.getType());
 
@@ -80,6 +85,7 @@ public class Pokemon {
             if (chance < this.paralyze) {
                 damage = 0;
                 message  = "Attack failed due to paralysis!";
+                effectType = Effect.EffectType.PARALYZE;
             }
             consumeEffect();
         }
@@ -94,6 +100,7 @@ public class Pokemon {
             if (chance < defender.dodge) {
                 damage = 0;
                 message = "Attack dodged!";
+                effectType = Effect.EffectType.DODGE;
             }
         }
 
@@ -101,6 +108,7 @@ public class Pokemon {
             if (chance < this.crit) {
                 damage = (int) (damage * 1.5);
                 message = "Crit attack!";
+                effectType = Effect.EffectType.CRIT;
             }
             consumeEffect();
         }
@@ -108,6 +116,7 @@ public class Pokemon {
         if (defender.hasEffect(Effect.EffectType.BURN)) {
             damage += defender.burnDamage;
             message = "Burn applied!";
+            effectType = Effect.EffectType.BURN;
             defender.consumeEffect();
         }
 
@@ -117,10 +126,11 @@ public class Pokemon {
             int healAmount = drainHeal;
             heal(healAmount);
             message = "Draining!";
+            effectType = Effect.EffectType.DRAIN;
             consumeEffect();
         }
 
-        return new AttackResult(damage, message);
+        return new AttackResult(damage, effectType ,message);
     }
 
     public boolean applyEffect(Effect effect) {
@@ -228,7 +238,7 @@ public class Pokemon {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Pokemon pokemon = (Pokemon) o;
-        return currentHP == pokemon.currentHP && Objects.equals(card, pokemon.card) && Objects.equals(attackBasic, pokemon.attackBasic) && Objects.equals(attackSpecial, pokemon.attackSpecial) && Objects.equals(currentEffect, pokemon.currentEffect);
+        return currentHP == pokemon.currentHP && Objects.equals(card, pokemon.card);
     }
 
     @Override
@@ -236,4 +246,20 @@ public class Pokemon {
         return Objects.hash(card, currentHP, attackBasic, attackSpecial, currentEffect);
     }
 
+    @Override
+    public String toString() {
+        return "Pokemon{" +
+                "card=" + card +
+                ", currentHP=" + currentHP +
+                ", attackBasic=" + attackBasic +
+                ", attackSpecial=" + attackSpecial +
+                ", currentEffect=" + currentEffect +
+                ", dodge=" + dodge +
+                ", paralyze=" + paralyze +
+                ", crit=" + crit +
+                ", burnDamage=" + burnDamage +
+                ", drainHeal=" + drainHeal +
+                ", defeated=" + defeated +
+                '}';
+    }
 }

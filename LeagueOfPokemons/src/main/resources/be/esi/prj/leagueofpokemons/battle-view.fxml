@@ -343,18 +343,7 @@
             <Font size="20.0" />
         </font>
     </Text>
-   <Pane fx:id="errorPane" layoutX="792.0" layoutY="406.0" prefHeight="134.0" prefWidth="255.0" visible="false">
-      <children>
-         <ImageView fitHeight="134.0" fitWidth="286.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-               <Image url="@pics/common/betterBoard.png" />
-            </image>
-         </ImageView>
-         <HBox alignment="CENTER" layoutX="20.0" layoutY="36.0" prefHeight="51.0" prefWidth="211.0">
-            <children>
-               <Label fx:id="errorLabel" styleClass="text-rog" text="error" textAlignment="CENTER" textFill="#a41d1d" wrapText="true" />
-            </children>
-         </HBox>
-      </children>
-   </Pane>
+    <Pane layoutX="792.0" layoutY="406.0">
+        <fx:include source="include/error-component.fxml" fx:id="errorPanel"/>
+    </Pane>
 </AnchorPane>

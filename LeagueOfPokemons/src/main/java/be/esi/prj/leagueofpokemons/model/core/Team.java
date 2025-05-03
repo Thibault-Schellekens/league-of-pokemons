@@ -8,10 +8,10 @@ public class Team {
     private int maxSize;
     private Tier maxTier;
 
-    public Team(){
+    public Team(Tier maxTier) {
         pokemons = new ArrayList<>();
         this.maxSize = 3;
-        this.maxTier = Tier.TIER_III;
+        this.maxTier = maxTier;
     }
 
     public Pokemon getPokemon(int index) {
@@ -20,8 +20,6 @@ public class Team {
         }
         return pokemons.get(index);
     }
-
-
 
     public int getMaxSize() {
         return maxSize;
@@ -62,5 +60,9 @@ public class Team {
 
     public boolean isDefeated() {
         return pokemons.stream().allMatch(Pokemon::isDefeated);
+    }
+
+    public int getTeamSize() {
+        return pokemons.size();
     }
 }
