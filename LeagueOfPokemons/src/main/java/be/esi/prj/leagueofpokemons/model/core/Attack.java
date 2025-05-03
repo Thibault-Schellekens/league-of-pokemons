@@ -1,22 +1,46 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
-public class Attack {
-    private Type type;
-    private int damage;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
-    // Might be added later
-    private Effect effect;
+public abstract class Attack {
+    protected int damage;
+    protected Tier tier;
+    protected IntegerProperty remainingUse = new SimpleIntegerProperty();
 
-    public Attack(Type type, int damage) {
-        this.type = type;
-        this.damage = damage;
+    public Attack(Tier tier) {
+        this.tier = tier;
+        this.damage = calculateBaseDamage(tier);
     }
 
-    public int calculateDamage(Type enemyType) {
-        return 0;
+    private int calculateBaseDamage(Tier tier) {
+        return switch (tier) {
+            case TIER_I -> 30;
+            case TIER_II -> 50;
+            case TIER_III -> 70;
+            case TIER_IV -> 90;
+            case TIER_V -> 110;
+        };
     }
 
-    public void applyEffect(Pokemon toApply) {
+    public int use(Type enemyType) {
+        if (remainingUse.get() <= 0) {
+            throw new ModelException("You can not perform this attack anymore!");
+        }
+        remainingUse.set(remainingUse.get() - 1);
+        return calculateDamage(enemyType);
+    }
 
+    protected abstract int calculateDamage(Type enemyType);
+
+    // Reduces chance to apply effect if defenderType is weak
+    public boolean hasEffect(boolean special, Type defenderType) {
+        return special;
+    }
+
+    public abstract void applyEffect(Pokemon attacker, Pokemon defender);
+
+    public IntegerProperty remainingUseProperty() {
+        return remainingUse;
     }
 }

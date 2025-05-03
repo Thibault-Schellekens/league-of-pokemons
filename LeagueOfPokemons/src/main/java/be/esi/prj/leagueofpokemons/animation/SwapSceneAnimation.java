@@ -20,7 +20,7 @@ import java.util.Random;
 public class SwapSceneAnimation {
     private static final int WIDTH = 1061;
     private static final int HEIGHT = 660;
-    private static final int LEAF_COUNT = 400;
+    private static final int LEAF_COUNT = 300;
     private static final Color[] LEAF_COLORS = {
             // Green
             Color.web("#4CAF50"), Color.web("#388E3C"), Color.web("#2E7D32"), Color.web("#1B5E20"),
@@ -95,7 +95,7 @@ public class SwapSceneAnimation {
 
         rightTransition.setOnFinished(event -> downTransitionRight.play());
 
-        downTransitionLeft.setOnFinished(_ -> {
+        downTransitionLeft.setOnFinished(e -> {
             nextRoot.getChildren().removeAll(leftCurtain, rightCurtain);
         });
     }

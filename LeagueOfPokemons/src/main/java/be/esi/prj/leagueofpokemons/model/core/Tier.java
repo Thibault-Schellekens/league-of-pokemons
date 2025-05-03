@@ -6,4 +6,9 @@ public enum Tier {
     TIER_III,
     TIER_IV,
     TIER_V,
+    ;
+
+    public boolean isGreater(Tier tier) {
+        return this.ordinal() > tier.ordinal();
+    }
 }

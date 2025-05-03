@@ -5,5 +5,33 @@ public enum Type {
     WATER,
     GRASS,
     LIGHTNING,
-    FIGHTING
+    FIGHTING;
+
+    private Type effectiveAgainst;
+    private Type weakAgainst;
+
+    static {
+        FIRE.effectiveAgainst = Type.GRASS;
+        FIRE.weakAgainst = Type.WATER;
+
+        WATER.effectiveAgainst = Type.FIRE;
+        WATER.weakAgainst = Type.LIGHTNING;
+
+        GRASS.effectiveAgainst = Type.FIGHTING;
+        GRASS.weakAgainst = Type.FIRE;
+
+        LIGHTNING.effectiveAgainst = Type.WATER;
+        LIGHTNING.weakAgainst = Type.FIGHTING;
+
+        FIGHTING.effectiveAgainst = Type.LIGHTNING;
+        FIGHTING.weakAgainst = Type.GRASS;
+    }
+
+    public boolean isEffectiveAgainst(Type type) {
+        return this.effectiveAgainst == type;
+    }
+
+    public boolean isWeakAgainst(Type type) {
+        return this.weakAgainst == type;
+    }
 }

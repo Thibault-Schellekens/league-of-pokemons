@@ -1,18 +1,48 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 // Singleton Pattern ?
 public class Collection {
-    private Set<Card> availableCards;
-    private Tier currentTier;
+    private int id;
 
-    public boolean addCard(Card card) {
-        return false;
+    private Set<Card> availableCards;
+    private Set<Card> importedCards;
+
+    public Collection(int gameID){
+        id = gameID;
+        availableCards = new HashSet<>();
+        importedCards = new HashSet<>();
+
     }
 
-    public boolean getCard(Card card) {
-        return false;
+    public void addCard(Card card) {
+        availableCards.add(card);
+        importedCards.add(card);
+    }
+
+    public void loadCards(Set<Card> baseSetCards, Set<Card> loadedCards){
+        availableCards = baseSetCards;
+        if (!Objects.isNull(loadedCards)) {
+            availableCards.addAll(loadedCards);
+        }
+    }
+
+
+    //returns all cards
+    public Set<Card> getAvailableCards(){
+        return availableCards;
+    }
+
+    //returns loadedCards
+    public Set<Card> getImportedCards() {
+        return importedCards;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void updateCollection() {

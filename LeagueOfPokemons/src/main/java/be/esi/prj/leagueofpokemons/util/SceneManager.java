@@ -19,6 +19,8 @@ public class SceneManager {
 
     private static SettingsManager settingsManager;
 
+    private SceneManager() {}
+
     private static void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.setResizable(false);
@@ -45,7 +47,7 @@ public class SceneManager {
                 Pane nextRoot = fxmlLoader.load();
                 Pane mainRoot = new Pane();
                 Node previousRoot = scene.getRoot();
-
+                
                 SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot, settingsManager.getAnimationSpeed());
             }
             primaryStage.show();

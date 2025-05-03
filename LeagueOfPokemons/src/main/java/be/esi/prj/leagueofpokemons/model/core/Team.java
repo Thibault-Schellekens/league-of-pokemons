@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Team {
@@ -7,19 +8,59 @@ public class Team {
     private int maxSize;
     private Tier maxTier;
 
-    public boolean addPokemon(Pokemon pokemon) {
-        return false;
+    public Team(){
+        pokemons = new ArrayList<>();
+        this.maxSize = 3;
+        this.maxTier = Tier.TIER_III;
+    }
+
+    public Pokemon getPokemon(int index) {
+        if (index < 0 || index >= pokemons.size()) {
+            return null;
+        }
+        return pokemons.get(index);
+    }
+
+
+
+    public int getMaxSize() {
+        return maxSize;
+    }
+
+    public void addPokemon(Pokemon pokemon) {
+        if (!canAddPokemon(pokemon)) {
+            throw new ModelException("Can not add this pokemon: " + pokemon);
+        }
+        pokemons.add(pokemon);
+    }
+
+    public void setPokemon(int index, Pokemon pokemon) {
+        pokemons.set(index, pokemon);
+    }
+
+    public int indexOf(Pokemon pokemon) {
+        return pokemons.indexOf(pokemon);
     }
 
     public boolean removePokemon(Pokemon pokemon) {
         return false;
     }
 
-    public boolean canAddPokemon(Pokemon pokemon) {
-        return false;
+    private boolean canAddPokemon(Pokemon pokemon) {
+        if (pokemons.size() >= maxSize) {
+            return false;
+        }
+        if (pokemons.contains(pokemon)) {
+            return false;
+        }
+        if (pokemon.getTier().isGreater(maxTier)) {
+            return false;
+        }
+
+        return true;
     }
 
     public boolean isDefeated() {
-        return false;
+        return pokemons.stream().allMatch(Pokemon::isDefeated);
     }
 }
