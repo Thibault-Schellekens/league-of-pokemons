@@ -8,10 +8,9 @@ import javafx.fxml.FXML;
 public class MainMenuController {
     @FXML
     private SettingsController settingsMenuController;
-
+    GameManager gameManager;
     public void initialize() {
         System.out.println("Initializing MainMenu Controller");
-        System.out.println("Initialized with player id : ");
     }
 
     public void openSettings() {
@@ -33,6 +32,7 @@ public class MainMenuController {
 
     public void save() {
         GameManager.getInstance().saveGame();
+
     }
 
     public void load() {

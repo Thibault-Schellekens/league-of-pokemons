@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface Repository<K, T> {
     Optional<T> findById(K id);
-    void save(T entity);
+    K save(T entity);
 
     Set<T> findAll();
     void delete(T entity);

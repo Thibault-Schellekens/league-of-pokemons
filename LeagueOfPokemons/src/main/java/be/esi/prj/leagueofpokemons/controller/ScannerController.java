@@ -3,6 +3,7 @@ package be.esi.prj.leagueofpokemons.controller;
 import be.esi.prj.leagueofpokemons.animation.ScannerAnimation;
 import be.esi.prj.leagueofpokemons.model.api.PokeApiService;
 import be.esi.prj.leagueofpokemons.model.core.Card;
+import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.ocr.CardScanResult;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
@@ -89,9 +90,8 @@ public class ScannerController {
     public void addToCollection() {
         System.out.println("Adding to collection");
         if (scannedCard != null) {
-            // Add to database
-
             audioManager.playSound(AudioSound.SCANNER_ADD);
+            Game.getInstance().getCollection().addCard(scannedCard);
         }
         reset();
     }

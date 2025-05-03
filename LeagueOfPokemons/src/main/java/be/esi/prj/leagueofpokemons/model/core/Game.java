@@ -1,6 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +41,6 @@ public class Game {
     private void buildOpponents() {
         Opponent first = new Opponent();
         first.createTeam();
-
         opponents.add(first);
     }
 
@@ -54,11 +54,11 @@ public class Game {
     public void nextStage() {
     }
 
-    public Battle startBattle() {
-        currentBattle = new Battle(player, opponents.get(currentStage));
-
-        return currentBattle;
-    }
+//    public Battle startBattle() {
+//        currentBattle = new Battle(player, opponents.get(currentStage));
+//
+//        return currentBattle;
+//    }
 
     public GameResult endGame() {
         return null;
@@ -86,4 +86,20 @@ public class Game {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+        collection.setId(id);
+    }
+
+    public List<Card> getPlayerInventory(){
+        return player.getInventory();
+    }
+
+    public void removeCardInPlayer(Card card){
+        player.removeCard(card);
+    }
+
+    public void addCardInPlayer(Card card){
+        player.addCard(card);
+    }
 }

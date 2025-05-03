@@ -41,7 +41,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
         }
     }
     @Override
-    public void save(Collection collection) {
+    public Integer save(Collection collection) {
         String sql = "INSERT INTO Collection (colId, pokemonID) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Card card : collection.getImportedCards()) {
@@ -52,6 +52,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
         } catch (SQLException e) {
             throw new RepositoryException("Error saving collection", e);
         }
+        return collection.getId();
     }
 
 

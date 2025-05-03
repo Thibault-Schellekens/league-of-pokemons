@@ -26,7 +26,6 @@ public class Player extends CombatEntity {
     public Player(){
         this(0, "Player");
     }
-
     public void loadPlayerInventory(List<Card> inventory){
         this.inventory = inventory;
     }
@@ -34,19 +33,30 @@ public class Player extends CombatEntity {
     public String getName(){
         return name;
     }
-    public List<Card> getInventory() {
-        return inventory;
+    public Card getSlot(int index) {
+        if (index >= 3 || index < 0){
+            throw new IndexOutOfBoundsException("out of bounds broski");
+        }
+        return inventory.get(index);
     }
     public int getId(){
         return id;
     }
 
-    public boolean buyCard(Card card) {
-        return false;
+    public void addCard(Card card) {
+        if (inventory.size() == 3){
+            throw new ModelException("You already have 3 cards sin inventory");
+        }
+
+        else if (inventory.contains(card)){
+            throw new ModelException("Can't have duplicates in inventory");
+        }
+        inventory.add(card);
+
     }
 
-    public void sellCard(Card card) {
-
+    public void removeCard(Card card) {
+        inventory.remove(card);
     }
 
     public boolean selectTeam() {
@@ -60,6 +70,7 @@ public class Player extends CombatEntity {
         }
         return true;
     }
+
 
     @Override
     public AttackResult performAction(ActionType actionType, CombatEntity enemy) {
