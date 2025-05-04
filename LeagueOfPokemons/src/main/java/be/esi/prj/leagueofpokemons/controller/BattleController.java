@@ -110,6 +110,11 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     @FXML
     private Label effectLabel;
 
+    @FXML
+    private ImageView playerPokemonTypeImage;
+    @FXML
+    private ImageView opponentPokemonTypeImage;
+
     @Override
     public void init() {
         System.out.println("Battle Controller Initialized");
@@ -129,6 +134,17 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     private void updateRemainingUseLabel(Pokemon pokemon) {
         basicAttackRemainingUseLabel.textProperty().bind(pokemon.remainingUseProperty(false).asString());
         specialAttackRemainingUseLabel.textProperty().bind(pokemon.remainingUseProperty(true).asString());
+    }
+
+    private void updatePokemonTypeImage(Pokemon pokemon, boolean isPlayerPokemon) {
+        Type type = pokemon.getType();
+        String imageUrl = type.name() + "_type.png";
+        Image image = new Image(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/battle/" + imageUrl).toExternalForm());
+        if (isPlayerPokemon) {
+            playerPokemonTypeImage.setImage(image);
+        } else {
+            opponentPokemonTypeImage.setImage(image);
+        }
     }
 
     private void initPokemonIndicators() {
@@ -194,6 +210,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
             String imageUrl = pokemon.getImageUrl();
             Image pokemonImage = buildPokemonImage(imageUrl);
             Platform.runLater(() -> {
+                updatePokemonTypeImage(pokemon, isPlayerPokemon);
                 if (isPlayerPokemon) {
                     updateRemainingUseLabel(pokemon);
                     updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText, playerPokemonCurrentHPBar);
@@ -337,7 +354,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void handleSwapEvent(Pokemon newPokemon, Pokemon oldPokemon, boolean isPlayerSwap) {
         handlePokemonChangeEvent(newPokemon, isPlayerSwap);
-
+        updatePokemonTypeImage(newPokemon, isPlayerSwap);
         if (isPlayerSwap) {
             if (oldPokemon.equals(player.getSlot1Pokemon())) {
                 updateSlotPokemon(oldPokemon, 1);

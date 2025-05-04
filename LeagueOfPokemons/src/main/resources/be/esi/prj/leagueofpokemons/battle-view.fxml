@@ -260,6 +260,11 @@
                </VBox>
             </children>
          </Pane>
+         <Pane layoutX="66.0" layoutY="102.0" prefHeight="42.0" prefWidth="41.0">
+            <children>
+               <ImageView fx:id="playerPokemonTypeImage" fitHeight="48.0" fitWidth="47.0" layoutX="-1.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" />
+            </children>
+         </Pane>
         </children>
     </Pane>
     <Pane layoutX="496.0" layoutY="7.0" prefHeight="372.0" prefWidth="538.0">
@@ -337,6 +342,11 @@
                      </Line>
                   </children>
                </VBox>
+            </children>
+         </Pane>
+         <Pane layoutX="369.0" layoutY="141.0" prefHeight="42.0" prefWidth="41.0">
+            <children>
+               <ImageView fx:id="opponentPokemonTypeImage" fitHeight="48.0" fitWidth="47.0" layoutX="-3.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
             </children>
          </Pane>
         </children>

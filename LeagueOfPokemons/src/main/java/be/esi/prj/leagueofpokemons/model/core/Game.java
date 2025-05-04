@@ -12,8 +12,11 @@ public class Game {
     private Player player;
     private List<Opponent> opponents;
     private Collection collection;
-    private int currentStage;
     private Battle currentBattle;
+    private int currentStage;
+    private boolean gameOver;
+
+    private final int MAX_STAGE = 5;
 
     public static void initialize(int gameId, Player player, Collection collection) {
         if (instance != null) {
@@ -58,10 +61,19 @@ public class Game {
             throw new ModelException("Current Battle must be over!");
         }
 
-        currentStage++;
+        if (currentBattle.getWinner().equals(player.getName())) {
+            currentStage++;
+            if (currentStage >= MAX_STAGE) {
+                endGame();
+            }
+        }
+        currentBattle = null;
     }
 
     public Battle startBattle() {
+        if (gameOver) {
+            throw new ModelException("Game has already ended");
+        }
         player.selectTeam(Tier.values()[currentStage]);
         currentBattle = new Battle(player, opponents.get(currentStage));
 
@@ -69,11 +81,12 @@ public class Game {
     }
 
     public GameResult endGame() {
+        gameOver = true;
         return null;
     }
 
     public boolean isGameOver() {
-        return false;
+        return gameOver;
     }
 
 
