@@ -117,7 +117,7 @@ class PokemonTest {
 
             // Make dodge chance to 100%
             mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
-            AttackResult expected = new AttackResult(0, Effect.EffectType.DODGE, "Attack dodged!");
+            AttackResult expected = new AttackResult(0, Effect.EffectType.DODGE);
             AttackResult actual = defender.attack(false, attacker);
 
             System.out.println("Actual: " + actual);
@@ -197,7 +197,7 @@ class PokemonTest {
 
             // Applying crit effect
             mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
-            AttackResult expected = new AttackResult(45, Effect.EffectType.CRIT, "Crit attack!");
+            AttackResult expected = new AttackResult(45, Effect.EffectType.CRIT);
             AttackResult actual = attacker.attack(true, defender);
 
             System.out.println("Actual: " + actual);
@@ -264,7 +264,7 @@ class PokemonTest {
 
             // Make paralyzed chance to 100%
             mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
-            AttackResult expected = new AttackResult(0, Effect.EffectType.PARALYZE, "Attack failed due to paralysis!");
+            AttackResult expected = new AttackResult(0, Effect.EffectType.PARALYZE);
             AttackResult actual =  defender.attack(false, attacker);
 
             System.out.println("Actual: " + actual);
@@ -346,7 +346,7 @@ class PokemonTest {
             // Applying burn effect
             mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
             Effect burnEffect = new Effect(Type.FIRE, Tier.TIER_I);
-            AttackResult expected = new AttackResult(30 + burnEffect.getBurnDamage(), Effect.EffectType.BURN, "Burn applied!");
+            AttackResult expected = new AttackResult(30 + burnEffect.getBurnDamage(), Effect.EffectType.BURN);
             AttackResult actual = attacker.attack(true, defender);
 
             System.out.println("Actual: " + actual);
@@ -434,7 +434,7 @@ class PokemonTest {
             Pokemon defender = lightning;
 
             mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
-            AttackResult expected = new AttackResult(30, Effect.EffectType.DRAIN, "Draining!");
+            AttackResult expected = new AttackResult(30, Effect.EffectType.DRAIN);
             AttackResult actual = attacker.attack(true, defender);
 
             System.out.println("Actual: " + actual);
@@ -702,7 +702,7 @@ class PokemonTest {
 
             // Make the defender fails his attack
             mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
-            AttackResult expected = new AttackResult(0, Effect.EffectType.PARALYZE, "Attack failed due to paralysis!");
+            AttackResult expected = new AttackResult(0, Effect.EffectType.PARALYZE);
             AttackResult actual = defender.attack(true, attacker);
 
             System.out.println("Actual: " + actual);
@@ -710,7 +710,28 @@ class PokemonTest {
             assertEquals(expected, actual);
         }
 
-
-
     }
+
+    @Test
+    void testCanNotApplyEffectIfDodgedAttack() {
+        try (MockedStatic<RandomUtil> mocked = mockStatic(RandomUtil.class)) {
+            Pokemon attacker = water;
+            Pokemon defender = fighting;
+
+            // Applying dodge effect
+            mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
+            attacker.attack(true, defender);
+
+            // Trying to apply burn effect while defender is dodges
+            mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
+            AttackResult expected = new AttackResult(0, Effect.EffectType.DODGE);
+            AttackResult actual = defender.attack(true, attacker);
+
+            System.out.println("Actual: " + actual);
+            System.out.println("Expected: " + expected);
+            assertEquals(expected, actual);
+        }
+    }
+
+
 }

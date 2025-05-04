@@ -78,37 +78,33 @@ public class Pokemon {
         }
 
         Effect.EffectType effectType = null;
-        String message = "";
         int damage = attack.use(defender.getType());
 
         double chance = RandomUtil.nextDouble();
         if (hasEffect(Effect.EffectType.PARALYZE)) {
             if (chance < this.paralyze) {
                 damage = 0;
-                message  = "Attack failed due to paralysis!";
                 effectType = Effect.EffectType.PARALYZE;
             }
             consumeEffect();
         }
 
-        // We have to check if damage is > 0, in case the attacker attack failed due to paralyzing
+        if (defender.hasEffect(Effect.EffectType.DODGE)) {
+            if (chance < defender.dodge) {
+                damage = 0;
+                effectType = Effect.EffectType.DODGE;
+            }
+        }
+
+        // We have to check if damage is > 0, in case the attacker attack failed due to paralyzing or dodging
         // If the attack fails, then no effect should be applied
         if (attack.hasEffect(special, defender.getType()) && damage > 0) {
             attack.applyEffect(this, defender);
         }
 
-        if (defender.hasEffect(Effect.EffectType.DODGE)) {
-            if (chance < defender.dodge) {
-                damage = 0;
-                message = "Attack dodged!";
-                effectType = Effect.EffectType.DODGE;
-            }
-        }
-
         if (hasEffect(Effect.EffectType.CRIT)) {
             if (chance < this.crit) {
                 damage = (int) (damage * 1.5);
-                message = "Crit attack!";
                 effectType = Effect.EffectType.CRIT;
             }
             consumeEffect();
@@ -116,7 +112,6 @@ public class Pokemon {
 
         if (defender.hasEffect(Effect.EffectType.BURN)) {
             damage += defender.burnDamage;
-            message = "Burn applied!";
             effectType = Effect.EffectType.BURN;
             defender.consumeEffect();
         }
@@ -126,12 +121,11 @@ public class Pokemon {
         if (hasEffect(Effect.EffectType.DRAIN)) {
             int healAmount = drainHeal;
             heal(healAmount);
-            message = "Draining!";
             effectType = Effect.EffectType.DRAIN;
             consumeEffect();
         }
 
-        return new AttackResult(damage, effectType ,message);
+        return new AttackResult(damage, effectType);
     }
 
     public boolean applyEffect(Effect effect) {

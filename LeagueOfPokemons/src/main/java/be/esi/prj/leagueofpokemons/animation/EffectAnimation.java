@@ -59,6 +59,7 @@ public class EffectAnimation {
         double centerY = pokemonImage.getLayoutY() + pokemonImage.getFitHeight() / 2;
         double maxRadius = Math.max(pokemonImage.getFitWidth(), pokemonImage.getFitHeight()) / 2 + 10; // Slightly outside the pokemon
 
+
         for (Circle particle : particles) {
             // Assign a random starting angle for each particle (in radians)
             double startAngle = RANDOM.nextDouble() * 2 * Math.PI;
