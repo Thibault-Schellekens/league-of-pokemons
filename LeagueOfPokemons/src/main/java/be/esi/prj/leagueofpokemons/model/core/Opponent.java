@@ -31,7 +31,7 @@ public class Opponent extends CombatEntity {
         Type enemyType = enemyPokemon.getType();
         if (activeType.isWeakAgainst(enemyType)) {
             for (Pokemon pokemon : getNonActivePokemons()) {
-                if (pokemon.getType().isEffectiveAgainst(enemyType)) {
+                if (!pokemon.getType().isWeakAgainst(enemyType)) {
                     return ActionType.SWAP;
                 }
             }

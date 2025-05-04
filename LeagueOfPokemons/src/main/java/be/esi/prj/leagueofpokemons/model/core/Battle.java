@@ -99,7 +99,7 @@ public class Battle {
         }
         boolean special = actionType == ActionType.SPECIAL_ATTACK;
         AttackResult result = attacker.performAttack(special, defender);
-        return new TurnResult(attacker, defender, defender.getActivePokemon().getCurrentHP(), defender.isActivePokemonDead(), result.effectType());
+        return new TurnResult(attacker, defender, defender.getActivePokemonCurrentHP(), attacker.getActivePokemonCurrentHP(),defender.isActivePokemonDead(), result.effectType());
     }
 
     public boolean isOver() {

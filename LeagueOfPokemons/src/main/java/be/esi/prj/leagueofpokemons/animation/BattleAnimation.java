@@ -22,6 +22,13 @@ public class BattleAnimation {
         animateHPText(pokemonHPText, currentHP, newHP);
     }
 
+    public static void playRestoreHealthAnimation(ProgressBar pokemonHPBar, double newBarValue, Text pokemonHPText, int newHP) {
+        int currentHP = Integer.parseInt(pokemonHPText.getText());
+
+        animateHealthBarValue(pokemonHPBar, newBarValue);
+        animateHPText(pokemonHPText, currentHP, newHP);
+    }
+
     private static void playShakeAnimation(ImageView pokemonImage) {
         Timeline shakeTimeline = new Timeline();
 

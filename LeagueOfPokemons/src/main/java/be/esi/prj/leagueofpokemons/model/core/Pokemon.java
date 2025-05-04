@@ -70,6 +70,7 @@ public class Pokemon {
         if (defender.isDefeated()) {
             throw new ModelException("Can not attack a defeated pokemon!");
         }
+
         Attack attack = special ? attackSpecial : attackBasic;
 
         if (hasEffect(Effect.EffectType.DODGE)) {

@@ -1,10 +1,12 @@
 package be.esi.prj.leagueofpokemons.controller;
 
 import be.esi.prj.leagueofpokemons.animation.BattleAnimation;
+import be.esi.prj.leagueofpokemons.animation.EffectAnimation;
 import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.ImageProcessor;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -18,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -101,6 +104,11 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     private Circle opponentSlot2Indicator;
     @FXML
     private Circle opponentSlot3Indicator;
+
+    @FXML
+    private Pane effectPane;
+    @FXML
+    private Label effectLabel;
 
     @Override
     public void init() {
@@ -340,16 +348,64 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void handleAttackTurnEvent(TurnResult turnResultEvent) {
-        double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
-        if (turnResultEvent.attacker() == player) {
+        if (!(turnResultEvent.effectType() == Effect.EffectType.PARALYZE)) {
+            double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
+            if (turnResultEvent.attacker() == player) {
 //            opponentPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
-            BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
-        } else {
+                BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
+            } else {
 //            playerPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
-            BattleAnimation.playDamageAnimation(playerPokemonImage, playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.defenderHP());
+                BattleAnimation.playDamageAnimation(playerPokemonImage, playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.defenderHP());
+            }
+        }
+        if (turnResultEvent.effectType() == Effect.EffectType.DRAIN) {
+            double newHPBarValue = (double) turnResultEvent.attackerHP() / turnResultEvent.attacker().getActivePokemon().getMaxHP();
+            if (turnResultEvent.attacker() == player) {
+                BattleAnimation.playRestoreHealthAnimation(playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.attackerHP());
+            } else {
+                BattleAnimation.playRestoreHealthAnimation(opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.attackerHP());
+            }
         }
 
-        System.out.println(turnResultEvent.effectType());
+
+        handleEffectMessage(turnResultEvent);
+
+        Effect.EffectType effectType = turnResultEvent.effectType();
+        System.out.println(effectType);
+        if (effectType != null) {
+            handleEffectAnimation(effectType, turnResultEvent);
+        }
+    }
+
+    private void handleEffectAnimation(Effect.EffectType effectType, TurnResult turnResultEvent) {
+        Effect.EffectTarget effectTarget = effectType.getTarget();
+        ImageView targetImageView;
+
+        if (effectTarget == Effect.EffectTarget.DEFENDER) {
+            targetImageView = (turnResultEvent.attacker() == player) ? opponentPokemonImage : playerPokemonImage;
+        } else { // ATTACKER
+            targetImageView = (turnResultEvent.attacker() == player) ? playerPokemonImage : opponentPokemonImage;
+        }
+        Pane parentPane = (Pane) targetImageView.getParent();
+        EffectAnimation.playEffectAnimation(targetImageView, parentPane, effectType);
+    }
+
+    private void handleEffectMessage(TurnResult turnResultEvent) {
+        if (turnResultEvent.attacker().getActivePokemon().hasEffect(Effect.EffectType.DODGE)) {
+            effectPane.setVisible(true);
+            effectLabel.setText("dodge active on " + turnResultEvent.attacker().getActivePokemon().getName());
+        } else if (turnResultEvent.defender().getActivePokemon().hasEffect(Effect.EffectType.PARALYZE)) {
+            effectPane.setVisible(true);
+            effectLabel.setText("paralized active on " + turnResultEvent.defender().getActivePokemon().getName());
+        }
+
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(e -> {
+            effectPane.setVisible(false);
+            effectLabel.setText("");
+        });
+        pause.play();
     }
 
 

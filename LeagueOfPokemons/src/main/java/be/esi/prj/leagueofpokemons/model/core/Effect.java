@@ -21,6 +21,18 @@ public class Effect {
         EffectType(Type type) {
             this.type = type;
         }
+
+        public EffectTarget getTarget() {
+            return switch (this) {
+                case BURN, CRIT, DODGE -> EffectTarget.DEFENDER;
+                case DRAIN, PARALYZE -> EffectTarget.ATTACKER;
+            };
+        }
+    }
+
+    public enum EffectTarget {
+        ATTACKER,
+        DEFENDER;
     }
 
     public Effect(Type type, Tier tier) {

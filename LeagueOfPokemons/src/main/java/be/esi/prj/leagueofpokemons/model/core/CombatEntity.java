@@ -47,6 +47,10 @@ public abstract class CombatEntity {
         return team.isDefeated();
     }
 
+    public int getActivePokemonCurrentHP() {
+        return activePokemon.getCurrentHP();
+    }
+
     public String getCardUrl() {
         return activePokemon.getImageUrl();
     }

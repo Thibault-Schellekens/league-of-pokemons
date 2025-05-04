@@ -185,14 +185,18 @@
     </AnchorPane>
     <Pane layoutX="29.0" layoutY="141.0" prefHeight="358.0" prefWidth="466.0">
         <children>
-
-            <!--    Player's Pokémon-->
-            <ImageView fx:id="playerPokemonImage" fitHeight="150.0" fitWidth="200.0" layoutX="178.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@pics/common/emptyCard.png" />
-                <clip>
-                    <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
-                </clip>
-            </ImageView>
+         <Pane layoutX="178.0" layoutY="166.0" prefHeight="110.0" prefWidth="220.0">
+            <children>
+      
+                  <!--    Player's Pokémon-->
+                  <ImageView fx:id="playerPokemonImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@pics/common/emptyCard.png" />
+                      <clip>
+                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
+                      </clip>
+                  </ImageView>
+            </children>
+         </Pane>
             <Label fx:id="playerPokemonNameLabel" layoutX="251.0" layoutY="70.0" styleClass="text-rog" text="PLAYER" textFill="WHITE">
                 <font>
                     <Font size="24.0" />
@@ -260,13 +264,17 @@
     </Pane>
     <Pane layoutX="496.0" layoutY="7.0" prefHeight="372.0" prefWidth="538.0">
         <children>
-            <!--    Defender's Pokémon-->
-            <ImageView fx:id="opponentPokemonImage" fitHeight="150.0" fitWidth="200.0" layoutX="119.0" layoutY="199.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@pics/common/emptyCard.png" />
-                <clip>
-                    <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
-                </clip>
-            </ImageView>
+         <Pane layoutX="119.0" layoutY="199.0" prefHeight="110.0" prefWidth="189.0">
+            <children>
+                  <!--    Defender's Pokémon-->
+                  <ImageView fx:id="opponentPokemonImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@pics/common/emptyCard.png" />
+                      <clip>
+                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
+                      </clip>
+                  </ImageView>
+            </children>
+         </Pane>
 
             <!-- HP Bar -->
             <ProgressBar fx:id="opponentPokemonCurrentHPBar" layoutX="56.0" layoutY="150.0" prefHeight="25.0" prefWidth="300" progress="1.0" styleClass="enemy-hp-bar" />
@@ -344,6 +352,20 @@
         </font>
     </Text>
     <Pane layoutX="792.0" layoutY="406.0">
-        <fx:include source="include/error-component.fxml" fx:id="errorPanel"/>
+        <fx:include fx:id="errorPanel" source="include/error-component.fxml" />
+    </Pane>
+    <Pane fx:id="effectPane" layoutX="792.0" layoutY="406.0" visible="false">
+        <children>
+            <ImageView fitHeight="134.0" fitWidth="286.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@pics/common/betterBoard.png" />
+                </image>
+            </ImageView>
+            <HBox alignment="CENTER" layoutX="20.0" layoutY="36.0" prefHeight="51.0" prefWidth="211.0">
+                <children>
+                    <Label fx:id="effectLabel" styleClass="text-rog" text="effect" textAlignment="CENTER" textFill="#a41d1d" wrapText="true" />
+                </children>
+            </HBox>
+        </children>
     </Pane>
 </AnchorPane>
