@@ -39,8 +39,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @FXML
     private Label playerCurrentPokemonNameLabel;
-    @FXML
-    private Label opponentCurrentPokemonNameLabel;
+//    @FXML
+//    private Label opponentCurrentPokemonNameLabel;
     @FXML
     private ImageView playerPokemonImage;
     @FXML
@@ -83,7 +83,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     @FXML
     private Pane teamPane;
     @FXML
-    private Pane opponentPane;
+    private Pane inTurnPane;
     @FXML
     private Pane battleOverPane;
 
@@ -170,7 +170,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void initNameLabels() {
         playerCurrentPokemonNameLabel.textProperty().bind(playerPokemonNameLabel.textProperty());
-        opponentCurrentPokemonNameLabel.textProperty().bind(opponentPokemonNameLabel.textProperty());
+//        opponentCurrentPokemonNameLabel.textProperty().bind(opponentPokemonNameLabel.textProperty());
     }
 
     private void initializeSlotsPokemon() {
@@ -223,21 +223,14 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         }).start();
     }
 
-    public void normalAttack() {
-        playTurnHandler(ActionType.BASIC_ATTACK);
-    }
-
-    public void specialAttack() {
-        playTurnHandler(ActionType.SPECIAL_ATTACK);
-    }
-
     public void escape() {
-        System.out.println("Escape");
+        System.out.println("removing");
         battle.removePropertyChangeListener(this);
         SceneManager.switchScene(SceneView.HUB);
     }
 
     public void backToHub() {
+        System.out.println("removing");
         battle.removePropertyChangeListener(this);
         game.nextStage();
         SceneManager.switchScene(SceneView.HUB);
@@ -261,7 +254,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void swapToOpponentPane() {
         hidePanes();
-        opponentPane.setVisible(true);
+        inTurnPane.setVisible(true);
     }
 
     private void swapToBattleOverPane() {
@@ -273,42 +266,40 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         selectionPane.setVisible(false);
         attackPane.setVisible(false);
         teamPane.setVisible(false);
-        opponentPane.setVisible(false);
+        inTurnPane.setVisible(false);
     }
 
     public void swapSlot1Pokemon() {
         Pokemon pokemonSlot1 = player.getSlot1Pokemon();
-        swapHandler(pokemonSlot1);
+        player.setNextPokemon(pokemonSlot1);
+
+        battle.prepareTurn(ActionType.SWAP, opponent.think(player.getActivePokemon()));
+        playTurnHandler();
     }
 
     public void swapSlot2Pokemon() {
         Pokemon pokemonSlot2 = player.getSlot2Pokemon();
-        swapHandler(pokemonSlot2);
+        player.setNextPokemon(pokemonSlot2);
+
+        battle.prepareTurn(ActionType.SWAP, opponent.think(player.getActivePokemon()));
+        playTurnHandler();
     }
 
-    public void handleOpponentTurn() {
-        ActionType action = opponent.think(player.getActivePokemon());
-        System.out.println("Opponent choses " + action);
-        switch (action) {
-            case SWAP -> {
-                Pokemon nextPokemon = opponent.getNextPokemon(player.getActivePokemon());
-                swapHandler(nextPokemon);
-            }
-            case BASIC_ATTACK, SPECIAL_ATTACK -> playTurnHandler(action);
-        }
+    public void normalAttack() {
+        battle.prepareTurn(ActionType.BASIC_ATTACK, opponent.think(player.getActivePokemon()));
+
+        playTurnHandler();
     }
 
-    private void playTurnHandler(ActionType action) {
+    public void specialAttack() {
+        battle.prepareTurn(ActionType.SPECIAL_ATTACK, opponent.think(player.getActivePokemon()));
+
+        playTurnHandler();
+    }
+
+    public void playTurnHandler() {
         try {
-            battle.playTurn(action);
-        } catch (ModelException e) {
-            errorPanelController.displayError(e.getMessage());
-        }
-    }
-
-    private void swapHandler(Pokemon nextPokemon) {
-        try {
-            battle.swap(nextPokemon);
+            battle.playTurn();
         } catch (ModelException e) {
             errorPanelController.displayError(e.getMessage());
         }
@@ -316,7 +307,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println(evt.getPropertyName());
         Object newValue = evt.getNewValue();
+
         switch (evt.getPropertyName()) {
             case "playerCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, true);
             case "opponentCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, false);
@@ -345,11 +338,18 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void handleTurnChangedEvent(CombatEntity newTurn) {
-        if (newTurn == player) {
-            swapToSelectionPane();
-        } else {
+        System.out.println("isInTurn: " + battle.isInTurn());
+
+        if (battle.isInTurn()) {
             swapToOpponentPane();
+        } else {
+            swapToSelectionPane();
         }
+//        if (newTurn == player && !battle.isInTurn()) {
+//            swapToSelectionPane();
+//        } else {
+//            swapToOpponentPane();
+//        }
     }
 
     private void handleSwapEvent(Pokemon newPokemon, Pokemon oldPokemon, boolean isPlayerSwap) {
@@ -386,7 +386,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         handleEffectMessage(turnResultEvent);
 
         Effect.EffectType effectType = turnResultEvent.effectType();
-        System.out.println(effectType);
         if (effectType != null) {
             handleEffectAnimation(effectType, turnResultEvent);
         }

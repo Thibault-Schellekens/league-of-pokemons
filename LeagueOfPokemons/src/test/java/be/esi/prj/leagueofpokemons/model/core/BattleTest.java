@@ -29,13 +29,14 @@ class BattleTest {
     }
 
     @Test
-    void testSwapBattleNotStarted() {
-        assertThrows(ModelException.class, () -> battle.swap(player.getActivePokemon()));
+    void testPlayTurnTurnsNotPrepared() {
+        battle.start();
+        assertThrows(ModelException.class, () -> battle.playTurn());
     }
 
     @Test
     void testPlayTurnBattleNotStarted() {
-        assertThrows(ModelException.class, () -> battle.playTurn(ActionType.SPECIAL_ATTACK));
+        assertThrows(ModelException.class, () -> battle.playTurn());
     }
 
     @Test
@@ -51,7 +52,11 @@ class BattleTest {
         Pokemon pokemon = player.getSlot1Pokemon();
         pokemon.takeDamage(pokemon.getMaxHP());
 
-        assertThrows(ModelException.class, () -> battle.swap(pokemon));
+        player.setNextPokemon(pokemon);
+
+        battle.prepareTurn(ActionType.SWAP, ActionType.SWAP);
+
+        assertThrows(ModelException.class, () -> battle.playTurn());
     }
 
     @Test
@@ -59,7 +64,9 @@ class BattleTest {
         battle.start();
 
         Pokemon pokemon = player.getSlot1Pokemon();
-        battle.swap(pokemon);
+        player.setNextPokemon(pokemon);
+        battle.prepareTurn(ActionType.SWAP, ActionType.SWAP);
+        battle.playTurn();
 
         Pokemon expected = pokemon;
         Pokemon actual = player.getActivePokemon();
@@ -71,14 +78,21 @@ class BattleTest {
     void testCannotSwapToSamePokemon() {
         battle.start();
 
-        assertThrows(ModelException.class, () -> battle.swap(player.getActivePokemon()));
+        Pokemon pokemon = player.getActivePokemon();
+        player.setNextPokemon(pokemon);
+        battle.prepareTurn(ActionType.SWAP, ActionType.SWAP);
+
+        assertThrows(ModelException.class, () -> battle.playTurn());
     }
 
     @Test
     void testSwapSwitchingTurnPlayerToOpponent() {
         battle.start();
 
-        battle.swap(player.getSlot1Pokemon());
+        Pokemon pokemon = player.getSlot1Pokemon();
+        player.setNextPokemon(pokemon);
+        battle.prepareTurn(ActionType.SWAP, ActionType.SWAP);
+        battle.playTurn();
 
         String expected = opponent.getName();
         String actual = battle.getCurrentTurnName();
@@ -90,9 +104,13 @@ class BattleTest {
     void testSwapSwitchingTurnOpponentToPlayer() {
         battle.start();
 
-        battle.swap(player.getSlot1Pokemon());
+        Pokemon pokemon = player.getSlot1Pokemon();
+        player.setNextPokemon(pokemon);
+        battle.prepareTurn(ActionType.SWAP, ActionType.SWAP);
 
-        battle.swap(opponent.getSlot1Pokemon());
+        battle.playTurn();
+
+        battle.playTurn();
 
         String expected = player.getName();
         String actual = battle.getCurrentTurnName();
@@ -106,9 +124,11 @@ class BattleTest {
 
         Pokemon pokemon = player.getActivePokemon();
         pokemon.takeDamage(pokemon.getMaxHP());
+        player.setNextPokemon(player.getSlot1Pokemon());
+        battle.prepareTurn(ActionType.SWAP, ActionType.SWAP);
 
         // Turn is already over, to get to the next one, no need to switch turn
-        battle.swap(player.getSlot1Pokemon());
+        battle.playTurn();
 
         // Player should already be the next one
         String expected = player.getName();
@@ -122,13 +142,14 @@ class BattleTest {
         battle.start();
 
         Pokemon pokemon = opponent.getActivePokemon();
-        pokemon.takeDamage(pokemon.getMaxHP());
+        pokemon.takeDamage(pokemon.getMaxHP() - 1);
+
+        battle.prepareTurn(ActionType.BASIC_ATTACK, ActionType.BASIC_ATTACK);
 
         // Switch to opponent's turn
-        battle.swap(player.getSlot1Pokemon());
+        battle.playTurn();
 
         // Opponent has dead Pokémon, he swaps
-        battle.swap(opponent.getSlot1Pokemon());
 
         // Turn is over, currentTurn should be the player
         String expected = player.getName();
@@ -143,8 +164,9 @@ class BattleTest {
         battle.start();
 
         player.getActivePokemon().takeDamage(1000);
+        battle.prepareTurn(ActionType.SPECIAL_ATTACK, ActionType.BASIC_ATTACK);
 
-        assertThrows(ModelException.class, () -> battle.playTurn(ActionType.SPECIAL_ATTACK));
+        assertThrows(ModelException.class, () -> battle.playTurn());
     }
 
     @Test
@@ -153,8 +175,9 @@ class BattleTest {
 
         opponent.getSlot1Pokemon().takeDamage(1000);
         opponent.getActivePokemon().takeDamage(opponent.getActivePokemon().getMaxHP() - 1);
+        battle.prepareTurn(ActionType.BASIC_ATTACK, ActionType.BASIC_ATTACK);
 
-        battle.playTurn(ActionType.BASIC_ATTACK);
+        battle.playTurn();
 
         assertTrue(battle.isOver());
 
@@ -173,8 +196,9 @@ class BattleTest {
 
         player.getActivePokemon().takeDamage(player.getActivePokemon().getMaxHP() - 1);
 
-        battle.playTurn(ActionType.BASIC_ATTACK);
-        battle.playTurn(ActionType.BASIC_ATTACK);
+        battle.prepareTurn(ActionType.BASIC_ATTACK, ActionType.BASIC_ATTACK);
+        battle.playTurn();
+        battle.playTurn();
 
         assertTrue(battle.isOver());
 
@@ -185,13 +209,61 @@ class BattleTest {
     }
 
     @Test
-    void testBattleSwitchCurrentTurnPokemonDefeated() {
+    void testInTurnAfterPlayerAttack() {
         battle.start();
 
-        opponent.getActivePokemon().takeDamage(opponent.getActivePokemon().getMaxHP() - 1);
+        battle.prepareTurn(ActionType.BASIC_ATTACK, ActionType.BASIC_ATTACK);
+        battle.playTurn();
 
-        battle.playTurn(ActionType.BASIC_ATTACK);
+        boolean expected = true;
+        boolean actual = battle.isInTurn();
 
-        assertEquals(opponent.getName(), battle.getCurrentTurnName());
+        assertEquals(expected, actual);
     }
+
+    @Test
+    void testInTurnAfterPlayerSwap() {
+        battle.start();
+
+        player.setNextPokemon(player.getSlot1Pokemon());
+
+        battle.prepareTurn(ActionType.SWAP, ActionType.BASIC_ATTACK);
+        battle.playTurn();
+
+        boolean expected = true;
+        boolean actual = battle.isInTurn();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testInTurnAfterOpponentSwap() {
+        battle.start();
+
+        battle.prepareTurn(ActionType.BASIC_ATTACK, ActionType.SWAP);
+        battle.playTurn();
+
+        boolean expected = true;
+        boolean actual = battle.isInTurn();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testNotInTurnAfterOpponentAttack() {
+        battle.start();
+
+        player.setNextPokemon(player.getSlot1Pokemon());
+
+        battle.prepareTurn(ActionType.SWAP, ActionType.BASIC_ATTACK);
+        battle.playTurn();
+        battle.playTurn();
+
+
+        boolean expected = false;
+        boolean actual = battle.isInTurn();
+
+        assertEquals(expected, actual);
+    }
+
 }

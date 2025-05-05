@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class Player extends CombatEntity {
     private int id;
+    private Pokemon nextPokemon;
     //no
     private List<Card> inventory;
 
@@ -76,6 +77,18 @@ public class Player extends CombatEntity {
             team.addPokemon(pokemon);
         }
         activePokemon = team.getPokemon(0);
+    }
+
+    public void setNextPokemon(Pokemon nextPokemon) {
+        this.nextPokemon = nextPokemon;
+    }
+
+    @Override
+    public Pokemon getNextPokemon(Pokemon enemyPokemon) {
+        if (nextPokemon == null) {
+            throw new ModelException("You must select the next Pokémon!");
+        }
+        return nextPokemon;
     }
 
 }

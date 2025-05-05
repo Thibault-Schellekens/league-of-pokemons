@@ -83,4 +83,6 @@ public abstract class CombatEntity {
 
     public abstract void selectTeam(Tier maxTier);
 
+    public abstract Pokemon getNextPokemon(Pokemon enemyPokemon);
+
 }

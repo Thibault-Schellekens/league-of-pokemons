@@ -44,6 +44,7 @@ public class Opponent extends CombatEntity {
         return ActionType.BASIC_ATTACK;
     }
 
+    @Override
     public Pokemon getNextPokemon(Pokemon enemyPokemon) {
         Type enemyType = enemyPokemon.getType();
         Pokemon fallback = null;

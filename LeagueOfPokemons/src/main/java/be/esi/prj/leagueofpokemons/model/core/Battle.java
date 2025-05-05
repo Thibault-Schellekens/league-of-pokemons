@@ -9,6 +9,10 @@ public class Battle {
     private CombatEntity currentTurn;
     private BattleStatus status;
 
+    private ActionType playerAction;
+    private ActionType opponentAction;
+    private boolean inTurn;
+
     private final PropertyChangeSupport pcs;
 
     public Battle(Player player, Opponent opponent) {
@@ -33,12 +37,22 @@ public class Battle {
             throw new ModelException("Battle already started: " + status);
         }
         status = BattleStatus.IN_PROGRESS;
+        inTurn = false;
 
         pcs.firePropertyChange("playerCurrentPokemon", null, player.getActivePokemon());
         pcs.firePropertyChange("opponentCurrentPokemon", null, opponent.getActivePokemon());
     }
 
-    public void swap(Pokemon nextPokemon) {
+    private boolean isTurnReady() {
+        return playerAction != null && opponentAction != null;
+    }
+
+    public void prepareTurn(ActionType playerAction, ActionType opponentAction) {
+        this.playerAction = playerAction;
+        this.opponentAction = opponentAction;
+    }
+
+    private void swap(Pokemon nextPokemon) {
         if (status != BattleStatus.IN_PROGRESS) {
             throw new ModelException("Battle must be in progress: " + status);
         }
@@ -58,37 +72,75 @@ public class Battle {
         }
     }
 
+    public boolean isInTurn() {
+        return inTurn;
+    }
+
     public String getCurrentTurnName() {
         return currentTurn.getName();
     }
 
-    public void playTurn(ActionType action) {
+    public void playTurn() {
         if (status != BattleStatus.IN_PROGRESS) {
             throw new ModelException("Battle must be in progress: " + status);
         }
 
+        if (!inTurn && !isTurnReady()) {
+            throw new ModelException("You must first prepare the turn!");
+        }
+
+        if (playerAction == ActionType.SWAP) {
+            inTurn = true;
+            swap(player.getNextPokemon(opponent.getActivePokemon()));
+            playerAction = null;
+            return;
+        }
+        if (opponentAction == ActionType.SWAP) {
+            // In turn only if the player hasn't already played
+            inTurn = playerAction != null;
+            currentTurn = opponent;
+            swap(opponent.getNextPokemon(player.getActivePokemon()));
+            opponentAction = null;
+            return;
+        }
+
         TurnResult result;
-        if (currentTurn == player) {
-            result = executeTurn(player, opponent, action);
+        if (currentTurn == player && playerAction != null) {
+            result = executeTurn(player, opponent, playerAction);
+            playerAction = null;
+        } else if (currentTurn == opponent && opponentAction != null) {
+            result = executeTurn(opponent, player, opponentAction);
+            opponentAction = null;
         } else {
-            result = executeTurn(opponent, player, action);
+            result = null;
         }
 
-        pcs.firePropertyChange("attackTurn", null, result);
+        if (result != null) {
+            pcs.firePropertyChange("attackTurn", null, result);
 
-
-        if (player.isDefeated()) {
-            status = BattleStatus.OPPONENT_WON;
-            pcs.firePropertyChange("battleOver", null, opponent.getName());
-        } else if (opponent.isDefeated()) {
-            status = BattleStatus.PLAYER_WON;
-            pcs.firePropertyChange("battleOver", null, player.getName());
-        } else if (result.isPokemonDefeated()) {
-            switchTurn();
-            pcs.firePropertyChange("pokemonDefeated", null, result.defender());
-        } else {
-            switchTurn();
+            if (player.isDefeated()) {
+                status = BattleStatus.OPPONENT_WON;
+                inTurn = false;
+                pcs.firePropertyChange("battleOver", null, opponent.getName());
+            } else if (opponent.isDefeated()) {
+                status = BattleStatus.PLAYER_WON;
+                inTurn = false;
+                pcs.firePropertyChange("battleOver", null, player.getName());
+            } else if (result.isPokemonDefeated()) {
+                inTurn = false;
+                if (result.defender() == opponent) {
+                    currentTurn = opponent;
+                    swap(opponent.getNextPokemon(opponent.getActivePokemon()));
+                }
+                switchTurn();
+                pcs.firePropertyChange("pokemonDefeated", null, result.defender());
+            } else {
+                inTurn = playerAction != null || opponentAction != null;
+                System.out.println("here");
+                switchTurn();
+            }
         }
+
 
     }
 
@@ -99,7 +151,7 @@ public class Battle {
         }
         boolean special = actionType == ActionType.SPECIAL_ATTACK;
         AttackResult result = attacker.performAttack(special, defender);
-        return new TurnResult(attacker, defender, result.damage(), defender.getActivePokemonCurrentHP(), attacker.getActivePokemonCurrentHP(),defender.isActivePokemonDead(), result.effectType());
+        return new TurnResult(attacker, defender, result.damage(), defender.getActivePokemonCurrentHP(), attacker.getActivePokemonCurrentHP(), defender.isActivePokemonDead(), result.effectType());
     }
 
     public boolean isOver() {
@@ -117,10 +169,14 @@ public class Battle {
     }
 
     private void switchTurn() {
-        CombatEntity previousTurn = currentTurn;
-        currentTurn = (currentTurn == player) ? opponent : player;
-
-        pcs.firePropertyChange("turnChanged", previousTurn, currentTurn);
+        // If turn is over, swap back to player
+        if (!inTurn) {
+            currentTurn = player;
+        } else {
+            currentTurn = (currentTurn == player) ? opponent : player;
+        }
+        System.out.println("fire turn changed");
+        pcs.firePropertyChange("turnChanged", null, currentTurn);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
