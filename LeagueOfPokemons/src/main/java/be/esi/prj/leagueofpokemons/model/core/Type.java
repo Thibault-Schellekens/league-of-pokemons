@@ -1,5 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import java.util.EnumSet;
+
 public enum Type {
     FIRE,
     WATER,
@@ -33,5 +35,14 @@ public enum Type {
 
     public boolean isWeakAgainst(Type type) {
         return this.weakAgainst == type;
+    }
+
+    public static boolean isValidTypeName(String typeName) {
+        try {
+            Type.valueOf(typeName);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }
