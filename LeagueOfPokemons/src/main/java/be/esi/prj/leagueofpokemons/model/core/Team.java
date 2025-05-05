@@ -51,11 +51,7 @@ public class Team {
         if (pokemons.contains(pokemon)) {
             return false;
         }
-        if (pokemon.getTier().isGreater(maxTier)) {
-            return false;
-        }
-
-        return true;
+        return !pokemon.getTier().isGreater(maxTier);
     }
 
     public boolean isDefeated() {

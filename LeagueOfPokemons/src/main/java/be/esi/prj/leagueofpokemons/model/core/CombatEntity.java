@@ -5,7 +5,7 @@ public abstract class CombatEntity {
     protected Team team;
     protected Pokemon activePokemon;
 
-    public CombatEntity(String name) {
+    protected CombatEntity(String name) {
         this.name = name;
     }
 

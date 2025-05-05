@@ -10,10 +10,10 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 
-// todo: Make it accept Node ?
-// todo: just make it non static ?
 public class ScannerAnimation {
     private static TranslateTransition transition;
+
+    private ScannerAnimation() {}
 
     public static void addGlowingAnimation(Button btn, ImageView image) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(300), image);

@@ -67,7 +67,6 @@ public class ScannerController implements ControllerFXML {
 
     @Override
     public void init() {
-        System.out.println("Initializing Scanner");
         lineStartY = lineScanner.getLayoutY();
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);
         setupDropZone();
@@ -88,7 +87,6 @@ public class ScannerController implements ControllerFXML {
     }
 
     public void addToCollection() {
-        System.out.println("Adding to collection");
         if (scannedCard != null) {
             audioManager.playSound(AudioSound.SCANNER_ADD);
             Game.getInstance().getCollection().addCard(scannedCard);
@@ -97,7 +95,6 @@ public class ScannerController implements ControllerFXML {
     }
 
     public void cancelCard() {
-        System.out.println("Canceling Card");
         reset();
     }
 
@@ -117,7 +114,6 @@ public class ScannerController implements ControllerFXML {
                     handleScanFailed();
                     return;
                 }
-                System.out.println(card);
                 handleScanSuccess(new Image(card.getImageURL()));
                 scannedCard = card;
             } catch (IOException | OCRException e) {

@@ -16,7 +16,7 @@ public class Game {
     private int currentStage;
     private boolean gameOver;
 
-    private final int MAX_STAGE = 5;
+    private static final int MAX_STAGE = 5;
 
     public static void initialize(int gameId, Player player, Collection collection) {
         if (instance != null) {

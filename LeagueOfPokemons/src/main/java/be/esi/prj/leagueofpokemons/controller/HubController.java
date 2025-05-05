@@ -16,39 +16,30 @@ public class HubController implements ControllerFXML {
     @FXML
     private Text stageText;
 
-    private Game game;
-
     @Override
     public void init() {
-        System.out.println("Initializing Hub Controller");
-        game = Game.getInstance();
+        Game game = Game.getInstance();
         stageText.setText("Lvl. " + game.getCurrentStage());
     }
 
     public void openScanner() {
-        System.out.println("Opening Scanner");
         SceneManager.switchScene(SceneView.SCANNER);
     }
 
     public void openCollection() {
-        System.out.println("Opening Collection");
         SceneManager.switchScene(SceneView.COLLECTION);
     }
 
     public void openBattle() {
         try {
-            System.out.println("Opening Battle");
             SceneManager.switchScene(SceneView.BATTLE);
         } catch (ModelException e) {
-            System.out.println(e.getMessage());
             errorPanelController.displayError(e.getMessage());
         }
     }
 
     public void openSettings() {
-        System.out.println("Settings");
         if (settingsMenuController != null) {
-            System.out.println("Settings opened");
             settingsMenuController.showSettings();
         }
     }

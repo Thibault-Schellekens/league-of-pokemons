@@ -8,7 +8,7 @@ public abstract class Attack {
     protected Tier tier;
     protected IntegerProperty remainingUse = new SimpleIntegerProperty();
 
-    public Attack(Tier tier) {
+    protected Attack(Tier tier) {
         this.tier = tier;
         this.damage = calculateBaseDamage(tier);
     }

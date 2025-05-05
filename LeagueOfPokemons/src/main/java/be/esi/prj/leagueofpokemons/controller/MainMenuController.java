@@ -8,28 +8,23 @@ import javafx.fxml.FXML;
 public class MainMenuController implements ControllerFXML{
     @FXML
     private SettingsController settingsMenuController;
-    GameManager gameManager;
 
     @Override
     public void init() {
-        System.out.println("Initializing MainMenu Controller");
     }
 
     public void openSettings() {
-        System.out.println("Settings");
         if (settingsMenuController != null) {
-            System.out.println("Settings opened");
             settingsMenuController.showSettings();
         }
     }
 
     public void play() {
-        System.out.println("Switching to Hub");
         SceneManager.switchScene(SceneView.HUB);
     }
 
     public void quit() {
-        System.out.println("Quit");
+        System.exit(0);
     }
 
     public void save() {
@@ -38,10 +33,10 @@ public class MainMenuController implements ControllerFXML{
     }
 
     public void load() {
-        System.out.println("Loading");
+
     }
 
     public void news() {
-        System.out.println("News");
+
     }
 }

@@ -28,6 +28,9 @@ public class EffectAnimation {
     private static final Random RANDOM = new Random();
     private static final double ANIMATION_DURATION = 2.5; // seconds
 
+
+    private EffectAnimation() {}
+
     /**
      * Play the appropriate animation based on effect type
      *
@@ -214,12 +217,8 @@ public class EffectAnimation {
         // Flicker effect
         Timeline flickerTimeline = new Timeline();
         for (int i = 0; i < 4; i++) {
-            KeyFrame keyFrame1 = new KeyFrame(Duration.seconds(i * 0.5), event -> {
-                pokemonImage.setOpacity(0.7);
-            });
-            KeyFrame keyFrame2 = new KeyFrame(Duration.seconds(i * 0.5 + 0.25), event -> {
-                pokemonImage.setOpacity(1.0);
-            });
+            KeyFrame keyFrame1 = new KeyFrame(Duration.seconds(i * 0.5), _ -> pokemonImage.setOpacity(0.7));
+            KeyFrame keyFrame2 = new KeyFrame(Duration.seconds(i * 0.5 + 0.25), _ -> pokemonImage.setOpacity(1.0));
             flickerTimeline.getKeyFrames().addAll(keyFrame1, keyFrame2);
         }
 
@@ -488,9 +487,6 @@ public class EffectAnimation {
             parentPane.getChildren().removeAll(particles);
             parentPane.getChildren().remove(critText);
         });
-
-        // Play hit sound if available
-        // playSound("critical_hit.wav");
     }
 
     /**
@@ -498,8 +494,8 @@ public class EffectAnimation {
      */
     private static void createCrossSlash(Pane parentPane, double centerX, double centerY) {
         // Create diagonal lines for cross effect
-        Line slash1 = createSlashLine(centerX, centerY, -45);
-        Line slash2 = createSlashLine(centerX, centerY, 45);
+        Line slash1 = createSlashLine(centerX, centerY);
+        Line slash2 = createSlashLine(centerX, centerY);
 
         // Add slashes to the pane
         parentPane.getChildren().addAll(slash1, slash2);
@@ -555,7 +551,7 @@ public class EffectAnimation {
     /**
      * Helper method to create a slash line with given angle
      */
-    private static Line createSlashLine(double centerX, double centerY, double angleDegrees) {
+    private static Line createSlashLine(double centerX, double centerY) {
         Line slash = new Line();
         slash.setStartX(centerX);
         slash.setStartY(centerY);

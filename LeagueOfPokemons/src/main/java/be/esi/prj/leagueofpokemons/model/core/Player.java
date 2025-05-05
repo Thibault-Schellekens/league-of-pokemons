@@ -3,7 +3,6 @@ package be.esi.prj.leagueofpokemons.model.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Player extends CombatEntity {
     private int id;

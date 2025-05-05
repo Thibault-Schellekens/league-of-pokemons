@@ -54,8 +54,7 @@ public class SceneManager {
                 SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot, settingsManager.getAnimationSpeed());
             }
             primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException _) {
         }
     }
 

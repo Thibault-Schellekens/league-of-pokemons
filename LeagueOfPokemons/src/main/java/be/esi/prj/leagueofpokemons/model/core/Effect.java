@@ -45,9 +45,9 @@ public class Effect {
     }
 
     private EffectType getEffectTypeFromType(Type type) {
-        for (EffectType effectType : EffectType.values()) {
-            if (effectType.type == type) {
-                return effectType;
+        for (EffectType e : EffectType.values()) {
+            if (e.type == type) {
+                return e;
             }
         }
         throw new ModelException("Invalid effect type: " + type);

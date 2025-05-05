@@ -1,7 +1,5 @@
 package be.esi.prj.leagueofpokemons.model.db.repository;
 
-import be.esi.prj.leagueofpokemons.model.core.Card;
-import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.core.Player;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 

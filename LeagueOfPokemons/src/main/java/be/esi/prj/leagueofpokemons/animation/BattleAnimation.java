@@ -13,6 +13,8 @@ import javafx.util.Duration;
 
 public class BattleAnimation {
 
+    private BattleAnimation() {}
+
     public static void playDamageAnimation(ImageView pokemonImage, ProgressBar pokemonHPBar, double newBarValue, Text pokemonHPText, int newHP) {
         int currentHP = Integer.parseInt(pokemonHPText.getText());
 

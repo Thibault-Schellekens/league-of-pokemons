@@ -29,6 +29,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public class BattleController implements ControllerFXML, PropertyChangeListener {
 
@@ -39,8 +40,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @FXML
     private Label playerCurrentPokemonNameLabel;
-    //    @FXML
-//    private Label opponentCurrentPokemonNameLabel;
     @FXML
     private ImageView playerPokemonImage;
     @FXML
@@ -117,7 +116,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @Override
     public void init() {
-        System.out.println("Battle Controller Initialized");
         game = Game.getInstance();
         battle = game.startBattle();
         battle.addPropertyChangeListener(this);
@@ -200,7 +198,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
             BufferedImage pokemonRegion = ImageProcessor.extractRegion(pokemonImage, 50, 80, 500, 300);
             return SwingFXUtils.toFXImage(pokemonRegion, null);
         } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+            errorPanelController.displayError(e.getMessage());
+            return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")));
         }
     }
 
@@ -224,14 +223,12 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @FXML
     private void escape() {
-        System.out.println("removing");
         battle.removePropertyChangeListener(this);
         SceneManager.switchScene(SceneView.HUB);
     }
 
     @FXML
     private void backToHub() {
-        System.out.println("removing");
         battle.removePropertyChangeListener(this);
         game.nextStage();
         SceneManager.switchScene(SceneView.HUB);
@@ -324,11 +321,13 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
                     handleSwapEvent((Pokemon) newValue, (Pokemon) evt.getOldValue(), player.getActivePokemon().equals(newValue));
 
             case "attackTurn" -> handleAttackTurnEvent((TurnResult) newValue);
-            case "turnChanged" -> handleTurnChangedEvent((CombatEntity) newValue);
+            case "turnChanged" -> handleTurnChangedEvent();
 
             case "pokemonDefeated" -> handlePokemonDefeatedEvent((CombatEntity) newValue);
 
             case "battleOver" -> handleBattleOverEvent((String) newValue);
+
+            default -> System.err.println("Unhandled property change event: " + evt.getPropertyName());
         }
     }
 
@@ -344,19 +343,12 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         }
     }
 
-    private void handleTurnChangedEvent(CombatEntity newTurn) {
-        System.out.println("isInTurn: " + battle.isInTurn());
-
+    private void handleTurnChangedEvent() {
         if (battle.isInTurn()) {
             swapToOpponentPane();
         } else {
             swapToSelectionPane();
         }
-//        if (newTurn == player && !battle.isInTurn()) {
-//            swapToSelectionPane();
-//        } else {
-//            swapToOpponentPane();
-//        }
     }
 
     private void handleSwapEvent(Pokemon newPokemon, Pokemon oldPokemon, boolean isPlayerSwap) {

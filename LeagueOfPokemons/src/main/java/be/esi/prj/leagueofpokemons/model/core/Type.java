@@ -1,7 +1,5 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
-import java.util.EnumSet;
-
 public enum Type {
     FIRE,
     WATER,
