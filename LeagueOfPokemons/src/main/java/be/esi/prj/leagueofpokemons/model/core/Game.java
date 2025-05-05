@@ -32,6 +32,10 @@ public class Game {
         return instance;
     }
 
+    static void resetInstance() {
+        instance = null;
+    }
+
     private Game(int gameId, Player player, Collection collection) {
         this.id = gameId;
         this.player = player;
@@ -61,7 +65,9 @@ public class Game {
             throw new ModelException("Current Battle must be over!");
         }
 
-        if (currentBattle.getWinner().equals(player.getName())) {
+        if (currentBattle.getWinner().equals(opponents.get(currentStage).getName())) {
+            endGame();
+        } else if (currentBattle.getWinner().equals(player.getName())) {
             currentStage++;
             if (currentStage >= MAX_STAGE) {
                 endGame();
@@ -103,7 +109,7 @@ public class Game {
         return currentStage;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
@@ -112,15 +118,15 @@ public class Game {
         collection.setId(id);
     }
 
-    public List<Card> getPlayerInventory(){
+    public List<Card> getPlayerInventory() {
         return player.getInventory();
     }
 
-    public void removeCardInPlayer(Card card){
+    public void removeCardInPlayer(Card card) {
         player.removeCard(card);
     }
 
-    public void addCardInPlayer(Card card){
+    public void addCardInPlayer(Card card) {
         player.addCard(card);
     }
 }

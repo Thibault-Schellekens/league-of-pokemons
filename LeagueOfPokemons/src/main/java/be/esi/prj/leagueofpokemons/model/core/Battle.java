@@ -66,7 +66,6 @@ public class Battle {
 
         pcs.firePropertyChange("swap", oldPokemon, nextPokemon);
 
-        // Only works if opponent is second to play
         if (!oldPokemon.isDefeated() || oldPokemon.isDefeated() && currentTurn == opponent) {
             switchTurn();
         }
@@ -89,20 +88,7 @@ public class Battle {
             throw new ModelException("You must first prepare the turn!");
         }
 
-        if (playerAction == ActionType.SWAP) {
-            inTurn = true;
-            swap(player.getNextPokemon(opponent.getActivePokemon()));
-            playerAction = null;
-            return;
-        }
-        if (opponentAction == ActionType.SWAP) {
-            // In turn only if the player hasn't already played
-            inTurn = playerAction != null;
-            currentTurn = opponent;
-            swap(opponent.getNextPokemon(player.getActivePokemon()));
-            opponentAction = null;
-            return;
-        }
+        if (handleSwapAction()) return;
 
         TurnResult result;
         if (currentTurn == player && playerAction != null) {
@@ -116,32 +102,51 @@ public class Battle {
         }
 
         if (result != null) {
-            pcs.firePropertyChange("attackTurn", null, result);
-
-            if (player.isDefeated()) {
-                status = BattleStatus.OPPONENT_WON;
-                inTurn = false;
-                pcs.firePropertyChange("battleOver", null, opponent.getName());
-            } else if (opponent.isDefeated()) {
-                status = BattleStatus.PLAYER_WON;
-                inTurn = false;
-                pcs.firePropertyChange("battleOver", null, player.getName());
-            } else if (result.isPokemonDefeated()) {
-                inTurn = false;
-                if (result.defender() == opponent) {
-                    currentTurn = opponent;
-                    swap(opponent.getNextPokemon(opponent.getActivePokemon()));
-                }
-                switchTurn();
-                pcs.firePropertyChange("pokemonDefeated", null, result.defender());
-            } else {
-                inTurn = playerAction != null || opponentAction != null;
-                System.out.println("here");
-                switchTurn();
-            }
+            handleAttackTurnResult(result);
         }
+    }
 
+    private void handleAttackTurnResult(TurnResult result) {
+        pcs.firePropertyChange("attackTurn", null, result);
 
+        if (player.isDefeated()) {
+            status = BattleStatus.OPPONENT_WON;
+            inTurn = false;
+            pcs.firePropertyChange("battleOver", null, opponent.getName());
+        } else if (opponent.isDefeated()) {
+            status = BattleStatus.PLAYER_WON;
+            inTurn = false;
+            pcs.firePropertyChange("battleOver", null, player.getName());
+        } else if (result.isPokemonDefeated()) {
+            inTurn = false;
+            if (result.defender() == opponent) {
+                currentTurn = opponent;
+                swap(opponent.getNextPokemon(opponent.getActivePokemon()));
+            }
+            switchTurn();
+            pcs.firePropertyChange("pokemonDefeated", null, result.defender());
+        } else {
+            inTurn = playerAction != null || opponentAction != null;
+            switchTurn();
+        }
+    }
+
+    private boolean handleSwapAction() {
+        if (playerAction == ActionType.SWAP) {
+            inTurn = true;
+            swap(player.getNextPokemon(opponent.getActivePokemon()));
+            playerAction = null;
+            return true;
+        }
+        if (opponentAction == ActionType.SWAP) {
+            // In turn only if the player hasn't already played
+            inTurn = playerAction != null;
+            currentTurn = opponent;
+            swap(opponent.getNextPokemon(player.getActivePokemon()));
+            opponentAction = null;
+            return true;
+        }
+        return false;
     }
 
     private TurnResult executeTurn(CombatEntity attacker, CombatEntity defender, ActionType actionType) {
@@ -175,7 +180,6 @@ public class Battle {
         } else {
             currentTurn = (currentTurn == player) ? opponent : player;
         }
-        System.out.println("fire turn changed");
         pcs.firePropertyChange("turnChanged", null, currentTurn);
     }
 
