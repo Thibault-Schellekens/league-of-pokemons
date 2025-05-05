@@ -365,13 +365,11 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void handleAttackTurnEvent(TurnResult turnResultEvent) {
-        if (!(turnResultEvent.effectType() == Effect.EffectType.PARALYZE)) {
+        if (turnResultEvent.damage() > 0) {
             double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
             if (turnResultEvent.attacker() == player) {
-//            opponentPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
                 BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
             } else {
-//            playerPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
                 BattleAnimation.playDamageAnimation(playerPokemonImage, playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.defenderHP());
             }
         }

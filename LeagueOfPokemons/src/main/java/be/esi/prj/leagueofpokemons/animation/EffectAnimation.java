@@ -3,6 +3,7 @@ package be.esi.prj.leagueofpokemons.animation;
 import be.esi.prj.leagueofpokemons.model.core.Effect;
 import javafx.animation.*;
 import javafx.scene.Node;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
@@ -46,6 +47,7 @@ public class EffectAnimation {
 
     /**
      * Plays a blue particle effect animation for the DODGE effect with particles moving in a circular pattern
+     * and makes the Pokémon image move like it's dodging
      */
     private static void playDodgeAnimation(ImageView pokemonImage, Pane parentPane) {
         List<Circle> particles = createParticles(40, Color.DODGERBLUE, pokemonImage);
@@ -59,6 +61,21 @@ public class EffectAnimation {
         double centerY = pokemonImage.getLayoutY() + pokemonImage.getFitHeight() / 2;
         double maxRadius = Math.max(pokemonImage.getFitWidth(), pokemonImage.getFitHeight()) / 2 + 10; // Slightly outside the pokemon
 
+        // Create the dodge movement animation for the Pokémon
+        TranslateTransition dodgeAnimation = new TranslateTransition(Duration.seconds(ANIMATION_DURATION * 0.4), pokemonImage);
+
+        // Decide randomly which direction to dodge (left/right and slightly up/down)
+        boolean dodgeRight = RANDOM.nextBoolean();
+        double dodgeDistance = pokemonImage.getFitWidth() * 0.3; // 30% of width
+        double dodgeX = dodgeRight ? dodgeDistance : -dodgeDistance;
+        double dodgeY = RANDOM.nextDouble() * dodgeDistance * 0.5 - (dodgeDistance * 0.25); // slight vertical movement
+
+        // Quick dodge to the side and back
+        dodgeAnimation.setByX(dodgeX);
+        dodgeAnimation.setByY(dodgeY);
+        dodgeAnimation.setCycleCount(2);
+        dodgeAnimation.setAutoReverse(true);
+        dodgeAnimation.setInterpolator(Interpolator.SPLINE(0.5, 0.1, 0.1, 0.5)); // Custom curve for natural movement
 
         for (Circle particle : particles) {
             // Assign a random starting angle for each particle (in radians)
@@ -106,16 +123,26 @@ public class EffectAnimation {
             parallelTransition.getChildren().addAll(timeline, fadeTransition);
         }
 
+        // Add the dodge animation to the parallel transition
+        parallelTransition.getChildren().add(dodgeAnimation);
+
         // Start animation and clean up when done
         parallelTransition.play();
-        parallelTransition.setOnFinished(event -> parentPane.getChildren().removeAll(particles));
+        parallelTransition.setOnFinished(event -> {
+            parentPane.getChildren().removeAll(particles);
+            // Ensure the Pokémon is back at its original position
+            pokemonImage.setTranslateX(0);
+            pokemonImage.setTranslateY(0);
+        });
 
         // Add glow effect to Pokemon
         DropShadow glow = new DropShadow();
         glow.setColor(Color.AQUA);
-        glow.setWidth(20);
-        glow.setHeight(20);
-        glow.setRadius(10);
+        glow.setWidth(70);
+        glow.setHeight(70);
+        glow.setRadius(150);
+        glow.setSpread(0.5);
+        glow.setBlurType(BlurType.GAUSSIAN);
 
         pokemonImage.setEffect(glow);
 
@@ -173,14 +200,16 @@ public class EffectAnimation {
         parallelTransition.play();
         parallelTransition.setOnFinished(event -> parentPane.getChildren().removeAll(particles));
 
-        // Add red tint effect to Pokemon
-        DropShadow burnEffect = new DropShadow();
-        burnEffect.setColor(Color.RED);
-        burnEffect.setWidth(10);
-        burnEffect.setHeight(10);
-        burnEffect.setRadius(5);
 
-        pokemonImage.setEffect(burnEffect);
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.ORANGERED);
+        glow.setWidth(70);
+        glow.setHeight(70);
+        glow.setRadius(150);
+        glow.setSpread(0.5);
+        glow.setBlurType(BlurType.GAUSSIAN);
+
+        pokemonImage.setEffect(glow);
 
         // Flicker effect
         Timeline flickerTimeline = new Timeline();
@@ -258,9 +287,11 @@ public class EffectAnimation {
         // Add green glow to Pokemon
         DropShadow glow = new DropShadow();
         glow.setColor(Color.LIMEGREEN);
-        glow.setWidth(20);
-        glow.setHeight(20);
-        glow.setRadius(10);
+        glow.setWidth(70);
+        glow.setHeight(70);
+        glow.setRadius(150);
+        glow.setSpread(0.5);
+        glow.setBlurType(BlurType.GAUSSIAN);
 
         pokemonImage.setEffect(glow);
 
@@ -317,12 +348,15 @@ public class EffectAnimation {
         parallelTransition.play();
         parallelTransition.setOnFinished(event -> parentPane.getChildren().removeAll(particles));
 
-        // Add yellow electric effect to Pokemon
-        DropShadow electricEffect = new DropShadow();
-        electricEffect.setColor(Color.YELLOW);
-        electricEffect.setWidth(15);
-        electricEffect.setHeight(15);
-        electricEffect.setRadius(7);
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.YELLOW);
+        glow.setWidth(70);
+        glow.setHeight(70);
+        glow.setRadius(150);
+        glow.setSpread(0.5);
+        glow.setBlurType(BlurType.GAUSSIAN);
+
+        pokemonImage.setEffect(glow);
 
         // Shaking animation for paralysis
         Timeline shakeTimeline = new Timeline();
@@ -331,7 +365,7 @@ public class EffectAnimation {
         for (int i = 0; i < 10; i++) {
             KeyFrame keyFrame1 = new KeyFrame(Duration.seconds(i * 0.25), event -> {
                 pokemonImage.setLayoutX(originalX + (RANDOM.nextDouble() * 10 - 5));
-                pokemonImage.setEffect(electricEffect);
+                pokemonImage.setEffect(glow);
             });
             KeyFrame keyFrame2 = new KeyFrame(Duration.seconds(i * 0.25 + 0.125), event -> {
                 pokemonImage.setLayoutX(originalX);
@@ -352,18 +386,22 @@ public class EffectAnimation {
      */
     private static void playCritAnimation(ImageView pokemonImage, Pane parentPane) {
         // Create a brighter red flash effect for critical hit
-        DropShadow critEffect = new DropShadow();
-        critEffect.setColor(Color.RED);
-        critEffect.setWidth(40);
-        critEffect.setHeight(40);
-        critEffect.setRadius(20);
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.RED);
+        glow.setWidth(70);
+        glow.setHeight(70);
+        glow.setRadius(150);
+        glow.setSpread(0.5);
+        glow.setBlurType(BlurType.GAUSSIAN);
+
+        pokemonImage.setEffect(glow);
 
         // Create flash animation - more intense
         Timeline flashTimeline = new Timeline();
         flashTimeline.getKeyFrames().addAll(
-                new KeyFrame(Duration.ZERO, event -> pokemonImage.setEffect(critEffect)),
+                new KeyFrame(Duration.ZERO, event -> pokemonImage.setEffect(glow)),
                 new KeyFrame(Duration.seconds(0.1), event -> pokemonImage.setEffect(null)),
-                new KeyFrame(Duration.seconds(0.2), event -> pokemonImage.setEffect(critEffect)),
+                new KeyFrame(Duration.seconds(0.2), event -> pokemonImage.setEffect(glow)),
                 new KeyFrame(Duration.seconds(0.3), event -> pokemonImage.setEffect(null))
         );
 

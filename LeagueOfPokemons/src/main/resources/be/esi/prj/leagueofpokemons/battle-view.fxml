@@ -185,15 +185,15 @@
     </AnchorPane>
     <Pane layoutX="29.0" layoutY="141.0" prefHeight="358.0" prefWidth="466.0">
         <children>
-         <Pane layoutX="178.0" layoutY="175.0" prefHeight="110.0" prefWidth="176.0">
+         <Pane layoutX="143.0" layoutY="175.0" prefHeight="114.0" prefWidth="204.0">
             <children>
 
                   <!--    Player's Pokémon-->
                   <ImageView fx:id="playerPokemonImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                       <Image url="@pics/common/emptyCard.png" />
-                      <clip>
-                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
-                      </clip>
+<!--                      <clip>-->
+<!--                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />-->
+<!--                      </clip>-->
                   </ImageView>
             </children>
          </Pane>
@@ -269,14 +269,14 @@
     </Pane>
     <Pane layoutX="496.0" layoutY="7.0" prefHeight="372.0" prefWidth="538.0">
         <children>
-         <Pane layoutX="134.0" layoutY="199.0" prefHeight="121.0" prefWidth="189.0">
+         <Pane layoutX="134.0" layoutY="199.0" prefHeight="121.0" prefWidth="204.0">
             <children>
                   <!--    Defender's Pokémon-->
                   <ImageView fx:id="opponentPokemonImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                       <Image url="@pics/common/emptyCard.png" />
-                      <clip>
-                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
-                      </clip>
+<!--                      <clip>-->
+<!--                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />-->
+<!--                      </clip>-->
                   </ImageView>
             </children>
          </Pane>
