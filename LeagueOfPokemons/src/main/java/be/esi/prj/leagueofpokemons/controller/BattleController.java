@@ -39,7 +39,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @FXML
     private Label playerCurrentPokemonNameLabel;
-//    @FXML
+    //    @FXML
 //    private Label opponentCurrentPokemonNameLabel;
     @FXML
     private ImageView playerPokemonImage;
@@ -161,8 +161,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
             indicator.setFill(Color.TRANSPARENT);
         } else {
             ObjectBinding<Color> fillBinding = Bindings.createObjectBinding(() ->
-                pokemon.isDefeated() ? Color.GRAY : Color.RED,
-                pokemon.defeatedProperty()
+                            pokemon.isDefeated() ? Color.GRAY : Color.RED,
+                    pokemon.defeatedProperty()
             );
             indicator.fillProperty().bind(fillBinding);
         }
@@ -170,7 +170,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void initNameLabels() {
         playerCurrentPokemonNameLabel.textProperty().bind(playerPokemonNameLabel.textProperty());
-//        opponentCurrentPokemonNameLabel.textProperty().bind(opponentPokemonNameLabel.textProperty());
     }
 
     private void initializeSlotsPokemon() {
@@ -223,31 +222,35 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         }).start();
     }
 
-    public void escape() {
+    @FXML
+    private void escape() {
         System.out.println("removing");
         battle.removePropertyChangeListener(this);
         SceneManager.switchScene(SceneView.HUB);
     }
 
-    public void backToHub() {
+    @FXML
+    private void backToHub() {
         System.out.println("removing");
         battle.removePropertyChangeListener(this);
         game.nextStage();
         SceneManager.switchScene(SceneView.HUB);
     }
 
-    public void swapToSelectionPane() {
+    @FXML
+    private void swapToSelectionPane() {
         hidePanes();
         selectionPane.setVisible(true);
     }
 
-    // Refactor these to take a Pane as parameters
-    public void swapToAttackPane() {
+    @FXML
+    private void swapToAttackPane() {
         hidePanes();
         attackPane.setVisible(true);
     }
 
-    public void swapToTeamPane() {
+    @FXML
+    private void swapToTeamPane() {
         hidePanes();
         teamPane.setVisible(true);
     }
@@ -269,7 +272,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         inTurnPane.setVisible(false);
     }
 
-    public void swapSlot1Pokemon() {
+    @FXML
+    private void swapSlot1Pokemon() {
         Pokemon pokemonSlot1 = player.getSlot1Pokemon();
         player.setNextPokemon(pokemonSlot1);
 
@@ -277,7 +281,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         playTurnHandler();
     }
 
-    public void swapSlot2Pokemon() {
+    @FXML
+    private void swapSlot2Pokemon() {
         Pokemon pokemonSlot2 = player.getSlot2Pokemon();
         player.setNextPokemon(pokemonSlot2);
 
@@ -285,19 +290,22 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         playTurnHandler();
     }
 
-    public void normalAttack() {
+    @FXML
+    private void normalAttack() {
         battle.prepareTurn(ActionType.BASIC_ATTACK, opponent.think(player.getActivePokemon()));
 
         playTurnHandler();
     }
 
-    public void specialAttack() {
+    @FXML
+    private void specialAttack() {
         battle.prepareTurn(ActionType.SPECIAL_ATTACK, opponent.think(player.getActivePokemon()));
 
         playTurnHandler();
     }
 
-    public void playTurnHandler() {
+    @FXML
+    private void playTurnHandler() {
         try {
             battle.playTurn();
         } catch (ModelException e) {
@@ -307,7 +315,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println(evt.getPropertyName());
         Object newValue = evt.getNewValue();
 
         switch (evt.getPropertyName()) {
