@@ -189,6 +189,10 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         nameLabel.setText(pokemon.getName());
         currentHPText.setText(String.valueOf(pokemon.getCurrentHP()));
         maxHPText.setText(String.valueOf(pokemon.getMaxHP()));
+        System.out.println(pokemon.getName());
+        System.out.println(pokemon.getCurrentHP());
+        System.out.println((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
+        System.out.println("---");
         hpBar.setProgress((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
     }
 
@@ -207,8 +211,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         new Thread(() -> {
             String imageUrl = pokemon.getImageUrl();
             Image pokemonImage = buildPokemonImage(imageUrl);
+            BattleAnimation.setPokemon(pokemon);
             Platform.runLater(() -> {
-                updatePokemonTypeImage(pokemon, isPlayerPokemon);
                 if (isPlayerPokemon) {
                     updateRemainingUseLabel(pokemon);
                     updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText, playerPokemonCurrentHPBar);
@@ -217,6 +221,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
                     updatePokemonInfo(pokemon, opponentPokemonNameLabel, opponentPokemonCurrentHPText, opponentPokemonMaxHPText, opponentPokemonCurrentHPBar);
                     opponentPokemonImage.setImage(pokemonImage);
                 }
+                updatePokemonTypeImage(pokemon, isPlayerPokemon);
             });
         }).start();
     }

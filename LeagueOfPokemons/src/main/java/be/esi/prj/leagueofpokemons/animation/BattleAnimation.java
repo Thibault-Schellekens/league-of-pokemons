@@ -1,9 +1,7 @@
 package be.esi.prj.leagueofpokemons.animation;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import be.esi.prj.leagueofpokemons.model.core.Pokemon;
+import javafx.animation.*;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.ProgressBar;
@@ -13,25 +11,50 @@ import javafx.util.Duration;
 
 public class BattleAnimation {
 
-    private BattleAnimation() {}
+    private BattleAnimation() {
+    }
+
+    private static Pokemon pokemon;
+
+    public static void setPokemon(Pokemon pokemon) {
+        BattleAnimation.pokemon = pokemon;
+    }
 
     public static void playDamageAnimation(ImageView pokemonImage, ProgressBar pokemonHPBar, double newBarValue, Text pokemonHPText, int newHP) {
         int currentHP = Integer.parseInt(pokemonHPText.getText());
 
-        playShakeAnimation(pokemonImage);
-        playFlashAnimation(pokemonImage);
-        animateHealthBarValue(pokemonHPBar, newBarValue);
-        animateHPText(pokemonHPText, currentHP, newHP);
+        Timeline shakeAnimation = playShakeAnimation(pokemonImage);
+        Timeline flashAnimation = playFlashAnimation(pokemonImage);
+        Timeline healthBarValueAnimation = animateHealthBarValue(pokemonHPBar, newBarValue);
+        Timeline HPTextAnimation = animateHPText(pokemonHPText, currentHP, newHP);
+
+        ParallelTransition allAnimations = new ParallelTransition(shakeAnimation, flashAnimation, healthBarValueAnimation, HPTextAnimation);
+
+        // Make sure to update with the right Pokémon infos.
+        // The current Pokémon might have changed during the animation
+        if (pokemon != null) {
+            allAnimations.setOnFinished(e -> {
+                pokemonHPText.setText(String.valueOf(currentHP));
+                pokemonHPBar.setProgress((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
+                pokemon = null;
+            });
+        }
+
+        allAnimations.play();
+
     }
 
     public static void playRestoreHealthAnimation(ProgressBar pokemonHPBar, double newBarValue, Text pokemonHPText, int newHP) {
         int currentHP = Integer.parseInt(pokemonHPText.getText());
 
-        animateHealthBarValue(pokemonHPBar, newBarValue);
-        animateHPText(pokemonHPText, currentHP, newHP);
+        Timeline healthBarValueAnimation = animateHealthBarValue(pokemonHPBar, newBarValue);
+        Timeline HPTextAnimation = animateHPText(pokemonHPText, currentHP, newHP);
+
+        ParallelTransition allAnimations = new ParallelTransition(healthBarValueAnimation, HPTextAnimation);
+        allAnimations.play();
     }
 
-    private static void playShakeAnimation(ImageView pokemonImage) {
+    private static Timeline playShakeAnimation(ImageView pokemonImage) {
         Timeline shakeTimeline = new Timeline();
 
         double shakeIntensity = 10.0;
@@ -51,10 +74,10 @@ public class BattleAnimation {
             shakeTimeline.getKeyFrames().add(keyFrame);
         }
 
-        shakeTimeline.play();
+        return shakeTimeline;
     }
 
-    private static void playFlashAnimation(ImageView pokemonImage) {
+    private static Timeline playFlashAnimation(ImageView pokemonImage) {
         Timeline colorTimeline = new Timeline(
                 new KeyFrame(Duration.ZERO,
                         new KeyValue(pokemonImage.opacityProperty(), 1.0)
@@ -67,20 +90,21 @@ public class BattleAnimation {
                 )
         );
 
-        colorTimeline.play();
+        return colorTimeline;
     }
 
-    private static void animateHealthBarValue(ProgressBar pokemonHPBar, double newBarValue) {
+    private static Timeline animateHealthBarValue(ProgressBar pokemonHPBar, double newBarValue) {
         double durationSeconds = 1.0;
         KeyValue progressKV = new KeyValue(pokemonHPBar.progressProperty(), newBarValue, Interpolator.EASE_BOTH);
         KeyFrame progressKF = new KeyFrame(Duration.seconds(durationSeconds), progressKV);
 
         Timeline hpTimeline = new Timeline(progressKF);
         hpTimeline.setCycleCount(1);
-        hpTimeline.play();
+
+        return hpTimeline;
     }
 
-    private static void animateHPText(Text pokemonHPText, int currentHP, int newHP) {
+    private static Timeline animateHPText(Text pokemonHPText, int currentHP, int newHP) {
         double durationSeconds = 1.0;
         final IntegerProperty animatedHP = new SimpleIntegerProperty(currentHP);
 
@@ -91,6 +115,7 @@ public class BattleAnimation {
 
         Timeline numberTimeline = new Timeline();
         numberTimeline.getKeyFrames().add(hpKF);
-        numberTimeline.play();
+
+        return numberTimeline;
     }
 }
