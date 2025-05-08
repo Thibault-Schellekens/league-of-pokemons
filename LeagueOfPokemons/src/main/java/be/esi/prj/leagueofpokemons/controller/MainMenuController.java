@@ -3,6 +3,7 @@ package be.esi.prj.leagueofpokemons.controller;
 import be.esi.prj.leagueofpokemons.util.GameManager;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.view.ImageCache;
 import javafx.fxml.FXML;
 
 public class MainMenuController implements ControllerFXML{
@@ -23,7 +24,10 @@ public class MainMenuController implements ControllerFXML{
         SceneManager.switchScene(SceneView.HUB);
     }
 
+
+    //TODO: GameManager quit method
     public void quit() {
+        ImageCache.getInstance().shutdown();
         System.exit(0);
     }
 

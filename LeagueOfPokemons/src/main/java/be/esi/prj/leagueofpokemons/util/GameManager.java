@@ -6,6 +6,7 @@ import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.core.Player;
 import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.model.db.repository.*;
+import be.esi.prj.leagueofpokemons.view.ImageCache;
 
 import java.util.*;
 
@@ -34,7 +35,8 @@ public class GameManager {
     public void newGame(String name){
         System.out.println("League of legends : Initializing game");
         Collection currCollection = new Collection(-1);
-        currCollection.loadCards(collectionRepository.loadBaseSet(),null);
+        ImageCache.getInstance().registerToCollection(currCollection);
+        currCollection.loadCards(collectionRepository.loadBaseSet(),Collections.emptySet());
         Player currPlayer = new Player(0, name);
         // getNewGameId feels wrong, game shouldn't need an id until saved
         Game.initialize(-1, currPlayer, currCollection);

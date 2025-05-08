@@ -9,8 +9,6 @@ import be.esi.prj.leagueofpokemons.util.SceneView;
 import be.esi.prj.leagueofpokemons.view.CardContext;
 import be.esi.prj.leagueofpokemons.view.CardView;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -36,7 +34,8 @@ public class CollectionController implements ControllerFXML {
     private Button tier4btn;
     @FXML
     private Button tier5btn;
-    private static Map<String, CardView> collectionCardViews = new HashMap<>();
+
+    private final Map<String, CardView> collectionCardViews = new HashMap<>();
 
 
     @Override
@@ -53,6 +52,8 @@ public class CollectionController implements ControllerFXML {
         loadCardViews();
         loadCollectionPage();
         loadInventory();
+
+        System.out.println(collectionCardViews);
     }
 
     // change this in the future so that it creates cardView by grabing the selected cardView's cropped image
@@ -67,7 +68,7 @@ public class CollectionController implements ControllerFXML {
         System.out.print("Cards in inventory : ");
 
         for (Card card : game.getPlayerInventory()) {
-            CardView cardView = new CardView(collectionCardViews.get(card.getId()), this, CardContext.INVENTORY);;
+            CardView cardView = new CardView(card, this, CardContext.INVENTORY);;
             System.out.println();
             System.out.println(cardView + "cardview");
             System.out.println("row: " + row);
