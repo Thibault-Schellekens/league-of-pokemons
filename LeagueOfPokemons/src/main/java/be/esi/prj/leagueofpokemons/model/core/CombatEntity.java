@@ -1,17 +1,13 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
 public abstract class CombatEntity {
-    protected int id;
     protected String name;
     protected Team team;
     protected Pokemon activePokemon;
 
-//    public CombatEntity(int id, String name, Team team) {
-//        this.id = id;
-//        this.name = name;
-//        this.team = team;
-//        this.activePokemon = team.getFirstPokemon();
-//    }
+    protected CombatEntity(String name) {
+        this.name = name;
+    }
 
     public Pokemon getActivePokemon() {
         return activePokemon;
@@ -51,12 +47,17 @@ public abstract class CombatEntity {
         return team.isDefeated();
     }
 
+    public int getActivePokemonCurrentHP() {
+        return activePokemon.getCurrentHP();
+    }
+
     public String getCardUrl() {
         return activePokemon.getImageUrl();
     }
 
-    //TODO: make it not abstract, and take a boolean isSpecial
-    public abstract AttackResult performAction(ActionType actionType, CombatEntity enemy);
+    public AttackResult performAttack(boolean special, CombatEntity enemy) {
+        return activePokemon.attack(special, enemy.getActivePokemon());
+    }
 
     void swap(Pokemon nextPokemon) {
         if (nextPokemon == null) {
@@ -79,5 +80,9 @@ public abstract class CombatEntity {
 
         activePokemon = nextPokemon;
     }
+
+    public abstract void selectTeam(Tier maxTier);
+
+    public abstract Pokemon getNextPokemon(Pokemon enemyPokemon);
 
 }

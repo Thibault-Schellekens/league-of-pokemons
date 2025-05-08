@@ -1,13 +1,10 @@
 package be.esi.prj.leagueofpokemons.model.db.repository;
 
-import be.esi.prj.leagueofpokemons.model.core.Card;
-import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 
 import java.sql.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,12 +39,13 @@ public class GameRepository implements Repository<Integer, GameDto> {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException("Error finding by id", e);
         }
         return Optional.empty();
     }
 
 
+    //FIXME prepare statement for findGame
     @Override
     public Integer save(GameDto gameDto) {
         String findGame = "Select * from GameSaves where gameID = " + gameDto.gameID();
@@ -74,11 +72,11 @@ public class GameRepository implements Repository<Integer, GameDto> {
                         }
                     }
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    throw new RepositoryException("Error saving", e);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException("Error saving", e);
         }
         return gameDto.gameID();
     }

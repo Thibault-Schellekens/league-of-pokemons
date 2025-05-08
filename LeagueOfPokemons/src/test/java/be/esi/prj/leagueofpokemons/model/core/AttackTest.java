@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AttackTest {
+class   AttackTest {
 
     @Test
     void testBasicAttackNoRemainingUse() {

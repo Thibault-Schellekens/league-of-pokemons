@@ -14,7 +14,7 @@ class TeamTest {
 
     @BeforeEach
     void setUp() {
-        team = new Team();
+        team = new Team(Tier.TIER_V);
         pokemon1 = new Pokemon(new Card("1", "1", 100, "url", Type.FIRE));
         pokemon2 = new Pokemon(new Card("2", "2", 100, "url", Type.FIRE));
         pokemon3 = new Pokemon(new Card("3", "3", 100, "url", Type.FIRE));
@@ -51,9 +51,8 @@ class TeamTest {
 
     @Test
     void testCanNotAddPokemonWithGreaterTier() {
+        Team team = new Team(Tier.TIER_I);
         Pokemon pokemon = new Pokemon(new Card("0", "0", 1000, "url", Type.FIRE));
-
-        System.out.println(pokemon.getTier());
 
         assertThrows(ModelException.class, () -> team.addPokemon(pokemon));
     }

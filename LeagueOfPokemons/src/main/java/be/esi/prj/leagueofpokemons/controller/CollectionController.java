@@ -16,7 +16,7 @@ import javafx.scene.layout.GridPane;
 
 import java.util.*;
 
-public class CollectionController {
+public class CollectionController implements ControllerFXML {
     private Game game;
     private int page = 1;
     private Tier tier = Tier.TIER_I;
@@ -39,9 +39,8 @@ public class CollectionController {
     private static Map<String, CardView> collectionCardViews = new HashMap<>();
 
 
-
-
-    public void initialize() {
+    @Override
+    public void init() {
         System.out.println("Initializing Collection Controller");
         game = Game.getInstance();
         System.out.println("Initialized with inventory size : " + game.getPlayer().getInventorySize());
@@ -55,7 +54,6 @@ public class CollectionController {
         loadCollectionPage();
         loadInventory();
     }
-
 
     // change this in the future so that it creates cardView by grabing the selected cardView's cropped image
     // -> skip image processing for better performance

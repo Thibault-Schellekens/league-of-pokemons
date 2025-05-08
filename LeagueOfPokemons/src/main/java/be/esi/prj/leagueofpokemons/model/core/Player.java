@@ -3,25 +3,18 @@ package be.esi.prj.leagueofpokemons.model.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Player extends CombatEntity {
     private int id;
+    private Pokemon nextPokemon;
     //no
     private List<Card> inventory;
 
     //if new game, inventory empty/ player id = size of PlayerDB +  1 / name hard coded for now
     public Player(int id, String name){
-        inventory = new ArrayList<>();
+        super(name);
         this.id = id;
-        this.name = name;
-
-        team = new Team();
-        team.addPokemon(new Pokemon(new Card("swsh1-43", "Krabby", 80, "https://assets.tcgdex.net/en/swsh/swsh1/43/high.png", Type.WATER)));
-        team.addPokemon(new Pokemon(new Card("swsh9-020", "Margmortar", 140, "https://assets.tcgdex.net/en/swsh/swsh9/020/high.png", Type.FIRE)));
-        team.addPokemon(new Pokemon(new Card("swsh1-71", "Galvantula", 100, "https://assets.tcgdex.net/en/swsh/swsh1/71/high.png", Type.LIGHTNING)));
-
-        activePokemon = team.getPokemon(0);
+        inventory = new ArrayList<>();
     }
 
     public Player(){
@@ -32,21 +25,19 @@ public class Player extends CombatEntity {
         this.inventory = inventory;
     }
 
-    public String getName(){
-        return name;
-    }
     public Card getSlot(int index) {
-        if (index >= 3 || index < 0){
-            throw new IndexOutOfBoundsException("out of bounds broski");
+        if (index >= inventory.size() || index < 0){
+            throw new ModelException("Index out of bounds: [" + index + "]");
         }
         return inventory.get(index);
     }
+
     public int getId(){
         return id;
     }
 
     public void addCard(Card card) {
-        if (inventory.size() == 3){
+        if (inventory.size() >= 3){
             throw new ModelException("You already have 3 cards sin inventory");
         }
 
@@ -61,18 +52,6 @@ public class Player extends CombatEntity {
         inventory.remove(card);
     }
 
-    public boolean selectTeam() {
-        if (inventory.size() < 3){
-            System.out.println("Player doesnt have the required number of pokemons in his team");
-            return false;
-        } else {
-            for (Card card : inventory){
-                // too
-            }
-        }
-        return true;
-    }
-
     public int getInventorySize(){
         return inventory.size();
     }
@@ -81,19 +60,34 @@ public class Player extends CombatEntity {
         return Collections.unmodifiableList(inventory);
     }
 
-    @Override
-    public AttackResult performAction(ActionType actionType, CombatEntity enemy) {
-        AttackResult attackResult = new AttackResult(0);
-        switch (actionType) {
-            case SWAP -> {
 
-            }
-            case BASIC_ATTACK, SPECIAL_ATTACK -> {
-                boolean isSpecial = actionType == ActionType.SPECIAL_ATTACK;
-                attackResult = activePokemon.attack(isSpecial, enemy.getActivePokemon());
-            }
+    @Override
+    public void selectTeam(Tier maxTier) {
+        if (inventory.isEmpty()) {
+            throw new ModelException("You have no cards in inventory");
+        }
+        if (inventory.size() != 3) {
+            throw new ModelException("You need 3 cards in inventory");
         }
 
-        return attackResult;
+        team = new Team(maxTier);
+        for (Card card : inventory) {
+            Pokemon pokemon = new Pokemon(card);
+            team.addPokemon(pokemon);
+        }
+        activePokemon = team.getPokemon(0);
     }
+
+    public void setNextPokemon(Pokemon nextPokemon) {
+        this.nextPokemon = nextPokemon;
+    }
+
+    @Override
+    public Pokemon getNextPokemon(Pokemon enemyPokemon) {
+        if (nextPokemon == null) {
+            throw new ModelException("You must select the next Pokémon!");
+        }
+        return nextPokemon;
+    }
+
 }

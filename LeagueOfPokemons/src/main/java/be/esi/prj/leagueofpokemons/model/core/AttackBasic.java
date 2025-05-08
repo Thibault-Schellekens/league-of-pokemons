@@ -14,6 +14,6 @@ public class AttackBasic extends Attack {
 
     @Override
     public void applyEffect(Pokemon attacker, Pokemon defender) {
-
+        // Basic attack doesn't apply any effect
     }
 }

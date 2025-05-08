@@ -5,29 +5,26 @@ import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
 import javafx.fxml.FXML;
 
-public class MainMenuController {
+public class MainMenuController implements ControllerFXML{
     @FXML
     private SettingsController settingsMenuController;
-    GameManager gameManager;
-    public void initialize() {
-        System.out.println("Initializing MainMenu Controller");
+
+    @Override
+    public void init() {
     }
 
     public void openSettings() {
-        System.out.println("Settings");
         if (settingsMenuController != null) {
-            System.out.println("Settings opened");
             settingsMenuController.showSettings();
         }
     }
 
     public void play() {
-        System.out.println("Switching to Hub");
         SceneManager.switchScene(SceneView.HUB);
     }
 
     public void quit() {
-        System.out.println("Quit");
+        System.exit(0);
     }
 
     public void save() {
@@ -36,10 +33,10 @@ public class MainMenuController {
     }
 
     public void load() {
-        System.out.println("Loading");
+
     }
 
     public void news() {
-        System.out.println("News");
+
     }
 }

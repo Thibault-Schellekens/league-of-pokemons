@@ -21,6 +21,18 @@ public class Effect {
         EffectType(Type type) {
             this.type = type;
         }
+
+        public EffectTarget getTarget() {
+            return switch (this) {
+                case BURN, CRIT, DODGE -> EffectTarget.DEFENDER;
+                case DRAIN, PARALYZE -> EffectTarget.ATTACKER;
+            };
+        }
+    }
+
+    public enum EffectTarget {
+        ATTACKER,
+        DEFENDER;
     }
 
     public Effect(Type type, Tier tier) {
@@ -33,9 +45,9 @@ public class Effect {
     }
 
     private EffectType getEffectTypeFromType(Type type) {
-        for (EffectType effectType : EffectType.values()) {
-            if (effectType.type == type) {
-                return effectType;
+        for (EffectType e : EffectType.values()) {
+            if (e.type == type) {
+                return e;
             }
         }
         throw new ModelException("Invalid effect type: " + type);

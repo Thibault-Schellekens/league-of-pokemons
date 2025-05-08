@@ -1,9 +1,10 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import javafx.beans.property.IntegerProperty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class Game {
     private static Game instance;
@@ -12,8 +13,11 @@ public class Game {
     private Player player;
     private List<Opponent> opponents;
     private Collection collection;
-    private int currentStage;
     private Battle currentBattle;
+    private int currentStage;
+    private boolean gameOver;
+
+    private static final int MAX_STAGE = 5;
 
     public static void initialize(int gameId, Player player, Collection collection) {
         if (instance != null) {
@@ -29,6 +33,10 @@ public class Game {
         return instance;
     }
 
+    static void resetInstance() {
+        instance = null;
+    }
+
     private Game(int gameId, Player player, Collection collection) {
         this.id = gameId;
         this.player = player;
@@ -39,10 +47,11 @@ public class Game {
     }
 
     private void buildOpponents() {
-        Opponent first = new Opponent();
-        first.createTeam();
-
-        opponents.add(first);
+        for (int i = 0; i < 5; i++) {
+            Opponent opponent = new Opponent("Opponent " + (i + 1), i);
+            opponent.selectTeam(Tier.values()[i]);
+            opponents.add(opponent);
+        }
     }
 
     public void loadGame(int gameId, Player newPlayer, Collection newCollection, int currentStage) {
@@ -53,20 +62,38 @@ public class Game {
     }
 
     public void nextStage() {
+        if (!currentBattle.isOver()) {
+            throw new ModelException("Current Battle must be over!");
+        }
+
+        if (currentBattle.getWinner().equals(opponents.get(currentStage).getName())) {
+            endGame();
+        } else if (currentBattle.getWinner().equals(player.getName())) {
+            currentStage++;
+            if (currentStage >= MAX_STAGE) {
+                endGame();
+            }
+        }
+        currentBattle = null;
     }
 
     public Battle startBattle() {
+        if (gameOver) {
+            throw new ModelException("Game has already ended");
+        }
+        player.selectTeam(Tier.values()[currentStage]);
         currentBattle = new Battle(player, opponents.get(currentStage));
 
         return currentBattle;
     }
 
     public GameResult endGame() {
+        gameOver = true;
         return null;
     }
 
     public boolean isGameOver() {
-        return false;
+        return gameOver;
     }
 
 
@@ -83,7 +110,7 @@ public class Game {
         return currentStage;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
@@ -92,15 +119,15 @@ public class Game {
         collection.setId(id);
     }
 
-    public List<Card> getPlayerInventory(){
+    public List<Card> getPlayerInventory() {
         return player.getInventory();
     }
 
-    public void removeCardInPlayer(Card card){
+    public void removeCardInPlayer(Card card) {
         player.removeCard(card);
     }
 
-    public void addCardInPlayer(Card card){
+    public void addCardInPlayer(Card card) {
         player.addCard(card);
     }
 }
