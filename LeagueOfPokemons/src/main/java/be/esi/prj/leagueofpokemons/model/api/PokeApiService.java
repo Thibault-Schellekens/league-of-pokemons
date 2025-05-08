@@ -24,7 +24,9 @@ public class PokeApiService {
             if (!isLocalIdValid(swshSet, localId)) continue;
 
             net.tcgdex.sdk.models.Card card = tcgdex.fetchCard(swshSet, String.valueOf(localId));
-            if (card != null && pokemonName.equals(card.getName())) {
+            if (card == null) continue;
+            String typeName = card.getTypes().getFirst().toUpperCase();
+            if (Type.isValidTypeName(typeName) && pokemonName.equals(card.getName())) {
                 return Optional.of(new Card(card.getId(),
                         pokemonName,
                         card.getHp(),

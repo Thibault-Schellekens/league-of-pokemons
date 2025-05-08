@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<Pane fx:id="errorPane" prefHeight="134.0" prefWidth="255.0" visible="false" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.ErrorController">
+    <children>
+        <ImageView fitHeight="134.0" fitWidth="286.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../pics/common/betterBoard.png" />
+            </image>
+        </ImageView>
+        <HBox alignment="CENTER" layoutX="20.0" layoutY="36.0" prefHeight="51.0" prefWidth="211.0">
+            <children>
+                <Label fx:id="errorLabel" styleClass="text-rog" text="error" textAlignment="CENTER" textFill="#a41d1d" wrapText="true" />
+            </children>
+        </HBox>
+    </children>
+</Pane>

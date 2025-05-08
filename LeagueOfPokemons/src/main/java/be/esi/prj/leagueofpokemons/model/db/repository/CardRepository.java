@@ -1,9 +1,7 @@
 package be.esi.prj.leagueofpokemons.model.db.repository;
 import be.esi.prj.leagueofpokemons.model.core.Card;
-import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.core.Type;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
-import be.esi.prj.leagueofpokemons.util.GameManager;
 
 import java.sql.*;
 import java.util.HashSet;
@@ -44,7 +42,7 @@ public class CardRepository implements Repository<String, Card> {
     }
 
     @Override
-    public void save(Card card) {
+    public String save(Card card) {
         String sql = "INSERT INTO Cards (pokID, pokName, pokType, pokMaxHP, pokTier, pokUrl) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, card.getId());
@@ -57,7 +55,7 @@ public class CardRepository implements Repository<String, Card> {
         } catch (SQLException e) {
             throw new RepositoryException(" Card : " + card.getId()+ " already exists ", e);
         }
-
+        return card.getId();
     }
 
 
@@ -78,7 +76,7 @@ public class CardRepository implements Repository<String, Card> {
                         ));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException("Error finding all", e);
         }
         return cards;
     }

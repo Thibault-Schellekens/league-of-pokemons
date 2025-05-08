@@ -68,28 +68,28 @@
             </Pane>
          </children>
       </Pane>
-      <Pane fx:id="opponentPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
+      <Pane fx:id="inTurnPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
          <children>
-            <Button layoutX="850.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#handleOpponentTurn" prefHeight="65.0" prefWidth="83.0" style="-fx-cursor: hand;" text="Enter" />
-            <VBox layoutY="10.2" prefHeight="99.0" prefWidth="430.0">
-               <children>
-                  <Label prefHeight="54.0" prefWidth="431.0" styleClass="text-rog" text="Opponent's" textFill="WHITE">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="opponentCurrentPokemonNameLabel" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="bulbasaur" textFill="WHITE">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="10.0" layoutY="63.0" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="is thinking..." textFill="WHITE">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </VBox>
+            <Button layoutX="850.0" layoutY="25.0" mnemonicParsing="false" onMouseClicked="#playTurnHandler" prefHeight="65.0" prefWidth="83.0" style="-fx-cursor: hand;" text="Enter" />
+<!--            <VBox layoutY="10.2" prefHeight="99.0" prefWidth="430.0">-->
+<!--               <children>-->
+<!--                  <Label prefHeight="54.0" prefWidth="431.0" styleClass="text-rog" text="Opponent's" textFill="WHITE">-->
+<!--                     <font>-->
+<!--                        <Font size="24.0" />-->
+<!--                     </font>-->
+<!--                  </Label>-->
+<!--                  <Label fx:id="opponentCurrentPokemonNameLabel" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="bulbasaur" textFill="WHITE">-->
+<!--                     <font>-->
+<!--                        <Font size="24.0" />-->
+<!--                     </font>-->
+<!--                  </Label>-->
+<!--                  <Label layoutX="10.0" layoutY="63.0" prefHeight="48.0" prefWidth="430.0" styleClass="text-rog" text="is thinking..." textFill="WHITE">-->
+<!--                     <font>-->
+<!--                        <Font size="24.0" />-->
+<!--                     </font>-->
+<!--                  </Label>-->
+<!--               </children>-->
+<!--            </VBox>-->
          </children>
       </Pane>
       <Pane fx:id="battleOverPane" layoutX="49.0" layoutY="4.0" prefHeight="114.0" prefWidth="947.0" visible="false">
@@ -185,14 +185,18 @@
     </AnchorPane>
     <Pane layoutX="29.0" layoutY="141.0" prefHeight="358.0" prefWidth="466.0">
         <children>
+         <Pane layoutX="143.0" layoutY="175.0" prefHeight="114.0" prefWidth="204.0">
+            <children>
 
-            <!--    Player's Pokémon-->
-            <ImageView fx:id="playerPokemonImage" fitHeight="150.0" fitWidth="200.0" layoutX="178.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@pics/common/emptyCard.png" />
-                <clip>
-                    <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
-                </clip>
-            </ImageView>
+                  <!--    Player's Pokémon-->
+                  <ImageView fx:id="playerPokemonImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@pics/common/emptyCard.png" />
+<!--                      <clip>-->
+<!--                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />-->
+<!--                      </clip>-->
+                  </ImageView>
+            </children>
+         </Pane>
             <Label fx:id="playerPokemonNameLabel" layoutX="251.0" layoutY="70.0" styleClass="text-rog" text="PLAYER" textFill="WHITE">
                 <font>
                     <Font size="24.0" />
@@ -256,17 +260,26 @@
                </VBox>
             </children>
          </Pane>
+         <Pane layoutX="66.0" layoutY="102.0" prefHeight="42.0" prefWidth="41.0">
+            <children>
+               <ImageView fx:id="playerPokemonTypeImage" fitHeight="48.0" fitWidth="47.0" layoutX="-1.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" />
+            </children>
+         </Pane>
         </children>
     </Pane>
     <Pane layoutX="496.0" layoutY="7.0" prefHeight="372.0" prefWidth="538.0">
         <children>
-            <!--    Defender's Pokémon-->
-            <ImageView fx:id="opponentPokemonImage" fitHeight="150.0" fitWidth="200.0" layoutX="119.0" layoutY="199.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@pics/common/emptyCard.png" />
-                <clip>
-                    <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />
-                </clip>
-            </ImageView>
+         <Pane layoutX="134.0" layoutY="199.0" prefHeight="121.0" prefWidth="204.0">
+            <children>
+                  <!--    Defender's Pokémon-->
+                  <ImageView fx:id="opponentPokemonImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@pics/common/emptyCard.png" />
+<!--                      <clip>-->
+<!--                          <Rectangle arcHeight="50.0" arcWidth="50.0" height="150.0" width="200.0" />-->
+<!--                      </clip>-->
+                  </ImageView>
+            </children>
+         </Pane>
 
             <!-- HP Bar -->
             <ProgressBar fx:id="opponentPokemonCurrentHPBar" layoutX="56.0" layoutY="150.0" prefHeight="25.0" prefWidth="300" progress="1.0" styleClass="enemy-hp-bar" />
@@ -331,6 +344,11 @@
                </VBox>
             </children>
          </Pane>
+         <Pane layoutX="369.0" layoutY="141.0" prefHeight="42.0" prefWidth="41.0">
+            <children>
+               <ImageView fx:id="opponentPokemonTypeImage" fitHeight="48.0" fitWidth="47.0" layoutX="-3.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
+            </children>
+         </Pane>
         </children>
     </Pane>
     <ImageView fitHeight="93.0" fitWidth="200.0" layoutX="35.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -343,18 +361,21 @@
             <Font size="20.0" />
         </font>
     </Text>
-   <Pane fx:id="errorPane" layoutX="792.0" layoutY="406.0" prefHeight="134.0" prefWidth="255.0" visible="false">
-      <children>
-         <ImageView fitHeight="134.0" fitWidth="286.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-               <Image url="@pics/common/betterBoard.png" />
-            </image>
-         </ImageView>
-         <HBox alignment="CENTER" layoutX="20.0" layoutY="36.0" prefHeight="51.0" prefWidth="211.0">
-            <children>
-               <Label fx:id="errorLabel" styleClass="text-rog" text="error" textAlignment="CENTER" textFill="#a41d1d" wrapText="true" />
-            </children>
-         </HBox>
-      </children>
-   </Pane>
+    <Pane layoutX="792.0" layoutY="406.0">
+        <fx:include fx:id="errorPanel" source="include/error-component.fxml" />
+    </Pane>
+    <Pane fx:id="effectPane" layoutX="792.0" layoutY="406.0" visible="false">
+        <children>
+            <ImageView fitHeight="134.0" fitWidth="286.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@pics/common/betterBoard.png" />
+                </image>
+            </ImageView>
+            <HBox alignment="CENTER" layoutX="20.0" layoutY="36.0" prefHeight="51.0" prefWidth="211.0">
+                <children>
+                    <Label fx:id="effectLabel" styleClass="text-rog" text="effect" textAlignment="CENTER" textFill="#a41d1d" wrapText="true" />
+                </children>
+            </HBox>
+        </children>
+    </Pane>
 </AnchorPane>

@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class ImageProcessor {
 
+    private ImageProcessor() {}
+
     public static BufferedImage preprocessImage(BufferedImage original, String type) {
         BufferedImage newImage = null;
         if (type.equals("pokemonName")) {

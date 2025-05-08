@@ -54,6 +54,18 @@ class PokeApiServiceTest {
     }
 
     @Test
+    void testInvalidType() {
+        // PSYCHIC Pokémon
+        int localId = 87;
+        String pokemonName = "Munna";
+
+        Optional<Card> expectedCard = Optional.empty();
+        Optional<Card> actualCard = pokeApiService.getPokemonCard(localId, pokemonName);
+
+        assertEquals(expectedCard, actualCard);
+    }
+
+    @Test
     void testValidCard() {
         int localId = 1;
         String pokemonName = "Exeggcute";

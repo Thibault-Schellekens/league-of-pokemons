@@ -3,8 +3,6 @@ package be.esi.prj.leagueofpokemons.model.core;
 public class AttackSpecial extends Attack {
     private Type type;
 
-    private Effect effect;
-
     public AttackSpecial(Tier tier, Type type) {
         super(tier);
         this.type = type;
@@ -24,9 +22,8 @@ public class AttackSpecial extends Attack {
 
     @Override
     public void applyEffect(Pokemon attacker, Pokemon defender) {
-        effect = new Effect(type, tier);
+        Effect effect = new Effect(type, tier);
         Effect.EffectType effectType = effect.getEffectType();
-        System.out.println("Applying effect: " + effectType);
         switch (effectType) {
             case DODGE, DRAIN, CRIT -> attacker.setCurrentEffect(effect);
             case BURN, PARALYZE -> defender.setCurrentEffect(effect);

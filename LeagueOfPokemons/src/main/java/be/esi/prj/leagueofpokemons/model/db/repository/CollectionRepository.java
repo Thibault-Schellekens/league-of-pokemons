@@ -2,11 +2,7 @@ package be.esi.prj.leagueofpokemons.model.db.repository;
 
 import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.core.Collection;
-import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.core.Type;
-import be.esi.prj.leagueofpokemons.model.db.repository.CardRepository;
-import be.esi.prj.leagueofpokemons.model.db.repository.Repository;
-import be.esi.prj.leagueofpokemons.model.db.repository.RepositoryException;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 
 import java.sql.*;
@@ -41,7 +37,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
         }
     }
     @Override
-    public void save(Collection collection) {
+    public Integer save(Collection collection) {
         String sql = "INSERT INTO Collection (colId, pokemonID) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Card card : collection.getImportedCards()) {
@@ -52,6 +48,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
         } catch (SQLException e) {
             throw new RepositoryException("Error saving collection", e);
         }
+        return collection.getId();
     }
 
 
@@ -66,7 +63,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException("Error finding all", e);
         }
         return collections;
     }
@@ -99,7 +96,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
                 cards.add(card);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException("Error loading BaseSet", e);
         }
         return cards;
     }

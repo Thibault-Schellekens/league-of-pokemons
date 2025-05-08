@@ -12,6 +12,8 @@ public class ConnectionManager {
     private static Connection connection;
     private static Properties properties = null;
 
+    private ConnectionManager() {}
+
     private static Properties loadProperties(){
         if (properties == null){
             properties = new Properties();
@@ -22,7 +24,7 @@ public class ConnectionManager {
                 System.out.println(properties.getProperty("db.url"));
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            } ;
+            }
         }
         return properties;
     }

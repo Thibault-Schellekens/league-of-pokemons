@@ -1,7 +1,5 @@
 package be.esi.prj.leagueofpokemons.model.db.repository;
 
-import be.esi.prj.leagueofpokemons.model.core.Card;
-import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.core.Player;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 
@@ -35,7 +33,7 @@ public class PlayerRepository implements Repository<Integer, Player> {
     }
 
     @Override
-    public void save(Player player) {
+    public Integer save(Player player) {
         System.out.println("SAVING PLAYER");
         String sql = "INSERT INTO Player (id, name) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -45,6 +43,7 @@ public class PlayerRepository implements Repository<Integer, Player> {
         } catch (SQLException e) {
             throw new RepositoryException("Error saving player", e);
         }
+        return player.getId();
     }
 
     @Override

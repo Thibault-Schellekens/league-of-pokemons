@@ -50,6 +50,10 @@ public class Pokemon {
         return special ? attackSpecial.remainingUseProperty() : attackBasic.remainingUseProperty();
     }
 
+    public int getRemainingUse(boolean special) {
+        return special ? attackSpecial.remainingUseProperty().get() : attackBasic.remainingUseProperty().get();
+    }
+
     public boolean hasEffect(Effect.EffectType effectType) {
         return hasAnyEffect() &&
                 currentEffect.getEffectType() == effectType;
@@ -66,61 +70,95 @@ public class Pokemon {
         if (defender.isDefeated()) {
             throw new ModelException("Can not attack a defeated pokemon!");
         }
+
         Attack attack = special ? attackSpecial : attackBasic;
 
         if (hasEffect(Effect.EffectType.DODGE)) {
             consumeEffect();
         }
 
-        String message = "";
+        Effect.EffectType effectType = null;
         int damage = attack.use(defender.getType());
 
         double chance = RandomUtil.nextDouble();
-        if (hasEffect(Effect.EffectType.PARALYZE)) {
-            if (chance < this.paralyze) {
-                damage = 0;
-                message  = "Attack failed due to paralysis!";
-            }
-            consumeEffect();
+
+        // Handle paralyze effect
+        if (handleParalyzeEffect(chance)) {
+            damage = 0;
+            effectType = Effect.EffectType.PARALYZE;
         }
 
-        // We have to check if damage is > 0, in case the attacker attack failed due to paralyzing
-        // If the attack fails, then no effect should be applied
+        // Handle dodge effect
+        if (handleDodgeEffect(defender, chance)) {
+            damage = 0;
+            effectType = Effect.EffectType.DODGE;
+        }
+
+        // Apply attack effect if applicable
         if (attack.hasEffect(special, defender.getType()) && damage > 0) {
             attack.applyEffect(this, defender);
         }
 
-        if (defender.hasEffect(Effect.EffectType.DODGE)) {
-            if (chance < defender.dodge) {
-                damage = 0;
-                message = "Attack dodged!";
-            }
+        // Handle critical hit effect
+        if (handleCritEffect(chance)) {
+            damage = (int) (damage * 1.5);
+            effectType = Effect.EffectType.CRIT;
         }
 
-        if (hasEffect(Effect.EffectType.CRIT)) {
-            if (chance < this.crit) {
-                damage = (int) (damage * 1.5);
-                message = "Crit attack!";
-            }
-            consumeEffect();
-        }
-
-        if (defender.hasEffect(Effect.EffectType.BURN)) {
+        // Handle burn effect
+        if (handleBurnEffect(defender)) {
             damage += defender.burnDamage;
-            message = "Burn applied!";
+            effectType = Effect.EffectType.BURN;
+            // We have to consume after, or else the burnDamage will be zero.
             defender.consumeEffect();
         }
 
         defender.takeDamage(damage);
 
-        if (hasEffect(Effect.EffectType.DRAIN)) {
-            int healAmount = drainHeal;
-            heal(healAmount);
-            message = "Draining!";
-            consumeEffect();
+        // Handle drain effect
+        if (handleDrainEffect()) {
+            effectType = Effect.EffectType.DRAIN;
         }
 
-        return new AttackResult(damage, message);
+        return new AttackResult(damage, effectType);
+    }
+
+    private boolean handleParalyzeEffect(double chance) {
+        if (hasEffect(Effect.EffectType.PARALYZE)) {
+            boolean triggered = chance < this.paralyze;
+            consumeEffect();
+            return triggered;
+        }
+        return false;
+    }
+
+    private boolean handleDodgeEffect(Pokemon defender, double chance) {
+        if (defender.hasEffect(Effect.EffectType.DODGE)) {
+            return chance < defender.dodge;
+        }
+        return false;
+    }
+
+    private boolean handleCritEffect(double chance) {
+        if (hasEffect(Effect.EffectType.CRIT)) {
+            boolean triggered = chance < this.crit;
+            consumeEffect();
+            return triggered;
+        }
+        return false;
+    }
+
+    private boolean handleBurnEffect(Pokemon defender) {
+        return defender.hasEffect(Effect.EffectType.BURN);
+    }
+
+    private boolean handleDrainEffect() {
+        if (hasEffect(Effect.EffectType.DRAIN)) {
+            heal(drainHeal);
+            consumeEffect();
+            return true;
+        }
+        return false;
     }
 
     public boolean applyEffect(Effect effect) {
@@ -228,7 +266,7 @@ public class Pokemon {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Pokemon pokemon = (Pokemon) o;
-        return currentHP == pokemon.currentHP && Objects.equals(card, pokemon.card) && Objects.equals(attackBasic, pokemon.attackBasic) && Objects.equals(attackSpecial, pokemon.attackSpecial) && Objects.equals(currentEffect, pokemon.currentEffect);
+        return currentHP == pokemon.currentHP && Objects.equals(card, pokemon.card);
     }
 
     @Override
@@ -236,4 +274,20 @@ public class Pokemon {
         return Objects.hash(card, currentHP, attackBasic, attackSpecial, currentEffect);
     }
 
+    @Override
+    public String toString() {
+        return "Pokemon{" +
+                "card=" + card +
+                ", currentHP=" + currentHP +
+                ", attackBasic=" + attackBasic +
+                ", attackSpecial=" + attackSpecial +
+                ", currentEffect=" + currentEffect +
+                ", dodge=" + dodge +
+                ", paralyze=" + paralyze +
+                ", crit=" + crit +
+                ", burnDamage=" + burnDamage +
+                ", drainHeal=" + drainHeal +
+                ", defeated=" + defeated +
+                '}';
+    }
 }

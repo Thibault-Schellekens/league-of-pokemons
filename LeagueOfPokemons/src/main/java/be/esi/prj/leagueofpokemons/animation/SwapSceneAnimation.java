@@ -18,6 +18,7 @@ import java.util.Random;
 
 // todo: get WIDTH/HEIGHT FROM A GLOBAL SCOPE
 public class SwapSceneAnimation {
+    private static final Random RANDOM = new Random();
     private static final int WIDTH = 1061;
     private static final int HEIGHT = 660;
     private static final int LEAF_COUNT = 300;
@@ -33,6 +34,8 @@ public class SwapSceneAnimation {
 //            Color.web("#FF5722"), Color.web("#E64A19"), Color.web("#D84315"), // Orange-rouge
             Color.web("#FBC02D"), Color.web("#F9A825"), Color.web("#F57F17")  // Jaunes dorés
     };
+
+    private SwapSceneAnimation() {}
 
     public static void swapSceneTransition(Scene scene, Pane mainRoot, Pane nextRoot, Node previousRoot, double speed) {
         mainRoot.getChildren().add(previousRoot);
@@ -95,25 +98,22 @@ public class SwapSceneAnimation {
 
         rightTransition.setOnFinished(event -> downTransitionRight.play());
 
-        downTransitionLeft.setOnFinished(e -> {
-            nextRoot.getChildren().removeAll(leftCurtain, rightCurtain);
-        });
+        downTransitionLeft.setOnFinished(event -> nextRoot.getChildren().removeAll(leftCurtain, rightCurtain));
     }
 
     private static void createLeaves(Group leftCurtain, Group rightCurtain, double speed) {
-        Random random = new Random();
 
         for (int i = 0; i < LEAF_COUNT; i++) {
-            createLeafWithDelay(leftCurtain, rightCurtain, i, random, speed);
+            createLeafWithDelay(leftCurtain, rightCurtain, i, speed);
         }
     }
 
-    private static void createLeafWithDelay(Group leftCurtain, Group rightCurtain, int index, Random random, double speed) {
-        double creationDelay = random.nextDouble(0, 2 / speed);
+    private static void createLeafWithDelay(Group leftCurtain, Group rightCurtain, int index, double speed) {
+        double creationDelay = RANDOM.nextDouble(0, 2 / speed);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(creationDelay));
         delay.setOnFinished(event -> {
-            Group leaf = createAndPositionLeaf(random);
+            Group leaf = createAndPositionLeaf();
 
             if (index % 2 == 0) {
                 leftCurtain.getChildren().add(leaf);
@@ -127,19 +127,19 @@ public class SwapSceneAnimation {
         delay.play();
     }
 
-    private static Group createAndPositionLeaf(Random random) {
-        double size = random.nextDouble() * 80 + 160;
-        Color leafColor = LEAF_COLORS[random.nextInt(LEAF_COLORS.length)];
-        Color darkColor = random.nextBoolean() ?
+    private static Group createAndPositionLeaf() {
+        double size = RANDOM.nextDouble() * 80 + 160;
+        Color leafColor = LEAF_COLORS[RANDOM.nextInt(LEAF_COLORS.length)];
+        Color darkColor = RANDOM.nextBoolean() ?
                 Color.web("#5D4037") : leafColor.darker();
-        double posX = random.nextDouble() * WIDTH * 0.6 - WIDTH * 0.3;
-        double posY = random.nextDouble() * HEIGHT;
+        double posX = RANDOM.nextDouble() * WIDTH * 0.6 - WIDTH * 0.3;
+        double posY = RANDOM.nextDouble() * HEIGHT;
 
-        Group leaf = createOptimizedLeaf(size, leafColor, darkColor, random);
+        Group leaf = createOptimizedLeaf(size, leafColor, darkColor);
 
         leaf.setTranslateX(posX);
         leaf.setTranslateY(posY);
-        leaf.setRotate(random.nextDouble() * 360);
+        leaf.setRotate(RANDOM.nextDouble() * 360);
 
         leaf.setOpacity(0);
         leaf.setCache(true);
@@ -154,15 +154,15 @@ public class SwapSceneAnimation {
         fadeIn.play();
     }
 
-    private static Group createOptimizedLeaf(double size, Color color, Color darkColor, Random random) {
+    private static Group createOptimizedLeaf(double size, Color color, Color darkColor) {
         Group leaf = new Group();
 
         Polygon mainLeaf = createMainLeafShape(size, color, darkColor);
         Rectangle centralVein = createCentralVein(size, darkColor);
-        Group veins = createSecondaryVeins(size, darkColor, random);
+        Group veins = createSecondaryVeins(size, darkColor);
 
-        if (random.nextBoolean()) {
-            addHighlight(veins, size, random);
+        if (RANDOM.nextBoolean()) {
+            addHighlight(veins, size);
         }
 
         addShadowEffect(mainLeaf, size);
@@ -198,7 +198,7 @@ public class SwapSceneAnimation {
         return centralVein;
     }
 
-    private static Group createSecondaryVeins(double size, Color darkColor, Random random) {
+    private static Group createSecondaryVeins(double size, Color darkColor) {
         Group veins = new Group();
         int numVeins = 2;
 
@@ -206,10 +206,10 @@ public class SwapSceneAnimation {
             double yPos = -size * 0.3 + (i * size * 0.6 / (numVeins + 1));
 
             Rectangle rightVein = createVein(0, yPos - size * 0.01, size * 0.15, size * 0.03,
-                    darkColor, random.nextDouble() * 10 + 10);
+                    darkColor, RANDOM.nextDouble() * 10 + 10);
 
             Rectangle leftVein = createVein(-size * 0.15, yPos - size * 0.01, size * 0.15, size * 0.03,
-                    darkColor, -random.nextDouble() * 10 - 10);
+                    darkColor, -RANDOM.nextDouble() * 10 - 10);
 
             veins.getChildren().addAll(leftVein, rightVein);
         }
@@ -228,9 +228,9 @@ public class SwapSceneAnimation {
         return vein;
     }
 
-    private static void addHighlight(Group veins, double size, Random random) {
-        double xPos = random.nextDouble() * size * 0.3 - size * 0.15;
-        double yPos = random.nextDouble() * size * 0.6 - size * 0.3;
+    private static void addHighlight(Group veins, double size) {
+        double xPos = RANDOM.nextDouble() * size * 0.3 - size * 0.15;
+        double yPos = RANDOM.nextDouble() * size * 0.6 - size * 0.3;
 
         Rectangle highlight = new Rectangle(xPos, yPos, size * 0.05, size * 0.05);
         highlight.setFill(Color.WHITE);

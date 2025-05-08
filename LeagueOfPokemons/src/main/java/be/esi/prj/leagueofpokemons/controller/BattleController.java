@@ -1,6 +1,7 @@
 package be.esi.prj.leagueofpokemons.controller;
 
 import be.esi.prj.leagueofpokemons.animation.BattleAnimation;
+import be.esi.prj.leagueofpokemons.animation.EffectAnimation;
 import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.ImageProcessor;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
@@ -28,8 +29,9 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
-public class BattleController implements PropertyChangeListener {
+public class BattleController implements ControllerFXML, PropertyChangeListener {
 
     private Game game;
     private Battle battle;
@@ -38,8 +40,6 @@ public class BattleController implements PropertyChangeListener {
 
     @FXML
     private Label playerCurrentPokemonNameLabel;
-    @FXML
-    private Label opponentCurrentPokemonNameLabel;
     @FXML
     private ImageView playerPokemonImage;
     @FXML
@@ -82,16 +82,13 @@ public class BattleController implements PropertyChangeListener {
     @FXML
     private Pane teamPane;
     @FXML
-    private Pane opponentPane;
+    private Pane inTurnPane;
     @FXML
     private Pane battleOverPane;
 
 
-    // Might encapsulate into its own FXML + Controller
     @FXML
-    private Pane errorPane;
-    @FXML
-    private Label errorLabel;
+    private ErrorController errorPanelController;
 
     // Might encapsulate into its own FXML + Controller
     @FXML
@@ -107,9 +104,18 @@ public class BattleController implements PropertyChangeListener {
     @FXML
     private Circle opponentSlot3Indicator;
 
+    @FXML
+    private Pane effectPane;
+    @FXML
+    private Label effectLabel;
 
-    public void initialize() {
-        System.out.println("Battle Controller Initialized");
+    @FXML
+    private ImageView playerPokemonTypeImage;
+    @FXML
+    private ImageView opponentPokemonTypeImage;
+
+    @Override
+    public void init() {
         game = Game.getInstance();
         battle = game.startBattle();
         battle.addPropertyChangeListener(this);
@@ -128,6 +134,17 @@ public class BattleController implements PropertyChangeListener {
         specialAttackRemainingUseLabel.textProperty().bind(pokemon.remainingUseProperty(true).asString());
     }
 
+    private void updatePokemonTypeImage(Pokemon pokemon, boolean isPlayerPokemon) {
+        Type type = pokemon.getType();
+        String imageUrl = type.name() + "_type.png";
+        Image image = new Image(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/battle/" + imageUrl).toExternalForm());
+        if (isPlayerPokemon) {
+            playerPokemonTypeImage.setImage(image);
+        } else {
+            opponentPokemonTypeImage.setImage(image);
+        }
+    }
+
     private void initPokemonIndicators() {
         updatePokemonIndicator(playerSlot1Indicator, player.getActivePokemon());
         updatePokemonIndicator(playerSlot2Indicator, player.getSlot1Pokemon());
@@ -142,8 +159,8 @@ public class BattleController implements PropertyChangeListener {
             indicator.setFill(Color.TRANSPARENT);
         } else {
             ObjectBinding<Color> fillBinding = Bindings.createObjectBinding(() ->
-                pokemon.isDefeated() ? Color.GRAY : Color.RED,
-                pokemon.defeatedProperty()
+                            pokemon.isDefeated() ? Color.GRAY : Color.RED,
+                    pokemon.defeatedProperty()
             );
             indicator.fillProperty().bind(fillBinding);
         }
@@ -151,7 +168,6 @@ public class BattleController implements PropertyChangeListener {
 
     private void initNameLabels() {
         playerCurrentPokemonNameLabel.textProperty().bind(playerPokemonNameLabel.textProperty());
-        opponentCurrentPokemonNameLabel.textProperty().bind(opponentPokemonNameLabel.textProperty());
     }
 
     private void initializeSlotsPokemon() {
@@ -173,6 +189,10 @@ public class BattleController implements PropertyChangeListener {
         nameLabel.setText(pokemon.getName());
         currentHPText.setText(String.valueOf(pokemon.getCurrentHP()));
         maxHPText.setText(String.valueOf(pokemon.getMaxHP()));
+        System.out.println(pokemon.getName());
+        System.out.println(pokemon.getCurrentHP());
+        System.out.println((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
+        System.out.println("---");
         hpBar.setProgress((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
     }
 
@@ -182,7 +202,8 @@ public class BattleController implements PropertyChangeListener {
             BufferedImage pokemonRegion = ImageProcessor.extractRegion(pokemonImage, 50, 80, 500, 300);
             return SwingFXUtils.toFXImage(pokemonRegion, null);
         } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+            errorPanelController.displayError(e.getMessage());
+            return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")));
         }
     }
 
@@ -190,6 +211,7 @@ public class BattleController implements PropertyChangeListener {
         new Thread(() -> {
             String imageUrl = pokemon.getImageUrl();
             Image pokemonImage = buildPokemonImage(imageUrl);
+            BattleAnimation.setPokemon(pokemon);
             Platform.runLater(() -> {
                 if (isPlayerPokemon) {
                     updateRemainingUseLabel(pokemon);
@@ -199,50 +221,45 @@ public class BattleController implements PropertyChangeListener {
                     updatePokemonInfo(pokemon, opponentPokemonNameLabel, opponentPokemonCurrentHPText, opponentPokemonMaxHPText, opponentPokemonCurrentHPBar);
                     opponentPokemonImage.setImage(pokemonImage);
                 }
+                updatePokemonTypeImage(pokemon, isPlayerPokemon);
             });
         }).start();
     }
 
-    public void normalAttack() {
-        System.out.println("Normal attack");
-        playTurnHandler(ActionType.BASIC_ATTACK);
-    }
-
-    public void specialAttack() {
-        System.out.println("Special attack");
-        playTurnHandler(ActionType.SPECIAL_ATTACK);
-    }
-
-    public void escape() {
-        System.out.println("Escape");
+    @FXML
+    private void escape() {
         battle.removePropertyChangeListener(this);
         SceneManager.switchScene(SceneView.HUB);
     }
 
-    public void backToHub() {
+    @FXML
+    private void backToHub() {
         battle.removePropertyChangeListener(this);
+        game.nextStage();
         SceneManager.switchScene(SceneView.HUB);
     }
 
-    public void swapToSelectionPane() {
+    @FXML
+    private void swapToSelectionPane() {
         hidePanes();
         selectionPane.setVisible(true);
     }
 
-    // Refactor these to take a Pane as parameters
-    public void swapToAttackPane() {
+    @FXML
+    private void swapToAttackPane() {
         hidePanes();
         attackPane.setVisible(true);
     }
 
-    public void swapToTeamPane() {
+    @FXML
+    private void swapToTeamPane() {
         hidePanes();
         teamPane.setVisible(true);
     }
 
     private void swapToOpponentPane() {
         hidePanes();
-        opponentPane.setVisible(true);
+        inTurnPane.setVisible(true);
     }
 
     private void swapToBattleOverPane() {
@@ -254,49 +271,54 @@ public class BattleController implements PropertyChangeListener {
         selectionPane.setVisible(false);
         attackPane.setVisible(false);
         teamPane.setVisible(false);
-        opponentPane.setVisible(false);
+        inTurnPane.setVisible(false);
     }
 
-    public void swapSlot1Pokemon() {
+    @FXML
+    private void swapSlot1Pokemon() {
         Pokemon pokemonSlot1 = player.getSlot1Pokemon();
-        swapHandler(pokemonSlot1);
+        player.setNextPokemon(pokemonSlot1);
+
+        battle.prepareTurn(ActionType.SWAP, opponent.think(player.getActivePokemon()));
+        playTurnHandler();
     }
 
-    public void swapSlot2Pokemon() {
+    @FXML
+    private void swapSlot2Pokemon() {
         Pokemon pokemonSlot2 = player.getSlot2Pokemon();
-        swapHandler(pokemonSlot2);
+        player.setNextPokemon(pokemonSlot2);
+
+        battle.prepareTurn(ActionType.SWAP, opponent.think(player.getActivePokemon()));
+        playTurnHandler();
     }
 
-    public void handleOpponentTurn() {
-        ActionType action = opponent.think();
-        switch (action) {
-            case SWAP -> {
-                Pokemon nextPokemon = opponent.getNextPokemon();
-                swapHandler(nextPokemon);
-            }
-            case BASIC_ATTACK, SPECIAL_ATTACK -> playTurnHandler(action);
-        }
+    @FXML
+    private void normalAttack() {
+        battle.prepareTurn(ActionType.BASIC_ATTACK, opponent.think(player.getActivePokemon()));
+
+        playTurnHandler();
     }
 
-    private void playTurnHandler(ActionType action) {
+    @FXML
+    private void specialAttack() {
+        battle.prepareTurn(ActionType.SPECIAL_ATTACK, opponent.think(player.getActivePokemon()));
+
+        playTurnHandler();
+    }
+
+    @FXML
+    private void playTurnHandler() {
         try {
-            battle.playTurn(action);
+            battle.playTurn();
         } catch (ModelException e) {
-            displayError(e.getMessage());
-        }
-    }
-
-    private void swapHandler(Pokemon nextPokemon) {
-        try {
-            battle.swap(nextPokemon);
-        } catch (ModelException e) {
-            displayError(e.getMessage());
+            errorPanelController.displayError(e.getMessage());
         }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Object newValue = evt.getNewValue();
+
         switch (evt.getPropertyName()) {
             case "playerCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, true);
             case "opponentCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, false);
@@ -304,11 +326,13 @@ public class BattleController implements PropertyChangeListener {
                     handleSwapEvent((Pokemon) newValue, (Pokemon) evt.getOldValue(), player.getActivePokemon().equals(newValue));
 
             case "attackTurn" -> handleAttackTurnEvent((TurnResult) newValue);
-            case "turnChanged" -> handleTurnChangedEvent((CombatEntity) newValue);
+            case "turnChanged" -> handleTurnChangedEvent();
 
             case "pokemonDefeated" -> handlePokemonDefeatedEvent((CombatEntity) newValue);
 
             case "battleOver" -> handleBattleOverEvent((String) newValue);
+
+            default -> System.err.println("Unhandled property change event: " + evt.getPropertyName());
         }
     }
 
@@ -324,17 +348,17 @@ public class BattleController implements PropertyChangeListener {
         }
     }
 
-    private void handleTurnChangedEvent(CombatEntity newTurn) {
-        if (newTurn == player) {
-            swapToSelectionPane();
-        } else {
+    private void handleTurnChangedEvent() {
+        if (battle.isInTurn()) {
             swapToOpponentPane();
+        } else {
+            swapToSelectionPane();
         }
     }
 
     private void handleSwapEvent(Pokemon newPokemon, Pokemon oldPokemon, boolean isPlayerSwap) {
         handlePokemonChangeEvent(newPokemon, isPlayerSwap);
-
+        updatePokemonTypeImage(newPokemon, isPlayerSwap);
         if (isPlayerSwap) {
             if (oldPokemon.equals(player.getSlot1Pokemon())) {
                 updateSlotPokemon(oldPokemon, 1);
@@ -345,25 +369,62 @@ public class BattleController implements PropertyChangeListener {
     }
 
     private void handleAttackTurnEvent(TurnResult turnResultEvent) {
-        double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
-        if (turnResultEvent.attacker() == player) {
-//            opponentPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
-            BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
-        } else {
-//            playerPokemonCurrentHPText.setText(String.valueOf(turnResultEvent.defenderHP()));
-            BattleAnimation.playDamageAnimation(playerPokemonImage, playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.defenderHP());
+        if (turnResultEvent.damage() > 0) {
+            double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
+            if (turnResultEvent.attacker() == player) {
+                BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
+            } else {
+                BattleAnimation.playDamageAnimation(playerPokemonImage, playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.defenderHP());
+            }
+        }
+        if (turnResultEvent.effectType() == Effect.EffectType.DRAIN) {
+            double newHPBarValue = (double) turnResultEvent.attackerHP() / turnResultEvent.attacker().getActivePokemon().getMaxHP();
+            if (turnResultEvent.attacker() == player) {
+                BattleAnimation.playRestoreHealthAnimation(playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.attackerHP());
+            } else {
+                BattleAnimation.playRestoreHealthAnimation(opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.attackerHP());
+            }
+        }
+
+
+        handleEffectMessage(turnResultEvent);
+
+        Effect.EffectType effectType = turnResultEvent.effectType();
+        if (effectType != null) {
+            handleEffectAnimation(effectType, turnResultEvent);
         }
     }
 
-    private void displayError(String message) {
-        errorPane.setVisible(true);
-        errorLabel.setText(message);
+    private void handleEffectAnimation(Effect.EffectType effectType, TurnResult turnResultEvent) {
+        Effect.EffectTarget effectTarget = effectType.getTarget();
+        ImageView targetImageView;
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(5));
+        if (effectTarget == Effect.EffectTarget.DEFENDER) {
+            targetImageView = (turnResultEvent.attacker() == player) ? opponentPokemonImage : playerPokemonImage;
+        } else { // ATTACKER
+            targetImageView = (turnResultEvent.attacker() == player) ? playerPokemonImage : opponentPokemonImage;
+        }
+        Pane parentPane = (Pane) targetImageView.getParent();
+        EffectAnimation.playEffectAnimation(targetImageView, parentPane, effectType);
+    }
+
+    private void handleEffectMessage(TurnResult turnResultEvent) {
+        if (turnResultEvent.attacker().getActivePokemon().hasEffect(Effect.EffectType.DODGE)) {
+            effectPane.setVisible(true);
+            effectLabel.setText("dodge active on " + turnResultEvent.attacker().getActivePokemon().getName());
+        } else if (turnResultEvent.defender().getActivePokemon().hasEffect(Effect.EffectType.PARALYZE)) {
+            effectPane.setVisible(true);
+            effectLabel.setText("paralized active on " + turnResultEvent.defender().getActivePokemon().getName());
+        }
+
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
         pause.setOnFinished(e -> {
-            errorPane.setVisible(false);
-            errorLabel.setText("");
+            effectPane.setVisible(false);
+            effectLabel.setText("");
         });
         pause.play();
     }
+
+
 }

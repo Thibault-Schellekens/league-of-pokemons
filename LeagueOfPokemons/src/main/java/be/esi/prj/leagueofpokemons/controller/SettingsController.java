@@ -25,11 +25,9 @@ public class SettingsController {
     private Pane settingsPane;
 
     public void initialize() {
-        System.out.println("Initializing Settings Component Controller");
         settingsManager = SettingsManager.getInstance();
         setupValues();
         hideSettings();
-        settingsPane.setOnMouseClicked(event -> System.out.println("Settings Pane Clicked!"));
     }
 
     private void setupValues() {
@@ -44,9 +42,8 @@ public class SettingsController {
             updateVolume(volume);
         });
 
-        skipAnimationCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            updateSkipAnimation(newValue);
-        });
+        skipAnimationCheckbox.selectedProperty().addListener((observable, oldValue, newValue) ->
+                updateSkipAnimation(newValue));
 
         animationSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double speed = 1 + (newValue.doubleValue() / 100) * (settingsManager.getMaxAnimationSpeed() - 1);

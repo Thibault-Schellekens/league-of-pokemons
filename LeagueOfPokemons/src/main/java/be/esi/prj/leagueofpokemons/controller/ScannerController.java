@@ -3,6 +3,7 @@ package be.esi.prj.leagueofpokemons.controller;
 import be.esi.prj.leagueofpokemons.animation.ScannerAnimation;
 import be.esi.prj.leagueofpokemons.model.api.PokeApiService;
 import be.esi.prj.leagueofpokemons.model.core.Card;
+import be.esi.prj.leagueofpokemons.model.core.Game;
 import be.esi.prj.leagueofpokemons.model.ocr.CardScanResult;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRException;
 import be.esi.prj.leagueofpokemons.model.ocr.OCRService;
@@ -26,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ScannerController {
+public class ScannerController implements ControllerFXML {
     private final AudioManager audioManager;
     private final OCRService ocrService;
     private final PokeApiService pokeApiService;
@@ -57,7 +58,6 @@ public class ScannerController {
     private Text failedText;
 
     private double lineStartY;
-    
 
     public ScannerController() {
         ocrService = new OCRService();
@@ -65,8 +65,8 @@ public class ScannerController {
         audioManager = AudioManager.getInstance();
     }
 
-    public void initialize() {
-        System.out.println("Initializing Scanner");
+    @Override
+    public void init() {
         lineStartY = lineScanner.getLayoutY();
         ScannerAnimation.addGlowingAnimation(fileExplorerBtn, glowingHouse);
         setupDropZone();
@@ -87,17 +87,14 @@ public class ScannerController {
     }
 
     public void addToCollection() {
-        System.out.println("Adding to collection");
         if (scannedCard != null) {
-            // Add to database
-
             audioManager.playSound(AudioSound.SCANNER_ADD);
+            Game.getInstance().getCollection().addCard(scannedCard);
         }
         reset();
     }
 
     public void cancelCard() {
-        System.out.println("Canceling Card");
         reset();
     }
 
@@ -117,7 +114,6 @@ public class ScannerController {
                     handleScanFailed();
                     return;
                 }
-                System.out.println(card);
                 handleScanSuccess(new Image(card.getImageURL()));
                 scannedCard = card;
             } catch (IOException | OCRException e) {
