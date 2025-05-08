@@ -34,6 +34,10 @@ public class CollectionController implements ControllerFXML {
     private Button tier4btn;
     @FXML
     private Button tier5btn;
+    @FXML
+    private Button prevPageBtn;
+    @FXML
+    private Button nextPageBtn;
 
     private final Map<String, CardView> collectionCardViews = new HashMap<>();
 
@@ -54,6 +58,31 @@ public class CollectionController implements ControllerFXML {
         loadInventory();
 
         System.out.println(collectionCardViews);
+    }
+
+    private void updatePaginationButtons() {
+        int totalPages = (int) Math.ceil((double) filteredCardViews().size() / CARDS_PER_PAGE);
+        prevPageBtn.setDisable(page <= 1);
+        nextPageBtn.setDisable(page >= totalPages);
+    }
+
+    @FXML
+    private void prevPage() {
+        if (page > 1) {
+            page--;
+            loadCollectionPage();
+            updatePaginationButtons();
+        }
+    }
+
+    @FXML
+    private void nextPage() {
+        int totalPages = (int) Math.ceil((double) filteredCardViews().size() / CARDS_PER_PAGE);
+        if (page < totalPages) {
+            page++;
+            loadCollectionPage();
+            updatePaginationButtons();
+        }
     }
 
     // change this in the future so that it creates cardView by grabing the selected cardView's cropped image
