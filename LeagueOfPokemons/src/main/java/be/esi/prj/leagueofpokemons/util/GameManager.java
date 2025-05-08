@@ -18,6 +18,7 @@ public class GameManager {
         return instance;
     }
 
+
     CardRepository cardRepository;
     CollectionRepository collectionRepository;
     PlayerRepository playerRepository;
@@ -33,12 +34,11 @@ public class GameManager {
 
     public void newGame(String name){
         System.out.println("League of legends : Initializing game");
-        Collection currCollection = new Collection(-1);
+        Collection currCollection = new Collection(gameRepository.getNewGameId());
         currCollection.loadCards(collectionRepository.loadBaseSet(),null);
         Player currPlayer = new Player(0, name);
-        // getNewGameId feels wrong, game shouldn't need an id until saved
-        Game.initialize(-1, currPlayer, currCollection);
-        game = Game.getInstance();
+
+        game = new Game(gameRepository.getNewGameId(), currPlayer, currCollection,1);
         System.out.println("GameID : " + game.getId() + " PlayerID : " + game.getPlayer().getId() + " CollectionID : " + game.getCollection().getId());
     }
 

@@ -6,17 +6,78 @@ public abstract class CombatEntity {
     protected Team team;
     protected Pokemon activePokemon;
 
+//    public CombatEntity(int id, String name, Team team) {
+//        this.id = id;
+//        this.name = name;
+//        this.team = team;
+//        this.activePokemon = team.getFirstPokemon();
+//    }
+
     public Pokemon getActivePokemon() {
         return activePokemon;
     }
 
-    public boolean swapActivePokemon(Pokemon pokemon) {
-        return false;
+    public boolean isActivePokemonDead() {
+        return activePokemon.isDefeated();
+    }
+
+    public Pokemon getSlot1Pokemon() {
+        return getInactivePokemonByIndex(1);
+    }
+
+    public Pokemon getSlot2Pokemon() {
+        return getInactivePokemonByIndex(2);
+    }
+
+    private Pokemon getInactivePokemonByIndex(int index) {
+        int count = 0;
+        for (int i = 0; i < team.getMaxSize(); i++) {
+            Pokemon pokemon = team.getPokemon(i);
+            if (pokemon != activePokemon) {
+                count++;
+                if (count == index) {
+                    return pokemon;
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isDefeated() {
-        return false;
+        return team.isDefeated();
     }
 
-    public abstract void performAction(ActionType actionType, CombatEntity enemy);
+    public String getCardUrl() {
+        return activePokemon.getImageUrl();
+    }
+
+    //TODO: make it not abstract, and take a boolean isSpecial
+    public abstract AttackResult performAction(ActionType actionType, CombatEntity enemy);
+
+    void swap(Pokemon nextPokemon) {
+        if (nextPokemon == null) {
+            throw new ModelException("Next pokemon is null!");
+        }
+
+        if (nextPokemon.equals(activePokemon)) {
+            throw new ModelException("You can not swap to the same pokemon!");
+        }
+
+        int activeIndex = team.indexOf(activePokemon);
+        int nextIndex = team.indexOf(nextPokemon);
+
+        if (activeIndex == -1 || nextIndex == -1) {
+            throw new ModelException("You can not swap to a Pokemon not in your team!");
+        }
+
+        team.setPokemon(activeIndex, nextPokemon);
+        team.setPokemon(nextIndex, activePokemon);
+
+        activePokemon = nextPokemon;
+    }
+
 }

@@ -19,6 +19,8 @@ public class SceneManager {
 
     private static SettingsManager settingsManager;
 
+    private SceneManager() {}
+
     private static void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.setResizable(false);
@@ -35,6 +37,7 @@ public class SceneManager {
 
     public static void switchScene(SceneView view) {
         try {
+
             FXMLLoader fxmlLoader = new FXMLLoader(SceneManager.class.getResource("/be/esi/prj/leagueofpokemons/" + view.name().toLowerCase() + "-view.fxml"));
             // Loading main menu
             if (scene == null || settingsManager.isSkipAnimation()) {

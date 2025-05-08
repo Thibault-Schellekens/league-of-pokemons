@@ -8,7 +8,7 @@ module be.esi.prj.leagueofpokemons {
     requires java.sdk;
     requires javafx.media;
     requires java.sql;
-    requires javafx.swing;
+
 
     opens be.esi.prj.leagueofpokemons to javafx.fxml;
     opens be.esi.prj.leagueofpokemons.controller to javafx.fxml;
