@@ -2,13 +2,16 @@ package be.esi.prj.leagueofpokemons.model.core;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Collection {
     private int id;
 
+    // Contains every card, including base set + imported cards
     private Set<Card> availableCards;
     private Set<Card> importedCards;
 
@@ -42,15 +45,16 @@ public class Collection {
         }
     }
 
-
-    //returns all cards
     public Set<Card> getAvailableCards(){
-        return availableCards;
+        return Collections.unmodifiableSet(availableCards);
     }
 
-    //returns loadedCards
+    public Set<Card> getAvailableCards(CardFilter filter) {
+        return availableCards.stream().filter(filter::matches).collect(Collectors.toSet());
+    }
+
     public Set<Card> getImportedCards() {
-        return importedCards;
+        return Collections.unmodifiableSet(importedCards);
     }
 
     public int getId() {

@@ -1,15 +1,13 @@
 package be.esi.prj.leagueofpokemons.controller;
 
-import be.esi.prj.leagueofpokemons.model.core.Card;
-import be.esi.prj.leagueofpokemons.model.core.Game;
-import be.esi.prj.leagueofpokemons.model.core.ModelException;
-import be.esi.prj.leagueofpokemons.model.core.Tier;
+import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
 import be.esi.prj.leagueofpokemons.view.CardContext;
 import be.esi.prj.leagueofpokemons.view.CardView;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.util.*;
@@ -18,6 +16,8 @@ public class CollectionController implements ControllerFXML {
     private Game game;
     private int page = 1;
     private Tier tier = Tier.TIER_I;
+    private String name;
+    private Type type;
     private final int CARDS_PER_PAGE = 6;
 
     @FXML
@@ -38,32 +38,103 @@ public class CollectionController implements ControllerFXML {
     private Button prevPageBtn;
     @FXML
     private Button nextPageBtn;
+    @FXML
+    private ImageView prevImage;
+    @FXML
+    private ImageView nextImage;
+
+    @FXML
+    private TextField nameField;
+    @FXML
+    private RadioButton fireButton;
+    @FXML
+    private RadioButton waterButton;
+    @FXML
+    private RadioButton grassButton;
+    @FXML
+    private RadioButton lightningButton;
+    @FXML
+    private RadioButton fightingButton;
 
     private final Map<String, CardView> collectionCardViews = new HashMap<>();
 
 
     @Override
     public void init() {
-        System.out.println("Initializing Collection Controller");
         game = Game.getInstance();
-        System.out.println("Initialized with inventory size : " + game.getPlayer().getInventorySize());
+        initTierButtons();
+        initTypeButtons();
 
+        loadCardViews();
+        loadCollectionPage();
+        loadInventory();
+        updatePaginationButtons();
+    }
+
+    private void initTypeButtons() {
+        List<RadioButton> typeButtons = List.of(fireButton, waterButton, grassButton, lightningButton, fightingButton);
+
+        for (RadioButton rb : typeButtons) {
+            rb.setOnAction(e -> {
+               boolean isSelected = rb.isSelected();
+               for (RadioButton b : typeButtons) {
+                   b.setSelected(false);
+                   b.getParent().setOpacity(0.5);
+               }
+               if (isSelected) {
+                   rb.setSelected(true);
+                   rb.getParent().setOpacity(1);
+               }
+            });
+        }
+    }
+
+    private Type getSelectedButtonType() {
+        List<RadioButton> typeButtons = List.of(fireButton, waterButton, grassButton, lightningButton, fightingButton);
+
+        for (RadioButton rb : typeButtons) {
+            if (rb.isSelected()) {
+                return Type.valueOf(rb.getText());
+            }
+        }
+        return null;
+    }
+
+
+    private void initTierButtons() {
         tier1btn.setOnAction(e -> setTierAndReload(Tier.TIER_I));
         tier2btn.setOnAction(e -> setTierAndReload(Tier.TIER_II));
         tier3btn.setOnAction(e -> setTierAndReload(Tier.TIER_III));
         tier4btn.setOnAction(e -> setTierAndReload(Tier.TIER_IV));
         tier5btn.setOnAction(e -> setTierAndReload(Tier.TIER_V));
-        loadCardViews();
-        loadCollectionPage();
-        loadInventory();
-
-        System.out.println(collectionCardViews);
     }
 
     private void updatePaginationButtons() {
+        updatePreviousPaginationButton();
+        updateNextPaginationButton();
+    }
+
+    private void updateNextPaginationButton() {
         int totalPages = (int) Math.ceil((double) filteredCardViews().size() / CARDS_PER_PAGE);
-        prevPageBtn.setDisable(page <= 1);
-        nextPageBtn.setDisable(page >= totalPages);
+        boolean nextDisable = page >= totalPages;
+        nextPageBtn.setDisable(nextDisable);
+        nextImage.setOpacity(nextDisable ? 0.5 : 1);
+    }
+
+    private void updatePreviousPaginationButton() {
+        boolean prevDisable = page <= 1;
+        prevPageBtn.setDisable(prevDisable);
+        prevImage.setOpacity(prevDisable ? 0.5 : 1);
+    }
+
+    @FXML
+    private void filteredSearch() {
+        String name = nameField.getText();
+        Type type = getSelectedButtonType();
+        
+        this.name = name;
+        this.type = type;
+        loadCollectionPage();
     }
 
     @FXML
@@ -135,11 +206,19 @@ public class CollectionController implements ControllerFXML {
 
 
     private List<CardView> filteredCardViews() {
-        return collectionCardViews.values()
-                .stream()
-                .filter(view -> view.getCard().getTier() == tier)
+        CardFilter filter = new CardFilter.Builder()
+                .tier(tier)
+                .name(name)
+                .type(type)
+                .build();
+
+        Set<Card> filteredCards = game.getCollection().getAvailableCards(filter);
+
+        return collectionCardViews.values().stream()
+                .filter(view -> filteredCards.contains(view.getCard()))
                 .toList();
     }
+
 
     public void back() {
         SceneManager.switchScene(SceneView.HUB);
