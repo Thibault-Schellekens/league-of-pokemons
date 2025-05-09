@@ -6,9 +6,7 @@ import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class GameRepository implements Repository<Integer, GameDto> {
 
@@ -99,10 +97,9 @@ public class GameRepository implements Repository<Integer, GameDto> {
         }
     }
 
-
     @Override
-    public Set<GameDto> findAll() {
-        Set<GameDto> gameSaves = new HashSet<>();
+    public List<GameDto> findAll() {
+        List<GameDto> gameSaves = new ArrayList<>();
         String sql = "Select * from GameSaves";
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);

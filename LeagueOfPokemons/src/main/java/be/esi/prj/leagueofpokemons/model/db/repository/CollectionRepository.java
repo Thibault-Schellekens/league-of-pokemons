@@ -53,8 +53,8 @@ public class CollectionRepository implements Repository<Integer, Collection> {
 
 
     @Override
-    public Set<Collection> findAll() {
-        Set<Collection> collections = null;
+    public List<Collection> findAll() {
+        List<Collection> collections = new ArrayList<>();
         String sql = "Select * from Collection";
         try(Statement statement= connection.createStatement()){
             try(ResultSet rs = statement.executeQuery(sql)){

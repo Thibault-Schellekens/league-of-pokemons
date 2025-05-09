@@ -76,4 +76,10 @@ public class GameManager {
         Game.getInstance().loadGame(gameDto.gameID(), player, collection, gameDto.currentStage());
     }
 
+
+    // TODO: only return game from that player name
+    public static List<GameDto> loadGames() {
+        return gameRepository.findAll();
+    }
+
 }

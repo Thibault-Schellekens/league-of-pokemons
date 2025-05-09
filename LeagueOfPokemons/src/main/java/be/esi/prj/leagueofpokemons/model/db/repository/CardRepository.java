@@ -4,10 +4,7 @@ import be.esi.prj.leagueofpokemons.model.core.Type;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class CardRepository implements Repository<String, Card> {
     private final Connection connection;
@@ -60,8 +57,8 @@ public class CardRepository implements Repository<String, Card> {
 
 
     @Override
-    public Set<Card> findAll() {
-        Set<Card> cards = new HashSet<>();
+    public List<Card> findAll() {
+        List<Card> cards = new ArrayList<>();
         String sql = "SELECT * from Cards";
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);

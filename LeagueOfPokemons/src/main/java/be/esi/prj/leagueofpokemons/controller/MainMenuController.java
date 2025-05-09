@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 public class MainMenuController implements ControllerFXML{
     @FXML
     private SettingsController settingsMenuController;
+    @FXML
+    private LoadGameController loadGameMenuController;
 
     @Override
     public void init() {
@@ -17,6 +19,12 @@ public class MainMenuController implements ControllerFXML{
     public void openSettings() {
         if (settingsMenuController != null) {
             settingsMenuController.showSettings();
+        }
+    }
+
+    public void openLoadGame() {
+        if (loadGameMenuController != null) {
+            loadGameMenuController.showLoadGame();
         }
     }
 
@@ -34,10 +42,6 @@ public class MainMenuController implements ControllerFXML{
     public void save() {
         System.out.println("Saving game...");
         GameManager.saveGame();
-
-    }
-
-    public void load() {
 
     }
 

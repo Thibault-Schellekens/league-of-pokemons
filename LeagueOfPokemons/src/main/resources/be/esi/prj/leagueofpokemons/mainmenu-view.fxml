@@ -17,6 +17,11 @@
         <Pane layoutX="364.0" layoutY="214.0" prefHeight="240.0" prefWidth="345.0">
             <fx:include source="include/settings-component.fxml" fx:id="settingsMenu"/>
         </Pane>
+
+        <Pane layoutX="0.0" layoutY="0.0">
+            <fx:include source="include/loadGame-component.fxml" fx:id="loadGameMenu"/>
+        </Pane>
+
         <ImageView fx:id="bgImage" disable="true" fitHeight="668.0" fitWidth="1072.0" layoutX="-2.0" pickOnBounds="true"
                    preserveRatio="true" smooth="false">
             <image>
@@ -140,7 +145,7 @@
                             </image>
                         </ImageView>
                         <Button fx:id="loadBtn" layoutX="13.0" layoutY="16.0" mnemonicParsing="false"
-                                onMouseClicked="#load" opacity="0.0" prefHeight="46.0" prefWidth="48.0"
+                                onMouseClicked="#openLoadGame" opacity="0.0" prefHeight="46.0" prefWidth="48.0"
                                 style="-fx-cursor: hand;" text="loadBtn">
                             <font>
                                 <Font size="10.0"/>

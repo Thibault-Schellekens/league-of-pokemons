@@ -84,7 +84,7 @@ public class PlayerRepository implements Repository<Integer, Player> {
     }
 
     @Override
-    public Set<Player> findAll() {
+    public List<Player> findAll() {
         return null;
     }
 
