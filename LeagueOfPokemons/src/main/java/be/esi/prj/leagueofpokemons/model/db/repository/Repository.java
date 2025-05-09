@@ -9,5 +9,5 @@ public interface Repository<K, T> {
     K save(T entity);
 
     List<T> findAll();
-    void delete(T entity);
+    void delete(K id);
 }

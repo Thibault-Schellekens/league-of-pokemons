@@ -137,7 +137,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     private void updatePokemonTypeImage(Pokemon pokemon, boolean isPlayerPokemon) {
         Type type = pokemon.getType();
         String imageUrl = type.name() + "_type.png";
-        Image image = new Image(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/battle/" + imageUrl).toExternalForm());
+        Image image = new Image(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/" + imageUrl).toExternalForm());
         if (isPlayerPokemon) {
             playerPokemonTypeImage.setImage(image);
         } else {
@@ -207,6 +207,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         }
     }
 
+
+    // TODO: Make dead animation and set Pokemon after this one
     private void handlePokemonChangeEvent(Pokemon pokemon, boolean isPlayerPokemon) {
         new Thread(() -> {
             String imageUrl = pokemon.getImageUrl();

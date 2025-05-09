@@ -27,9 +27,8 @@
             </TableView>
 
             <HBox alignment="CENTER" spacing="20">
-                <Button fx:id="loadGameButton" disable="true" prefHeight="30" prefWidth="120" text="Charger" />
-                <Button fx:id="deleteGameButton" disable="true" prefHeight="30" prefWidth="120" text="Supprimer" />
-                <Button fx:id="cancelButton" prefHeight="30" prefWidth="120" text="Annuler" />
+                <Button onMouseClicked="#loadGame" prefHeight="30" prefWidth="120" text="Charger" />
+                <Button onMouseClicked="#deleteGame" prefHeight="30" prefWidth="120" text="Supprimer" />
             </HBox>
         </VBox>
         <Pane layoutX="1008.0" layoutY="14.0" prefHeight="30.0" prefWidth="31.0">

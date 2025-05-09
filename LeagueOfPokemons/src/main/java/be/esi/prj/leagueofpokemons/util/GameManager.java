@@ -1,9 +1,7 @@
 package be.esi.prj.leagueofpokemons.util;
 
-import be.esi.prj.leagueofpokemons.model.core.Card;
+import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.model.core.Collection;
-import be.esi.prj.leagueofpokemons.model.core.Game;
-import be.esi.prj.leagueofpokemons.model.core.Player;
 import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.model.db.repository.*;
 import be.esi.prj.leagueofpokemons.view.ImageCache;
@@ -31,11 +29,14 @@ public class GameManager {
                 + " CollectionID : " + Game.getInstance().getCollection().getId());
     }
 
-    public static void saveGame() {
+    public static void saveGame(String name) {
+        if (name == null) {
+            throw new ModelException("Game name cannot be empty");
+        }
         Game game = Game.getInstance();
         GameDto gameDto = new GameDto(
                 game.getId(),
-                "game save 9",
+                name,
                 game.getPlayer().getId(),
                 game.getPlayer().getSlot(0).getId(),
                 game.getPlayer().getSlot(1).getId(),
@@ -58,10 +59,10 @@ public class GameManager {
     }
 
     public static void loadGame(int gameId) {
-        List<Card> playerInventory = new ArrayList<>();
+        System.out.println("GameID before loading : " + gameId);
         GameDto gameDto = gameRepository.findById(gameId).orElse(null);
         if (gameDto == null) {
-            throw new IllegalArgumentException("Game not found with ID: " + gameId);
+            throw new ModelException("Game not found with ID: " + gameId);
         }
 
         Collection collection = collectionRepository.findById(gameDto.gameID()).orElse(null);
@@ -71,9 +72,20 @@ public class GameManager {
         Card slot2 = cardRepository.findById(gameDto.slot2ID()).orElse(null);
         Card slot3 = cardRepository.findById(gameDto.slot3ID()).orElse(null);
 
-        playerInventory.addAll(List.of(slot1, slot2, slot3));
+        List<Card> playerInventory = new ArrayList<>(List.of(slot1, slot2, slot3));
         player.loadPlayerInventory(playerInventory);
+
         Game.getInstance().loadGame(gameDto.gameID(), player, collection, gameDto.currentStage());
+        ImageCache.getInstance().registerToCollection(collection);
+        System.out.println("GameID after loading : " + gameId);
+    }
+
+    public static void deleteGame(int gameId) {
+        try {
+            gameRepository.delete(gameId);
+        } catch (RepositoryException e) {
+            throw new ModelException("Error while deleting game: " + gameId);
+        }
     }
 
 

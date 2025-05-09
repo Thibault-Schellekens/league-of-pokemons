@@ -20,7 +20,7 @@ public class GameRepository implements Repository<Integer, GameDto> {
 
     @Override
     public Optional<GameDto> findById(Integer gameId) {
-        String sql = "Select * from GameSaves where playerID = ?";
+        String sql = "Select * from GameSaves where gameID = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, gameId);
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -130,7 +130,13 @@ public class GameRepository implements Repository<Integer, GameDto> {
     }
 
     @Override
-    public void delete(GameDto entity) {
-
+    public void delete(Integer id) {
+        String sql = "DELETE FROM GameSaves WHERE gameId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RepositoryException("Error deleting", e);
+        }
     }
 }

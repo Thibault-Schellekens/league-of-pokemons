@@ -89,8 +89,15 @@ public class PlayerRepository implements Repository<Integer, Player> {
     }
 
     @Override
-    public void delete(Player entity) {
+    public void delete(Integer id) {
+        String sql = "DELETE FROM Player WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RepositoryException("Error deleting", e);
 
+        }
     }
 
 }

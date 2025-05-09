@@ -59,6 +59,8 @@ public class Game {
         this.player = newPlayer;
         this.collection = newCollection;
         this.currentStage = currentStage;
+
+        // Register ImageCache to new Collection
     }
 
     public void nextStage() {

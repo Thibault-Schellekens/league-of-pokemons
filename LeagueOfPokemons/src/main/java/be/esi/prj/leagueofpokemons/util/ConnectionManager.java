@@ -6,6 +6,7 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 public class ConnectionManager {
@@ -28,6 +29,7 @@ public class ConnectionManager {
         }
         return properties;
     }
+
     public static Connection getConnection() {
         if (connection == null) {
             try {
@@ -35,6 +37,8 @@ public class ConnectionManager {
                 String url = properties.getProperty("db.url");
                 System.out.println(url);
                 connection = DriverManager.getConnection(url);
+                Statement statement = connection.createStatement();
+                statement.execute("PRAGMA foreign_keys = ON;");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

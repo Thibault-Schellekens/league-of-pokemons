@@ -3,6 +3,8 @@ package be.esi.prj.leagueofpokemons.controller;
 import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.util.GameManager;
+import be.esi.prj.leagueofpokemons.util.SceneManager;
+import be.esi.prj.leagueofpokemons.util.SceneView;
 import be.esi.prj.leagueofpokemons.view.ImageCache;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,7 +16,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -115,5 +116,28 @@ public class LoadGameController {
         if (loadGamePane.getParent() != null) {
             loadGamePane.getParent().toBack();
         }
+    }
+
+    @FXML
+    private void loadGame() {
+        GameDto selectedGame = savedGamesTable.getSelectionModel().getSelectedItem();
+        if (selectedGame == null) {
+            return;
+        }
+        System.out.println(selectedGame);
+        int gameId = selectedGame.gameID();
+        GameManager.loadGame(gameId);
+        SceneManager.switchScene(SceneView.HUB);
+    }
+
+    @FXML
+    private void deleteGame() {
+        GameDto selectedGame = savedGamesTable.getSelectionModel().getSelectedItem();
+        if (selectedGame == null) {
+            return;
+        }
+        int gameId = selectedGame.gameID();
+        GameManager.deleteGame(gameId);
+        savedGames.remove(selectedGame);
     }
 }
