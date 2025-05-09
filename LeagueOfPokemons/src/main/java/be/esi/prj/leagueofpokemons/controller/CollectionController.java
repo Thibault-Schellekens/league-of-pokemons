@@ -18,7 +18,7 @@ public class CollectionController implements ControllerFXML {
     private Tier tier = Tier.TIER_I;
     private String name;
     private Type type;
-    private final int CARDS_PER_PAGE = 6;
+    private static final int CARDS_PER_PAGE = 6;
 
     @FXML
     private GridPane collectionGrid;

@@ -32,7 +32,8 @@ public class MainMenuController implements ControllerFXML{
     }
 
     public void save() {
-        GameManager.getInstance().saveGame();
+        System.out.println("Saving game...");
+        GameManager.saveGame();
 
     }
 
