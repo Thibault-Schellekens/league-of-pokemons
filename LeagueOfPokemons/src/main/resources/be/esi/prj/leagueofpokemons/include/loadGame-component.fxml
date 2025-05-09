@@ -7,21 +7,21 @@
 
 <Pane fx:id="loadGamePane" prefHeight="663.0" prefWidth="1061.0" style="-fx-background-color: pink;" stylesheets="@../style/loadGame_scene.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.LoadGameController">
     <children>
-        <VBox alignment="CENTER" layoutX="33.0" layoutY="44.0" spacing="15" AnchorPane.bottomAnchor="-12.200000000000045" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="32.799999999999955" AnchorPane.topAnchor="44.0">
+        <VBox alignment="CENTER" layoutX="3.0" layoutY="44.0" spacing="15" AnchorPane.bottomAnchor="87.79999999999995" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="2.7999999999999545" AnchorPane.topAnchor="44.0">
             <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
 
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Charger une partie" />
 
-            <TableView fx:id="savedGamesTable" fixedCellSize="80">
+            <TableView fx:id="savedGamesTable" fixedCellSize="150">
                 <columns>
-                    <TableColumn fx:id="gameNameColumn"  resizable="false" text="Nom de la sauvegarde" />
-                    <TableColumn fx:id="dateColumn"  resizable="false" text="Date" />
-                    <TableColumn fx:id="stageColumn"  resizable="false" text="Stage" />
-                    <TableColumn fx:id="pokemon1Column" prefWidth="200" resizable="false" text="Pokémon 1" />
-                    <TableColumn fx:id="pokemon2Column" prefWidth="200" resizable="false" text="Pokémon 2" />
-                    <TableColumn fx:id="pokemon3Column" prefWidth="200" resizable="false" text="Pokémon 3" />
+                    <TableColumn fx:id="gameNameColumn" prefWidth="150" resizable="false" text="Nom de la sauvegarde" />
+                    <TableColumn fx:id="dateColumn" prefWidth="150" resizable="false" text="Date" />
+                    <TableColumn fx:id="stageColumn" resizable="false" text="Stage" />
+                    <TableColumn fx:id="pokemon1Column" prefWidth="210" resizable="false" text="Pokémon 1" />
+                    <TableColumn fx:id="pokemon2Column" prefWidth="210" resizable="false" text="Pokémon 2" />
+                    <TableColumn fx:id="pokemon3Column" prefWidth="210" resizable="false" text="Pokémon 3" />
 
                 </columns>
             </TableView>

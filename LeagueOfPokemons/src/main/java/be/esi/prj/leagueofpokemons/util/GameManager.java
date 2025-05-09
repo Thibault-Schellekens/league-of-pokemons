@@ -35,7 +35,7 @@ public class GameManager {
         Game game = Game.getInstance();
         GameDto gameDto = new GameDto(
                 game.getId(),
-                "game save 2",
+                "game save 9",
                 game.getPlayer().getId(),
                 game.getPlayer().getSlot(0).getId(),
                 game.getPlayer().getSlot(1).getId(),
@@ -80,6 +80,10 @@ public class GameManager {
     // TODO: only return game from that player name
     public static List<GameDto> loadGames() {
         return gameRepository.findAll();
+    }
+
+    public static Optional<Card> findCardById(String id) {
+        return cardRepository.findById(id);
     }
 
 }

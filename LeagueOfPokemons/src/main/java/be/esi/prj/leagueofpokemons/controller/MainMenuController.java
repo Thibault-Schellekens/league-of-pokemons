@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.controller;
 
+import be.esi.prj.leagueofpokemons.model.core.ModelException;
 import be.esi.prj.leagueofpokemons.util.GameManager;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
@@ -11,6 +12,8 @@ public class MainMenuController implements ControllerFXML{
     private SettingsController settingsMenuController;
     @FXML
     private LoadGameController loadGameMenuController;
+    @FXML
+    private ErrorController errorPanelController;
 
     @Override
     public void init() {
@@ -40,8 +43,11 @@ public class MainMenuController implements ControllerFXML{
     }
 
     public void save() {
-        System.out.println("Saving game...");
-        GameManager.saveGame();
+        try {
+            GameManager.saveGame();
+        } catch (ModelException e) {
+            errorPanelController.displayError("Error saving game");
+        }
 
     }
 
