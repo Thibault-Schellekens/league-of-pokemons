@@ -189,10 +189,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         nameLabel.setText(pokemon.getName());
         currentHPText.setText(String.valueOf(pokemon.getCurrentHP()));
         maxHPText.setText(String.valueOf(pokemon.getMaxHP()));
-        System.out.println(pokemon.getName());
-        System.out.println(pokemon.getCurrentHP());
-        System.out.println((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
-        System.out.println("---");
         hpBar.setProgress((double) pokemon.getCurrentHP() / pokemon.getMaxHP());
     }
 
@@ -206,25 +202,31 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
             return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")));
         }
     }
-
-
-    // TODO: Make dead animation and set Pokemon after this one
-    private void handlePokemonChangeEvent(Pokemon pokemon, boolean isPlayerPokemon) {
+    
+    private void handlePokemonChangeEvent(Pokemon pokemon, boolean isPlayerPokemon, boolean isDead) {
         new Thread(() -> {
             String imageUrl = pokemon.getImageUrl();
             Image pokemonImage = buildPokemonImage(imageUrl);
-            BattleAnimation.setPokemon(pokemon);
-            Platform.runLater(() -> {
-                if (isPlayerPokemon) {
-                    updateRemainingUseLabel(pokemon);
-                    updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText, playerPokemonCurrentHPBar);
-                    playerPokemonImage.setImage(pokemonImage);
-                } else {
-                    updatePokemonInfo(pokemon, opponentPokemonNameLabel, opponentPokemonCurrentHPText, opponentPokemonMaxHPText, opponentPokemonCurrentHPBar);
-                    opponentPokemonImage.setImage(pokemonImage);
-                }
-                updatePokemonTypeImage(pokemon, isPlayerPokemon);
-            });
+            Runnable updateFunction = () -> {
+                Platform.runLater(() -> {
+                    if (isPlayerPokemon) {
+                        updateRemainingUseLabel(pokemon);
+                        updatePokemonInfo(pokemon, playerPokemonNameLabel, playerPokemonCurrentHPText, playerPokemonMaxHPText, playerPokemonCurrentHPBar);
+                        playerPokemonImage.setImage(pokemonImage);
+                        playerPokemonImage.setOpacity(1.0);
+                    } else {
+                        updatePokemonInfo(pokemon, opponentPokemonNameLabel, opponentPokemonCurrentHPText, opponentPokemonMaxHPText, opponentPokemonCurrentHPBar);
+                        opponentPokemonImage.setImage(pokemonImage);
+                        opponentPokemonImage.setOpacity(1.0);
+                    }
+                    updatePokemonTypeImage(pokemon, isPlayerPokemon);
+                });
+            };
+            if (isDead && BattleAnimation.isAnimationPlaying()) {
+                BattleAnimation.setFunction(updateFunction);
+            } else {
+                updateFunction.run();
+            }
         }).start();
     }
 
@@ -322,8 +324,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         Object newValue = evt.getNewValue();
 
         switch (evt.getPropertyName()) {
-            case "playerCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, true);
-            case "opponentCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, false);
+            case "playerCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, true, false);
+            case "opponentCurrentPokemon" -> handlePokemonChangeEvent((Pokemon) newValue, false, false);
             case "swap" ->
                     handleSwapEvent((Pokemon) newValue, (Pokemon) evt.getOldValue(), player.getActivePokemon().equals(newValue));
 
@@ -344,9 +346,11 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void handlePokemonDefeatedEvent(CombatEntity defender) {
-
         if (defender == player) {
+            BattleAnimation.playDeathAnimation(playerPokemonImage, playerPokemonCurrentHPBar, playerPokemonCurrentHPText);
             swapToTeamPane();
+        } else {
+            BattleAnimation.playDeathAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, opponentPokemonCurrentHPText);
         }
     }
 
@@ -359,7 +363,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void handleSwapEvent(Pokemon newPokemon, Pokemon oldPokemon, boolean isPlayerSwap) {
-        handlePokemonChangeEvent(newPokemon, isPlayerSwap);
+        handlePokemonChangeEvent(newPokemon, isPlayerSwap, oldPokemon.isDefeated());
         updatePokemonTypeImage(newPokemon, isPlayerSwap);
         if (isPlayerSwap) {
             if (oldPokemon.equals(player.getSlot1Pokemon())) {
@@ -427,6 +431,5 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         });
         pause.play();
     }
-
 
 }
