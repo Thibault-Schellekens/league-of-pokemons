@@ -9,14 +9,18 @@ import javafx.scene.image.WritableImage;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ImageCache implements PropertyChangeListener {
     private final Map<String, Image> croppedImages = new HashMap<>();
-
+    // Stores all the clones, so we can update them when the real image is loaded
+    private final Map<String, List<ImageView>> activeViews = new HashMap<>();
     private final Map<String, ImageView> imageViews = new HashMap<>();
 
     private static ImageCache instance;
@@ -34,15 +38,17 @@ public class ImageCache implements PropertyChangeListener {
         return instance;
     }
 
+    private boolean isEmptyCardImage(Image image) {
+        return image.getUrl() != null && image.getUrl().endsWith("emptyCard.png");
+    }
+
     private Image getCroppedImage(Card card) {
-        return croppedImages.computeIfAbsent(card.getId(), id -> {
-            Image fullImage = new Image(card.getImageURL(), false);
-            return new WritableImage(fullImage.getPixelReader(), 0, 0, 600, 420);
-        });
+        return croppedImages.computeIfAbsent(card.getId(),
+                id -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png"))));
     }
 
     public ImageView getImageView(Card card) {
-        if (!imageViews.containsKey(card.getId())) {
+        if (!imageViews.containsKey(card.getId()) || isEmptyCardImage(imageViews.get(card.getId()).getImage())) {
             Image croppedImage = getCroppedImage(card);
             ImageView view = new ImageView(croppedImage);
             view.setFitWidth(165);
@@ -51,31 +57,51 @@ public class ImageCache implements PropertyChangeListener {
             imageViews.put(card.getId(), view);
         }
 
-        // Return a clone
         ImageView original = imageViews.get(card.getId());
         ImageView clone = new ImageView(original.getImage());
         clone.setFitWidth(original.getFitWidth());
         clone.setFitHeight(original.getFitHeight());
         clone.setPreserveRatio(original.isPreserveRatio());
 
+        activeViews.computeIfAbsent(card.getId(), k -> new ArrayList<>()).add(clone);
+
         return clone;
     }
 
     private void preloadCardImage(Card card) {
-        if (!croppedImages.containsKey(card.getId())) {
+        if (!croppedImages.containsKey(card.getId()) || isEmptyCardImage(croppedImages.get(card.getId()))) {
             System.out.println("Preloading " + card.getName());
 
             executor.submit(() -> {
-                Image fullImage = new Image(card.getImageURL(), false);
-                WritableImage croppedImage = new WritableImage(fullImage.getPixelReader(), 0, 0, 600, 420);
+                try {
+                    Image fullImage = new Image(card.getImageURL(), false);
+                    WritableImage croppedImage = new WritableImage(fullImage.getPixelReader(), 0, 0, 600, 420);
 
-                Platform.runLater(() -> {
-                    croppedImages.put(card.getId(), croppedImage);
-                    System.out.println("Finished preloading " + card.getName());
-                });
+                    Platform.runLater(() -> {
+                        croppedImages.put(card.getId(), croppedImage);
 
+                        if (imageViews.containsKey(card.getId())) {
+                            imageViews.get(card.getId()).setImage(croppedImage);
+                        }
+                        
+                        if (activeViews.containsKey(card.getId())) {
+                            List<ImageView> views = activeViews.get(card.getId());
+                            List<ImageView> validViews = new ArrayList<>();
+
+                            for (ImageView view : views) {
+                                view.setImage(croppedImage);
+                                validViews.add(view);
+                            }
+
+                            activeViews.put(card.getId(), validViews);
+                        }
+
+                        System.out.println("Finished preloading " + card.getName());
+                    });
+                } catch (Exception e) {
+                    System.err.println("Error preloading image for " + card.getName() + ": " + e.getMessage());
+                }
             });
-
         }
     }
 
@@ -86,7 +112,6 @@ public class ImageCache implements PropertyChangeListener {
     public void shutdown() {
         executor.shutdown();
     }
-
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

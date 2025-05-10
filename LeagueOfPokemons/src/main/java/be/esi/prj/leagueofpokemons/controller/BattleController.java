@@ -202,7 +202,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
             return new Image(Objects.requireNonNull(getClass().getResourceAsStream("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png")));
         }
     }
-    
+
     private void handlePokemonChangeEvent(Pokemon pokemon, boolean isPlayerPokemon, boolean isDead) {
         new Thread(() -> {
             String imageUrl = pokemon.getImageUrl();
@@ -347,10 +347,10 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void handlePokemonDefeatedEvent(CombatEntity defender) {
         if (defender == player) {
-            BattleAnimation.playDeathAnimation(playerPokemonImage, playerPokemonCurrentHPBar, playerPokemonCurrentHPText);
+            BattleAnimation.playDeathAnimation(playerPokemonImage);
             swapToTeamPane();
         } else {
-            BattleAnimation.playDeathAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, opponentPokemonCurrentHPText);
+            BattleAnimation.playDeathAnimation(opponentPokemonImage);
         }
     }
 

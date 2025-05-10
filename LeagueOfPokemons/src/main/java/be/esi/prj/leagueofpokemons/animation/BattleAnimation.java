@@ -1,6 +1,5 @@
 package be.esi.prj.leagueofpokemons.animation;
 
-import be.esi.prj.leagueofpokemons.model.core.Pokemon;
 import javafx.animation.*;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -107,7 +106,7 @@ public class BattleAnimation {
         return numberTimeline;
     }
 
-    public static void playDeathAnimation(ImageView pokemonImage, ProgressBar pokemonHPBar, Text pokemonHPText) {
+    public static void playDeathAnimation(ImageView pokemonImage) {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(2.5), pokemonImage);
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
