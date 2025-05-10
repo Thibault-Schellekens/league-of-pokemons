@@ -42,6 +42,9 @@ public class CardRepository implements Repository<String, Card> {
 
     @Override
     public String save(Card card) {
+        if (card == null){
+            return null;
+        }
         String sql = "SELECT COUNT(*) FROM Cards WHERE pokID = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, card.getId());
@@ -70,11 +73,14 @@ public class CardRepository implements Repository<String, Card> {
             stmt.setString(5, card.getTier().toString());
             stmt.setString(6, card.getImageURL());
 
-            stmt.executeUpdate();
+            int affectedRows = stmt.executeUpdate();
 
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                return rs.next() ? rs.getString(1) : null;
+            if (affectedRows > 0 ){
+                return card.getId();
+            } else{
+                return null;
             }
+
 
         } catch (SQLException e) {
             throw new RepositoryException("Error inserting card: " + card, e);

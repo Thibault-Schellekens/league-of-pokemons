@@ -41,6 +41,7 @@ public class Collection {
 
         for (Card card : loadedCards) {
             availableCards.add(card);
+            importedCards.add(card);
             pcs.firePropertyChange(CARD_ADDED_EVENT, null, card);
         }
     }

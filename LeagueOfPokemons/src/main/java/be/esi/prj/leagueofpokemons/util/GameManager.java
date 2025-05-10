@@ -49,9 +49,6 @@ public class GameManager {
             cardRepository.save(card);
         }
 
-        System.out.println("LOP : saving with id : " + game.getId());
-        System.out.println("Saving with team : " + game.getPlayer().getSlot(2).getName());
-
         int gameId = gameRepository.save(gameDto);
         game.setId(gameId);
         collectionRepository.save(game.getCollection());

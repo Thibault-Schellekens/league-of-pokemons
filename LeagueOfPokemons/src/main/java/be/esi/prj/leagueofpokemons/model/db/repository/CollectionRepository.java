@@ -10,14 +10,19 @@ import java.util.*;
 
 public class CollectionRepository implements Repository<Integer, Collection> {
     private final Connection connection;
+    private CardRepository cardRepository;
 
     public CollectionRepository() {
         this.connection = ConnectionManager.getConnection();
     }
 
+    public CollectionRepository(Connection connection) {
+        this.connection = connection;
+        this.cardRepository = new CardRepository(connection);
+    }
+
     @Override
     public Optional<Collection> findById(Integer id) {
-        CardRepository cardRepository = new CardRepository();
         Set<Card> cards = new HashSet<>();
         String sql = "SELECT * FROM Collection WHERE colId = ?";
 
@@ -39,33 +44,27 @@ public class CollectionRepository implements Repository<Integer, Collection> {
 
     @Override
     public Integer save(Collection collection) {
-        String sql = "SELECT COUNT(*) FROM Collection WHERE colId = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, collection.getId());
-            ResultSet rs = stmt.executeQuery();
-            boolean exists = rs.next() && rs.getInt(1) > 0;
+        String sqlInsert = "INSERT INTO Collection (colID, pokemonID) VALUES (?, ?)";
+        String sqlCheck = "SELECT COUNT(*) FROM Collection WHERE pokemonID = ? AND colID = ?";
 
-            if (exists) {
-                return collection.getId();
-            } else {
-                return insert(collection);
-            }
-
-        } catch (SQLException e) {
-            throw new RepositoryException("Error saving collection with id: " + collection.getId(), e);
-        }
-    }
-
-    private int insert(Collection collection) {
-        String sql = "INSERT INTO Collection (colId, pokemonID) VALUES (?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (
+                PreparedStatement checkStmt = connection.prepareStatement(sqlCheck);
+                PreparedStatement insertStmt = connection.prepareStatement(sqlInsert)
+        ) {
             for (Card card : collection.getImportedCards()) {
-                stmt.setInt(1, collection.getId());
-                stmt.setString(2, card.getId());
+                checkStmt.setString(1, card.getId());
+                checkStmt.setInt(2, collection.getId());
 
-                stmt.executeUpdate();
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    boolean exists = rs.next() && rs.getInt(1) > 0;
+
+                    if (!exists) {
+                        insertStmt.setInt(1, collection.getId());
+                        insertStmt.setString(2, card.getId());
+                        insertStmt.executeUpdate();
+                    }
+                }
             }
-            // There's no id generation, so we can ignore the ResultSet generated keys.
             return collection.getId();
         } catch (SQLException e) {
             throw new RepositoryException("Error inserting collection", e);
@@ -75,23 +74,29 @@ public class CollectionRepository implements Repository<Integer, Collection> {
 
     @Override
     public List<Collection> findAll() {
-        List<Collection> collections = new ArrayList<>();
-        String sql = "Select * from Collection";
-        try (Statement statement = connection.createStatement()) {
-            try (ResultSet rs = statement.executeQuery(sql)) {
-                while (rs.next()) {
-                    // todo
-                }
+        Map<Integer, Collection> collectionMap = new HashMap<>();
+        String sql = "SELECT colId, pokemonID FROM Collection";
+
+        try (Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int collectionId = rs.getInt("colId");
+                String pokemonId = rs.getString("pokemonID");
+                // Get or create the Collection
+                Collection collection = collectionMap.computeIfAbsent(collectionId, Collection::new);
+                // Find the card and add to the Collection
+                cardRepository.findById(pokemonId).ifPresent(collection::addCard);
             }
         } catch (SQLException e) {
-            throw new RepositoryException("Error finding all", e);
+            throw new RepositoryException("Error finding all collections", e);
         }
-        return collections;
+        return new ArrayList<>(collectionMap.values());
     }
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM Collection WHERE colId = ?";
+        String sql = "DELETE FROM Collection WHERE colID = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -104,7 +109,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
     public Set<Card> loadBaseSet() {
         Set<Card> cards = new HashSet<>();
         String sql = "SELECT * FROM BaseSet";
-        try (Statement stmt = connection.createStatement()) {
+        try (Statement stmt = ConnectionManager.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Card card = Optional.of(new Card(
