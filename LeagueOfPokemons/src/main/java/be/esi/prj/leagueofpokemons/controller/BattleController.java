@@ -31,6 +31,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
+//todo: enhance buttons
 public class BattleController implements ControllerFXML, PropertyChangeListener {
 
     private Game game;
