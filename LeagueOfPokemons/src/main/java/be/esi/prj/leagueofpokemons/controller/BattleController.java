@@ -114,6 +114,11 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     @FXML
     private ImageView opponentPokemonTypeImage;
 
+    @FXML
+    private ImageView slot1PokemonTypeImage;
+    @FXML
+    private ImageView slot2PokemonTypeImage;
+
     @Override
     public void init() {
         game = Game.getInstance();
@@ -135,14 +140,18 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void updatePokemonTypeImage(Pokemon pokemon, boolean isPlayerPokemon) {
-        Type type = pokemon.getType();
-        String imageUrl = type.name() + "_type.png";
-        Image image = new Image(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/" + imageUrl).toExternalForm());
+        Image image = getTypeImage(pokemon);
         if (isPlayerPokemon) {
             playerPokemonTypeImage.setImage(image);
         } else {
             opponentPokemonTypeImage.setImage(image);
         }
+    }
+
+    private Image getTypeImage(Pokemon pokemon) {
+        Type type = pokemon.getType();
+        String imageUrl = type.name() + "_type.png";
+        return new Image(getClass().getResource("/be/esi/prj/leagueofpokemons/pics/common/" + imageUrl).toExternalForm());
     }
 
     private void initPokemonIndicators() {
@@ -179,9 +188,11 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         if (slot == 1) {
             slot1PokemonNameLabel.setText(newSlotPokemon.getName());
             slot1PokemonCurrentHPBar.setProgress((double) newSlotPokemon.getCurrentHP() / newSlotPokemon.getMaxHP());
+            slot1PokemonTypeImage.setImage(getTypeImage(newSlotPokemon));
         } else if (slot == 2) {
             slot2PokemonNameLabel.setText(newSlotPokemon.getName());
             slot2PokemonCurrentHPBar.setProgress((double) newSlotPokemon.getCurrentHP() / newSlotPokemon.getMaxHP());
+            slot2PokemonTypeImage.setImage(getTypeImage(newSlotPokemon));
         }
     }
 
