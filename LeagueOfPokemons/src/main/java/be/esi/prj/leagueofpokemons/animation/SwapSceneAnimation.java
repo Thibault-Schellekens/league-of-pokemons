@@ -1,5 +1,6 @@
 package be.esi.prj.leagueofpokemons.animation;
 
+import be.esi.prj.leagueofpokemons.util.SceneManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
@@ -16,22 +17,17 @@ import javafx.util.Duration;
 
 import java.util.Random;
 
-// todo: get WIDTH/HEIGHT FROM A GLOBAL SCOPE
 public class SwapSceneAnimation {
     private static final Random RANDOM = new Random();
-    private static final int WIDTH = 1061;
-    private static final int HEIGHT = 660;
+    private static final int WIDTH = SceneManager.WIDTH;
+    private static final int HEIGHT = SceneManager.HEIGHT;
     private static final int LEAF_COUNT = 300;
     private static final Color[] LEAF_COLORS = {
             // Green
             Color.web("#4CAF50"), Color.web("#388E3C"), Color.web("#2E7D32"), Color.web("#1B5E20"),
             Color.web("#66BB6A"), Color.web("#81C784"), Color.web("#43A047"), Color.web("#558B2F"),
             // Autumn colors
-//            Color.web("#FFA000"), Color.web("#FF8F00"), Color.web("#FF6F00"), // Oranges
-//            Color.web("#F57F17"), Color.web("#F57C00"), Color.web("#EF6C00"), // Orange foncé
             Color.web("#FFB300"), Color.web("#FFA000"), Color.web("#FF8F00"), // Ambre
-//            Color.web("#A1887F"), Color.web("#8D6E63"), Color.web("#795548"), // Bruns
-//            Color.web("#FF5722"), Color.web("#E64A19"), Color.web("#D84315"), // Orange-rouge
             Color.web("#FBC02D"), Color.web("#F9A825"), Color.web("#F57F17")  // Jaunes dorés
     };
 

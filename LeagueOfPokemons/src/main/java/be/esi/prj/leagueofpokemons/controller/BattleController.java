@@ -376,7 +376,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void handleSwapEvent(Pokemon newPokemon, Pokemon oldPokemon, boolean isPlayerSwap) {
         handlePokemonChangeEvent(newPokemon, isPlayerSwap, oldPokemon.isDefeated());
-        updatePokemonTypeImage(newPokemon, isPlayerSwap);
         if (isPlayerSwap) {
             if (oldPokemon.equals(player.getSlot1Pokemon())) {
                 updateSlotPokemon(oldPokemon, 1);

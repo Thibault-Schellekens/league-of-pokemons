@@ -45,17 +45,22 @@ public class GameManager {
                 LocalDateTime.now()
         );
 
-        for (Card card : game.getCollection().getImportedCards()) {
-            cardRepository.save(card);
+        try {
+            for (Card card : game.getCollection().getImportedCards()) {
+                cardRepository.save(card);
+            }
+
+            System.out.println("LOP : saving with id : " + game.getId());
+            System.out.println("Saving with team : " + game.getPlayer().getSlot(2).getName());
+
+            int gameId = gameRepository.save(gameDto);
+            game.setId(gameId);
+            collectionRepository.save(game.getCollection());
+            playerRepository.save(game.getPlayer());
+        } catch (RepositoryException e) {
+            throw new ModelException("Error while saving game");
         }
 
-        System.out.println("LOP : saving with id : " + game.getId());
-        System.out.println("Saving with team : " + game.getPlayer().getSlot(2).getName());
-
-        int gameId = gameRepository.save(gameDto);
-        game.setId(gameId);
-        collectionRepository.save(game.getCollection());
-        playerRepository.save(game.getPlayer());
     }
 
     public static void loadGame(int gameId) {

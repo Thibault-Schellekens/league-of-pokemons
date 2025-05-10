@@ -15,8 +15,8 @@ import java.io.IOException;
 public class SceneManager {
     private static Stage primaryStage;
     private static Scene scene;
-    private static final int WIDTH = 1061;
-    private static final int HEIGHT = 663;
+    public static final int WIDTH = 1061;
+    public static final int HEIGHT = 663;
 
     private static SettingsManager settingsManager;
 
