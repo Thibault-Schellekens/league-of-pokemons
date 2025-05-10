@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,17 +37,13 @@ public class ImageCache implements PropertyChangeListener {
         return instance;
     }
 
-    private boolean isEmptyCardImage(Image image) {
-        return image.getUrl() != null && image.getUrl().endsWith("emptyCard.png");
-    }
-
     private Image getCroppedImage(Card card) {
         return croppedImages.computeIfAbsent(card.getId(),
-                id -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("/be/esi/prj/leagueofpokemons/pics/common/emptyCard.png"))));
+                id -> EmptyCardView.create(card));
     }
 
     public ImageView getImageView(Card card) {
-        if (!imageViews.containsKey(card.getId()) || isEmptyCardImage(imageViews.get(card.getId()).getImage())) {
+        if (!imageViews.containsKey(card.getId())) {
             Image croppedImage = getCroppedImage(card);
             ImageView view = new ImageView(croppedImage);
             view.setFitWidth(165);
@@ -69,7 +64,7 @@ public class ImageCache implements PropertyChangeListener {
     }
 
     private void preloadCardImage(Card card) {
-        if (!croppedImages.containsKey(card.getId()) || isEmptyCardImage(croppedImages.get(card.getId()))) {
+        if (!croppedImages.containsKey(card.getId())) {
             System.out.println("Preloading " + card.getName());
 
             executor.submit(() -> {
@@ -83,7 +78,7 @@ public class ImageCache implements PropertyChangeListener {
                         if (imageViews.containsKey(card.getId())) {
                             imageViews.get(card.getId()).setImage(croppedImage);
                         }
-                        
+
                         if (activeViews.containsKey(card.getId())) {
                             List<ImageView> views = activeViews.get(card.getId());
                             List<ImageView> validViews = new ArrayList<>();
