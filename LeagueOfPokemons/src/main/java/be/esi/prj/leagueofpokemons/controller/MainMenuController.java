@@ -4,6 +4,8 @@ import be.esi.prj.leagueofpokemons.model.core.ModelException;
 import be.esi.prj.leagueofpokemons.util.GameManager;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.util.audio.AudioManager;
+import be.esi.prj.leagueofpokemons.util.audio.AudioSound;
 import be.esi.prj.leagueofpokemons.view.ImageCache;
 import javafx.scene.control.TextInputDialog;
 import javafx.fxml.FXML;
@@ -15,6 +17,12 @@ public class MainMenuController implements ControllerFXML{
     private LoadGameController loadGameMenuController;
     @FXML
     private ErrorController errorPanelController;
+
+    private final AudioManager audioManager;
+
+    public MainMenuController() {
+        audioManager = AudioManager.getInstance();
+    }
 
     @Override
     public void init() {
@@ -59,6 +67,7 @@ public class MainMenuController implements ControllerFXML{
         dialog.showAndWait().ifPresent(name -> {
             try {
                 GameManager.saveGame(name);
+                audioManager.playSound(AudioSound.SAVE_GAME);
             } catch (ModelException e) {
                 errorPanelController.displayError("Error saving game");
             }

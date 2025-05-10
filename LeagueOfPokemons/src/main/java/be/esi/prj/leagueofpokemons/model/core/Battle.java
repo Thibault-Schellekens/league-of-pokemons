@@ -112,10 +112,12 @@ public class Battle {
         if (player.isDefeated()) {
             status = BattleStatus.OPPONENT_WON;
             inTurn = false;
+            pcs.firePropertyChange("pokemonDefeated", null, result.defender());
             pcs.firePropertyChange("battleOver", null, opponent.getName());
         } else if (opponent.isDefeated()) {
             status = BattleStatus.PLAYER_WON;
             inTurn = false;
+            pcs.firePropertyChange("pokemonDefeated", null, result.defender());
             pcs.firePropertyChange("battleOver", null, player.getName());
         } else if (result.isPokemonDefeated()) {
             inTurn = false;

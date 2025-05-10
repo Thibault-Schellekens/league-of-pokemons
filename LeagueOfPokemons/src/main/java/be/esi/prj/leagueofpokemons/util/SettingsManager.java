@@ -1,5 +1,8 @@
 package be.esi.prj.leagueofpokemons.util;
 
+import be.esi.prj.leagueofpokemons.util.audio.AudioManager;
+
+//todo image for settings
 public class SettingsManager {
     private static SettingsManager instance;
 
@@ -13,7 +16,7 @@ public class SettingsManager {
         volume = 100;
         skipAnimation = true;
         animationSpeed = 1.0;
-        maxAnimationSpeed = 5.0;
+        maxAnimationSpeed = 3.0;
     }
 
     public static SettingsManager getInstance() {
@@ -28,7 +31,14 @@ public class SettingsManager {
     }
 
     public void setVolume(int volume) {
+        int oldVolume = this.volume;
         this.volume = volume;
+
+        if (oldVolume != volume) {
+            // Keep the AudioManager.getInstance() here, and not in the constructor
+            // Or else it'll create an infinite recursive loop.
+            AudioManager.getInstance().updateAllSoundVolumes();
+        }
     }
 
     public boolean isSkipAnimation() {

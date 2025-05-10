@@ -49,7 +49,6 @@ public class Game {
     private void buildOpponents() {
         for (int i = 0; i < 5; i++) {
             Opponent opponent = new Opponent("Opponent " + (i + 1), i);
-            opponent.selectTeam(Tier.values()[i]);
             opponents.add(opponent);
         }
     }
@@ -60,7 +59,6 @@ public class Game {
         this.collection = newCollection;
         this.currentStage = currentStage;
 
-        // Register ImageCache to new Collection
     }
 
     public void nextStage() {
@@ -68,13 +66,9 @@ public class Game {
             throw new ModelException("Current Battle must be over!");
         }
 
-        if (currentBattle.getWinner().equals(opponents.get(currentStage).getName())) {
+        currentStage++;
+        if (currentStage > MAX_STAGE) {
             endGame();
-        } else if (currentBattle.getWinner().equals(player.getName())) {
-            currentStage++;
-            if (currentStage >= MAX_STAGE) {
-                endGame();
-            }
         }
         currentBattle = null;
     }
@@ -84,14 +78,15 @@ public class Game {
             throw new ModelException("Game has already ended");
         }
         player.selectTeam(Tier.values()[currentStage]);
+        Opponent opponent = opponents.get(currentStage);
+        opponent.selectTeam(Tier.values()[currentStage]);
         currentBattle = new Battle(player, opponents.get(currentStage));
 
         return currentBattle;
     }
 
-    public GameResult endGame() {
+    public void endGame() {
         gameOver = true;
-        return null;
     }
 
     public boolean isGameOver() {

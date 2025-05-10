@@ -6,6 +6,8 @@ import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.ImageProcessor;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.util.audio.AudioManager;
+import be.esi.prj.leagueofpokemons.util.audio.AudioSound;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -38,6 +40,11 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     private Battle battle;
     private Player player;
     private Opponent opponent;
+
+    private final AudioManager audioManager;
+
+    @FXML
+    private SettingsController settingsMenuController;
 
     @FXML
     private Label playerCurrentPokemonNameLabel;
@@ -120,6 +127,10 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     @FXML
     private ImageView slot2PokemonTypeImage;
 
+    public BattleController() {
+        audioManager = AudioManager.getInstance();
+    }
+
     @Override
     public void init() {
         game = Game.getInstance();
@@ -133,6 +144,14 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         initNameLabels();
         initPokemonIndicators();
         battle.start();
+        audioManager.playSound(AudioSound.IN_BATTLE, 0.2);
+    }
+
+    @FXML
+    private void openSettings() {
+        if (settingsMenuController != null) {
+            settingsMenuController.showSettings();
+        }
     }
 
     private void updateRemainingUseLabel(Pokemon pokemon) {
@@ -244,12 +263,14 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @FXML
     private void escape() {
+        audioManager.stopSound(AudioSound.IN_BATTLE);
         battle.removePropertyChangeListener(this);
         SceneManager.switchScene(SceneView.HUB);
     }
 
     @FXML
     private void backToHub() {
+        audioManager.stopSound(AudioSound.BATTLE_WON);
         battle.removePropertyChangeListener(this);
         game.nextStage();
         SceneManager.switchScene(SceneView.HUB);
@@ -353,11 +374,16 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void handleBattleOverEvent(String winnerName) {
+        audioManager.stopSound(AudioSound.IN_BATTLE);
+        if (winnerName.equals(player.getName())) {
+            audioManager.playSound(AudioSound.BATTLE_WON);
+        }
         winnerNameLabel.setText(winnerName);
         swapToBattleOverPane();
     }
 
     private void handlePokemonDefeatedEvent(CombatEntity defender) {
+        audioManager.playSound(AudioSound.KO_EFFECT);
         if (defender == player) {
             BattleAnimation.playDeathAnimation(playerPokemonImage);
             swapToTeamPane();
@@ -387,6 +413,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void handleAttackTurnEvent(TurnResult turnResultEvent) {
         if (turnResultEvent.damage() > 0) {
+            handleAttackSound(turnResultEvent.attacker().getActivePokemon().getType());
             double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
             if (turnResultEvent.attacker() == player) {
                 BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
@@ -409,7 +436,20 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         Effect.EffectType effectType = turnResultEvent.effectType();
         if (effectType != null) {
             handleEffectAnimation(effectType, turnResultEvent);
+            handleEffectSound(effectType);
         }
+    }
+
+    private void handleEffectSound(Effect.EffectType effectType) {
+        String soundString = "EFFECT_" + effectType.name();
+        AudioSound sound = AudioSound.valueOf(soundString);
+        audioManager.playSound(sound);
+    }
+
+    private void handleAttackSound(Type type) {
+        String soundString = "ATTACK_" + type.name();
+        AudioSound sound = AudioSound.valueOf(soundString);
+        audioManager.playSound(sound);
     }
 
     private void handleEffectAnimation(Effect.EffectType effectType, TurnResult turnResultEvent) {

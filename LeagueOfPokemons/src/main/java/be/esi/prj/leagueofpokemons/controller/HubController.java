@@ -22,15 +22,18 @@ public class HubController implements ControllerFXML {
         stageText.setText("Lvl. " + game.getCurrentStage());
     }
 
-    public void openScanner() {
+    @FXML
+    private void openScanner() {
         SceneManager.switchScene(SceneView.SCANNER);
     }
 
-    public void openCollection() {
+    @FXML
+    private void openCollection() {
         SceneManager.switchScene(SceneView.COLLECTION);
     }
 
-    public void openBattle() {
+    @FXML
+    private void openBattle() {
         try {
             SceneManager.switchScene(SceneView.BATTLE);
         } catch (ModelException e) {
@@ -38,13 +41,15 @@ public class HubController implements ControllerFXML {
         }
     }
 
-    public void openSettings() {
+    @FXML
+    private void openSettings() {
         if (settingsMenuController != null) {
             settingsMenuController.showSettings();
         }
     }
 
-    public void back() {
+    @FXML
+    private void back() {
         SceneManager.switchScene(SceneView.MAINMENU);
     }
 }

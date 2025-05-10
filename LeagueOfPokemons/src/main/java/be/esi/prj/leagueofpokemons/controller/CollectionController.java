@@ -3,6 +3,8 @@ package be.esi.prj.leagueofpokemons.controller;
 import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.util.audio.AudioManager;
+import be.esi.prj.leagueofpokemons.util.audio.AudioSound;
 import be.esi.prj.leagueofpokemons.view.CardContext;
 import be.esi.prj.leagueofpokemons.view.CardView;
 import javafx.fxml.FXML;
@@ -19,6 +21,8 @@ public class CollectionController implements ControllerFXML {
     private String name;
     private Type type;
     private static final int CARDS_PER_PAGE = 6;
+
+    private final AudioManager audioManager;
 
     @FXML
     private GridPane collectionGrid;
@@ -58,10 +62,14 @@ public class CollectionController implements ControllerFXML {
 
     private final Map<String, CardView> collectionCardViews = new HashMap<>();
 
+    public CollectionController() {
+        game = Game.getInstance();
+        audioManager = AudioManager.getInstance();
+    }
+
 
     @Override
     public void init() {
-        game = Game.getInstance();
         initTierButtons();
         initTypeButtons();
 
@@ -226,6 +234,7 @@ public class CollectionController implements ControllerFXML {
 
     public void onCollectionCardSelected(CardView card) {
         try {
+            audioManager.playSound(AudioSound.PLINK);
             game.addCardInPlayer(card.getCard());
             loadInventory();
             System.out.println("Added Card " + card.getCard().getName());
@@ -236,6 +245,7 @@ public class CollectionController implements ControllerFXML {
 
     public void onInventoryCardSelected(Card card) {
         try{
+            audioManager.playSound(AudioSound.PLINK);
             game.removeCardInPlayer(card);
             System.out.println(card.getName() + " got removed");
             loadInventory();

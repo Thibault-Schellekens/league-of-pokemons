@@ -5,6 +5,8 @@ import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.util.GameManager;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.util.audio.AudioManager;
+import be.esi.prj.leagueofpokemons.util.audio.AudioSound;
 import be.esi.prj.leagueofpokemons.view.ImageCache;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -28,6 +30,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class LoadGameController {
+
+    private final AudioManager audioManager;
 
     @FXML
     private Pane loadGamePane;
@@ -56,9 +60,15 @@ public class LoadGameController {
 
     private ObservableList<GameDto> savedGames;
 
+    //todo format date
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public void initialize() {
+    public LoadGameController() {
+        audioManager = AudioManager.getInstance();
+    }
+
+    @FXML
+    private void initialize() {
         savedGames = FXCollections.observableArrayList();
     }
 
@@ -126,7 +136,7 @@ public class LoadGameController {
         if (selectedGame == null) {
             return;
         }
-        System.out.println(selectedGame);
+        audioManager.playSound(AudioSound.PLINK);
         int gameId = selectedGame.gameID();
         GameManager.loadGame(gameId);
         SceneManager.switchScene(SceneView.HUB);
@@ -138,6 +148,7 @@ public class LoadGameController {
         if (selectedGame == null) {
             return;
         }
+        audioManager.playSound(AudioSound.PLINK);
         int gameId = selectedGame.gameID();
         GameManager.deleteGame(gameId);
         savedGames.remove(selectedGame);
