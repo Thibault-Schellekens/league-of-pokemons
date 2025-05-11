@@ -17,6 +17,9 @@ public class GameRepository implements Repository<Integer, GameDto> {
     public GameRepository() {
         this.connection = ConnectionManager.getConnection();
     }
+    public GameRepository(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Optional<GameDto> findById(Integer gameId) {

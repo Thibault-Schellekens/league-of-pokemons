@@ -110,7 +110,7 @@ class CollectionRepositoryTest {
     @Test
     void testSave_ignoreDuplicatesCollection() { //Saving a collection's importedCards but ignoring cards already added.
         //Saving collection (has a baseSet and an importedSet)
-        insertCardIntoCollectionDB(collectionTest.getId(), charizard);
+        testInsertCardIntoCollectionDB(collectionTest.getId(), charizard);
         //already adding one of the collections cards in DB to see if save will add it again
         int collectionAddedId = collectionRepository.save(collectionTest);
 
@@ -127,6 +127,9 @@ class CollectionRepositoryTest {
         System.out.println("testSave_ignoreDuplicatesCollection : imported cards were not added twice ");
 
     }
+
+
+
 
     @Test
     void testFindAll_ReturnsAllCollections() {
@@ -150,15 +153,48 @@ class CollectionRepositoryTest {
     }
 
     @Test
+    void testFindById_ReturnsCollectionImportedCards(){
+        int collectionAddedId = collectionRepository.save(collectionTest);
+        Set<Card> importedCards = collectionRepository.findById(collectionAddedId).get().getImportedCards();
+        assertTrue(importedCards.size() == collectionTest.getImportedCards().size());
+        for (Card card : importedCards){
+            assertTrue(collectionTest.getImportedCards().contains(card));
+        }
+        System.out.println("testFindById_ReturnsCollectionImportedCards : " +
+                "If a collection is stored in DB," +
+                " and findById returns a collection that has the same importedCards" +
+                ", means the finByiD is working properly");
+    }
+
+    @Test
+    void testFindById_ReturnsCollectionWithEmptyImportedCards(){
+        // We want to see, if a collection doesn't exist in the DB, then we should receive a collection with empty ImportedCards
+        Set<Card> importedCards = collectionRepository.findById(15313).get().getImportedCards();
+        assertTrue(importedCards.isEmpty());
+        System.out.println("testFindById_ReturnsCollectionWithEmptyImportedCards: " +
+                "If a collection is not stored in DB," +
+                " and findById(non-existent-id) returns a collection that has an empty ImportedCards set" +
+                ", means the finById is working properly");
+    }
+
+    @Test
     void testDelete_RemovesCollectionEntries() {
         int coladdedId = collectionRepository.save(collectionTest);
         System.out.println(collectionTest.getImportedCards().size());
         System.out.println(coladdedId + " " + collectionTest.getId());
         collectionRepository.delete(coladdedId);
         Optional<Collection> found = collectionRepository.findById(coladdedId);
+        System.out.println("FindById always returns a collection. If a collection isnt found, the importedCards wil be null" );
         assertTrue(found.get().getImportedCards().isEmpty());
+        System.out.println("testDelete_RemovesCollectionEntries : returns all collections ");
 
     }
+
+
+
+
+
+
 
 
     // -----------------------HELPER METHOD------------------------
@@ -182,7 +218,7 @@ class CollectionRepositoryTest {
         return cards;
     }
 
-    private void insertCardIntoCollectionDB(int colID, Card card) {
+    private void testInsertCardIntoCollectionDB(int colID, Card card) {
         String sqlInsert = "INSERT INTO Collection (colID, pokemonID) VALUES (?, ?)";
         String sqlCheck = "SELECT COUNT(*) FROM Collection WHERE pokemonID = ? AND colID = ?";
 

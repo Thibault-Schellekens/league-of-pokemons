@@ -13,6 +13,9 @@ public class PlayerRepository implements Repository<Integer, Player> {
     public PlayerRepository() {
         this.connection = ConnectionManager.getConnection();
     }
+    public PlayerRepository(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Optional<Player> findById(Integer id) {
@@ -85,7 +88,21 @@ public class PlayerRepository implements Repository<Integer, Player> {
 
     @Override
     public List<Player> findAll() {
-        return null;
+        List<Player> players = new ArrayList<>();
+
+        String sql = "SELECT * FROM Player";
+        try(Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                int playerID = rs.getInt(1);
+                String playerName = rs.getString(2);
+                Player player = new Player(playerID,playerName);
+                players.add(player);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return players;
     }
 
     @Override

@@ -106,6 +106,7 @@ public class CollectionRepository implements Repository<Integer, Collection> {
     }
 
 
+    //This uses a fixed BaseSet Table with filled with card data. Not to be tampered with.
     public Set<Card> loadBaseSet() {
         Set<Card> cards = new HashSet<>();
         String sql = "SELECT * FROM BaseSet";
