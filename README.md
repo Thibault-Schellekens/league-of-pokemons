@@ -192,7 +192,12 @@ To use the application, follow these steps:
 1. Clone this repository :
 
    ```bash
-   git clone ...
+   git clone https://git.esi-bru.be/63491/4prj1d-63491-63054.git
+   ```
+2. 
+
+   ```bash
+   cd 4prj1d-63491-63054/LeagueOfPokemons
    ```
 
 2. Start the project by running the command :
@@ -200,7 +205,8 @@ To use the application, follow these steps:
    mvn javafx:run
    ```
 
-Make sure to have Tesseract installed to be able to scan cards, at the default installation location.
+Make sure to have maven installed, as well as java 23.
+Tesseract has to be installed to scan cards, at the default installation location on Windows.
 
 ## Known Issues of the Application
 
