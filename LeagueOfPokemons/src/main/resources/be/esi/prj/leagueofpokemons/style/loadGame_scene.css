@@ -1,0 +1,121 @@
+.root {
+    -fx-background-color: #f5f0e6;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.label {
+    -fx-text-fill: #3d2c14;
+}
+
+.table-view {
+    -fx-background-color: #fffaf3;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #b39667;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(78, 59, 44, 0.3), 8, 0, 0, 3);
+    -fx-padding: 2px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #8b5e3c, #6e4728);
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 0 0 5px 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+    -fx-border-color: transparent transparent #9c7a4d transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #fff2e0;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.table-row-cell {
+    -fx-background-color: #fdf8ee;
+    -fx-table-cell-border-color: #e6d9c2;
+    -fx-padding: 2px;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d4bf94;
+    -fx-text-fill: #3d2c14;
+}
+
+.table-cell {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #3d2c14;
+    -fx-font-size: 12px;
+}
+
+.table-view .scroll-bar:horizontal,
+.table-view .scroll-bar:vertical {
+    -fx-background-color: #f5f0e6;
+}
+
+.table-view .scroll-bar:horizontal .thumb,
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #b39667;
+    -fx-background-radius: 5px;
+}
+
+.table-view .scroll-bar:horizontal .thumb:hover,
+.table-view .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9c7a4d;
+}
+
+.button {
+    -fx-background-color: linear-gradient(to bottom, #7d664a, #6e5838);
+    -fx-text-fill: #fff2e0;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 10px 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #6e5838, #5c482d);
+}
+
+.button:pressed {
+    -fx-background-color: #4b3a24;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.3), 3, 0, 0, 1);
+}
+
+.button:disabled {
+    -fx-background-color: #bfae99;
+    -fx-opacity: 0.7;
+}
+
+#deleteGameButton {
+    -fx-background-color: linear-gradient(to bottom, #b44a3c, #a63c2f);
+}
+
+#deleteGameButton:hover {
+    -fx-background-color: linear-gradient(to bottom, #a63c2f, #912f25);
+}
+
+#cancelButton {
+    -fx-background-color: linear-gradient(to bottom, #83917a, #77866b);
+}
+
+#cancelButton:hover {
+    -fx-background-color: linear-gradient(to bottom, #77866b, #66745c);
+}
+
+.table-row-cell:focused {
+    -fx-background-color: #ceb992;
+}
+
+.table-view .column-header .arrow {
+    -fx-background-color: #fff2e0;
+}

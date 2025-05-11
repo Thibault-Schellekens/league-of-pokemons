@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<Pane prefHeight="663.0" prefWidth="1061.0" stylesheets="@style/scanner_scene.css, @style/global.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.ScannerController">
+   <children>
+      <ImageView fitHeight="669.0" fitWidth="1072.0" layoutX="-5.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+          <Image url="@pics/scanner/scanner_background.png" />
+      </ImageView>
+      <Pane fx:id="dropZone" layoutX="393.0" layoutY="98.0" prefHeight="390.0" prefWidth="283.0" styleClass="drop-zone">
+         <children>
+            <ImageView fx:id="cardImage" fitHeight="389.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true" styleClass="drop-image">
+               <image>
+                  <Image url="@pics/common/emptyCard.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane layoutX="54.0" layoutY="14.0" prefHeight="149.0" prefWidth="283.0">
+         <children>
+            <ImageView fitHeight="149.0" fitWidth="391.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/betterBoard.png" />
+               </image>
+            </ImageView>
+            <Text fill="#eeff00" layoutX="30.0" layoutY="82.0" stroke="#3743e5" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="Card Scanner" textAlignment="CENTER">
+               <font>
+                  <Font size="23.0" />
+               </font></Text>
+         </children></Pane>
+      <Pane layoutY="507.0" prefHeight="117.0" prefWidth="149.0">
+         <children>
+            <ImageView fitHeight="94.0" fitWidth="93.0" layoutX="36.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/icons.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="40.0" fitWidth="54.0" layoutX="55.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/back.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="47.0" layoutY="73.0" mnemonicParsing="false" onMouseClicked="#back" opacity="0.0" prefHeight="62.0" prefWidth="64.0" style="-fx-cursor: hand;" text="Button" />
+         </children>
+      </Pane>
+      <Pane layoutX="449.0" layoutY="504.0" prefHeight="149.0" prefWidth="172.0">
+         <children>
+            <ImageView fx:id="glowingHouse" fitHeight="141.0" fitWidth="163.0" layoutX="5.0" layoutY="-6.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/scanner/houseGlowy.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="125.0" fitWidth="150.0" layoutX="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/scanner/templateHouse.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="fileExplorerBtn" layoutX="28.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#openFileExplorer" opacity="0.0" prefHeight="106.0" prefWidth="114.0" style="-fx-cursor: hand;" text="todo file explorer" />
+         </children>
+      </Pane>
+      <Line fx:id="lineScanner" endX="134.0" fill="RED" layoutX="535.0" layoutY="95.0" opacity="0.0" startX="-134.0" stroke="RED" strokeWidth="4.0" />
+      <Pane layoutX="840.0" layoutY="46.0" prefHeight="94.0" prefWidth="207.0">
+         <children>
+            <ImageView fitHeight="106.0" fitWidth="272.0" layoutX="3.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/betterBoard.png" />
+               </image>
+            </ImageView>
+            <Text fx:id="successText" fill="#eeff00" layoutX="32.0" layoutY="58.0" opacity="0.0" stroke="#3743e5" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="SUCCESS" wrappingWidth="172.0">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Text>
+            <Text fx:id="failedText" fill="RED" layoutX="32.0" layoutY="61.0" opacity="0.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="FAILED" wrappingWidth="162.9999999999999">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane layoutX="801.0" layoutY="475.0" prefHeight="137.0" prefWidth="246.0">
+         <children>
+            <ImageView fitHeight="149.0" fitWidth="246.0" layoutX="-1.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pics/common/betterBoard.png" />
+               </image>
+            </ImageView>
+            <Pane layoutX="90.0" layoutY="35.0" prefHeight="54.0" prefWidth="64.0">
+               <children>
+                  <ImageView fitHeight="54.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pics/common/bag.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane layoutX="27.0" layoutY="41.0" prefHeight="54.0" prefWidth="54.0">
+               <children>
+                  <ImageView fx:id="cancelCardImg" fitHeight="54.0" fitWidth="64.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                     <Image url="@pics/scanner/delete.png" />
+                  </ImageView>
+                  <Button fx:id="cancelCardBtn" disable="true" onMouseClicked="#cancelCard" opacity="0" prefHeight="54.0" prefWidth="54.0" style="-fx-cursor: hand;" />
+               </children>
+            </Pane>
+            <Pane layoutX="164.0" layoutY="41.0" prefHeight="54.0" prefWidth="54.0">
+               <children>
+                  <ImageView fx:id="addCardImg" fitHeight="54.0" fitWidth="64.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pics/scanner/add.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="addCardBtn" disable="true" onMouseClicked="#addToCollection" opacity="0" prefHeight="54.0" prefWidth="54.0" style="-fx-cursor: hand;" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+   </children>
+</Pane>

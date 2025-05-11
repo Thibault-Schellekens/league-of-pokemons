@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'ROGFonts-Regular';
+    src: url(../font/ROGFonts-Regular.otf);
+}
+
+.text-rog {
+    -fx-font-family: "ROGFONTS-Regular"
+}

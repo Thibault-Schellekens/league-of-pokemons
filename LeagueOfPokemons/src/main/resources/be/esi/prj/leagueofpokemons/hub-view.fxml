@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="1061.0" stylesheets="@style/global.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.HubController">
+    <children>
+        <Pane layoutX="364.0" layoutY="214.0" prefHeight="240.0" prefWidth="345.0">
+            <fx:include fx:id="settingsMenu" source="include/settings-component.fxml" />
+        </Pane>
+        <ImageView fx:id="background" fitHeight="742.0" fitWidth="1446.0" layoutX="-190.0" layoutY="-43.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@pics/hub/hub_background.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="68.0" fitWidth="132.0" layoutX="151.0" layoutY="210.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@pics/common/betterBoard.png" />
+            </image>
+        </ImageView>
+        <Pane layoutX="283.0" layoutY="404.0" prefHeight="106.0" prefWidth="164.0">
+            <children>
+                <ImageView fitHeight="82.0" fitWidth="132.0" layoutX="18.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/betterBoard.png" />
+                    </image>
+                </ImageView>
+                <Text fill="WHITE" layoutX="72.0" layoutY="66.0" stroke="BLACK" strokeType="OUTSIDE" styleClass="text-rog" text="import" wrappingWidth="59.0" />
+                <ImageView fitHeight="36.0" fitWidth="39.0" layoutX="37.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/hub/importIcon.png" />
+                    </image>
+                </ImageView>
+                <Button fx:id="importBtn" layoutX="32.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#openScanner" opacity="0.0" prefHeight="47.0" prefWidth="111.0" style="-fx-cursor: hand;" text="Button" />
+            </children>
+        </Pane>
+        <Pane layoutX="467.0" layoutY="14.0">
+            <children>
+                <ImageView fitHeight="132.0" fitWidth="246.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/betterBoard.png" />
+                    </image>
+                </ImageView>
+                <Text fill="#ffff0f" layoutX="73.0" layoutY="77.0" stroke="#4e0dbf" strokeType="OUTSIDE" strokeWidth="3.0" styleClass="text-rog" text="Hub">
+                    <font>
+                        <Font size="39.0" />
+                    </font>
+                </Text>
+            </children>
+        </Pane>
+        <Pane layoutX="117.0" layoutY="264.0" prefHeight="110.0" prefWidth="255.0">
+            <children>
+                <ImageView fitHeight="113.0" fitWidth="70.0" layoutX="182.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" rotate="66.8">
+                    <image>
+                        <Image url="@pics/hub/leaves.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/betterBoard.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="68.0" fitWidth="78.0" layoutX="24.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/hub/battleSign.png" />
+                    </image>
+                </ImageView>
+                <Text fill="WHITE" layoutX="86.0" layoutY="57.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" styleClass="text-rog" text="BATTLE">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Text>
+                <ImageView fitHeight="68.0" fitWidth="78.0" layoutX="15.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" rotate="91.5">
+                    <image>
+                        <Image url="@pics/hub/battleSign.png" />
+                    </image>
+                </ImageView>
+                <Button fx:id="battleBtn" layoutX="12.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#openBattle" opacity="0.0" prefHeight="70.0" prefWidth="173.0" style="-fx-cursor: hand;" text="Button" />
+            </children>
+        </Pane>
+        <Pane layoutX="117.0" layoutY="410.0">
+            <children>
+                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/betterBoard.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="47.0" fitWidth="59.0" layoutX="23.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/bag.png" />
+                    </image>
+                </ImageView>
+                <Text fill="WHITE" layoutX="87.0" layoutY="56.0" stroke="BLACK" strokeType="OUTSIDE" styleClass="text-rog" text="collection" wrappingWidth="111.42399597167969" />
+                <Button fx:id="collectionBtn" layoutX="13.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#openCollection" opacity="0.0" prefHeight="68.0" prefWidth="173.0" style="-fx-cursor: hand;" text="Button" />
+            </children>
+        </Pane>
+        <ImageView fitHeight="331.0" fitWidth="462.0" layoutX="599.0" layoutY="238.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@pics/common/bigBoardWood.png" />
+            </image>
+        </ImageView>
+        <Text fx:id="stageText" fill="WHITE" layoutX="173.0" layoutY="253.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="1.5" styleClass="text-rog" text="Lvl X">
+            <font>
+                <Font size="19.0" />
+            </font>
+        </Text>
+        <ImageView fitHeight="253.0" fitWidth="513.0" layoutX="-200.0" layoutY="490.0" pickOnBounds="true" preserveRatio="true" rotate="4.4">
+            <image>
+                <Image url="@pics/hub/bush.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="238.0" fitWidth="504.0" layoutX="-1.0" layoutY="529.0" pickOnBounds="true" preserveRatio="true" rotate="16.6">
+            <image>
+                <Image url="@pics/hub/bush.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="283.0" fitWidth="504.0" layoutX="-226.0" layoutY="-98.0" pickOnBounds="true" preserveRatio="true" rotate="169.8">
+            <image>
+                <Image url="@pics/hub/bush.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="240.0" fitWidth="285.0" layoutX="426.0" layoutY="-87.0" pickOnBounds="true" preserveRatio="true" rotate="-174.1">
+            <image>
+                <Image url="@pics/hub/bush.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="233.0" fitWidth="440.0" layoutX="831.0" layoutY="484.0" pickOnBounds="true" preserveRatio="true" rotate="-40.9">
+            <image>
+                <Image url="@pics/hub/bush.png" />
+            </image>
+        </ImageView>
+        <ImageView fitHeight="288.0" fitWidth="280.0" layoutX="874.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" rotate="-70.2">
+            <image>
+                <Image url="@pics/hub/branch.png" />
+            </image>
+        </ImageView>
+        <Pane layoutX="-31.0" layoutY="528.0" prefHeight="141.0" prefWidth="141.0">
+            <children>
+                <ImageView fitHeight="113.0" fitWidth="89.0" layoutX="36.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/icons.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="44.0" fitWidth="56.0" layoutX="55.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/back.png" />
+                    </image>
+                </ImageView>
+                <Button layoutX="51.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#back" opacity="0.0" prefHeight="60.0" prefWidth="59.0" style="-fx-cursor: hand;" text="Button" />
+            </children>
+        </Pane>
+        <Pane layoutX="39.0" layoutY="30.0">
+            <children>
+                <ImageView fitHeight="82.0" fitWidth="88.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/icons.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="40.0" fitWidth="51.0" layoutX="18.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@pics/common/settingIcon.png" />
+                    </image>
+                </ImageView>
+                <Button fx:id="settingsBtn" layoutX="13.0" layoutY="15.0" mnemonicParsing="false" onMouseClicked="#openSettings" opacity="0.0" prefHeight="49.0" prefWidth="48.0" style="-fx-cursor: hand;" text="settingsBtn">
+                    <font>
+                        <Font size="10.0" />
+                    </font>
+                </Button>
+            </children>
+        </Pane>
+        <Pane layoutX="800.0" layoutY="9.0" prefHeight="155.0" prefWidth="270.0">
+            <fx:include fx:id="errorPanel" source="include/error-component.fxml" />
+        </Pane>
+      <ImageView fitHeight="288.0" fitWidth="200.0" layoutX="725.0" layoutY="248.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pics/hub/typeTutorial.png" />
+         </image>
+      </ImageView>
+    </children>
+</Pane>
