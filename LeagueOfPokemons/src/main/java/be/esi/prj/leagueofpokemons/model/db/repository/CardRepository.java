@@ -1,13 +1,11 @@
 package be.esi.prj.leagueofpokemons.model.db.repository;
+
 import be.esi.prj.leagueofpokemons.model.core.Card;
 import be.esi.prj.leagueofpokemons.model.core.Type;
 import be.esi.prj.leagueofpokemons.util.ConnectionManager;
 
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class CardRepository implements Repository<String, Card> {
     private final Connection connection;
@@ -15,6 +13,7 @@ public class CardRepository implements Repository<String, Card> {
     public CardRepository(Connection connection) {
         this.connection = Objects.requireNonNull(connection, "Connection not valid");
     }
+
     public CardRepository() {
         this.connection = ConnectionManager.getConnection();
     }
@@ -43,7 +42,29 @@ public class CardRepository implements Repository<String, Card> {
 
     @Override
     public String save(Card card) {
-        String sql = "INSERT INTO Cards (pokID, pokName, pokType, pokMaxHP, pokTier, pokUrl) VALUES (?, ?, ?, ?, ?, ?)";
+        if (card == null){
+            return null;
+        }
+        String sql = "SELECT COUNT(*) FROM Cards WHERE pokID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, card.getId());
+            ResultSet rs = stmt.executeQuery();
+            boolean exists = rs.next() && rs.getInt(1) > 0;
+
+            // A card in database, it should never be updated.
+            if (exists) {
+                return card.getId();
+            } else {
+                return insert(card);
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error saving card: " + card, e);
+        }
+    }
+
+    private String insert(Card card) {
+        String sql = "INSERT INTO Cards VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, card.getId());
             stmt.setString(2, card.getName());
@@ -51,21 +72,29 @@ public class CardRepository implements Repository<String, Card> {
             stmt.setInt(4, card.getMaxHP());
             stmt.setString(5, card.getTier().toString());
             stmt.setString(6, card.getImageURL());
-            stmt.executeUpdate();
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows > 0 ){
+                return card.getId();
+            } else{
+                return null;
+            }
+
+
         } catch (SQLException e) {
-            throw new RepositoryException(" Card : " + card.getId()+ " already exists ", e);
+            throw new RepositoryException("Error inserting card: " + card, e);
         }
-        return card.getId();
     }
 
 
     @Override
-    public Set<Card> findAll() {
-        Set<Card> cards = new HashSet<>();
+    public List<Card> findAll() {
+        List<Card> cards = new ArrayList<>();
         String sql = "SELECT * from Cards";
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 cards.add(
                         new Card(
                                 rs.getString("pokID"),
@@ -82,13 +111,13 @@ public class CardRepository implements Repository<String, Card> {
     }
 
     @Override
-    public void delete(Card card) {
-        String sql = "DELETE FROM Card WHERE pokID = ?";
+    public void delete(String id) {
+        String sql = "DELETE FROM Cards WHERE pokID = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, card.getId());
+            stmt.setString(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RepositoryException("Error deleting collection with id: " + card.getId(), e);
+            throw new RepositoryException("Error deleting collection with id: " + id, e);
         }
     }
 

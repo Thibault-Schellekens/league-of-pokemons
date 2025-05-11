@@ -10,7 +10,6 @@ public class Player extends CombatEntity {
     //no
     private List<Card> inventory;
 
-    //if new game, inventory empty/ player id = size of PlayerDB +  1 / name hard coded for now
     public Player(int id, String name){
         super(name);
         this.id = id;

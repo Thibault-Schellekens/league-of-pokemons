@@ -1,72 +1,67 @@
 package be.esi.prj.leagueofpokemons.util;
 
-import be.esi.prj.leagueofpokemons.model.core.Card;
+import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.model.core.Collection;
-import be.esi.prj.leagueofpokemons.model.core.Game;
-import be.esi.prj.leagueofpokemons.model.core.Player;
 import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.model.db.repository.*;
+import be.esi.prj.leagueofpokemons.view.ImageCache;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class GameManager {
-    private static GameManager instance;
-    public static GameManager getInstance() {
-        if (instance == null) {
-            instance = new GameManager();
-        }
-        return instance;
-    }
 
-    CardRepository cardRepository;
-    CollectionRepository collectionRepository;
-    PlayerRepository playerRepository;
-    GameRepository gameRepository;
-    private Game game;
+    private static final CardRepository cardRepository = new CardRepository();
+    private static final CollectionRepository collectionRepository = new CollectionRepository();
+    private static final PlayerRepository playerRepository = new PlayerRepository();
+    private static final GameRepository gameRepository = new GameRepository();
 
-    public GameManager(){
-        cardRepository = new CardRepository();
-        collectionRepository = new CollectionRepository();
-        playerRepository = new PlayerRepository();
-        gameRepository = new GameRepository();
-    }
-
-    public void newGame(String name){
+    public static void newGame(String name) {
         System.out.println("League of legends : Initializing game");
         Collection currCollection = new Collection(-1);
-        currCollection.loadCards(collectionRepository.loadBaseSet(),null);
+        ImageCache.getInstance().registerToCollection(currCollection);
+        currCollection.loadCards(collectionRepository.loadBaseSet(), Collections.emptySet());
         Player currPlayer = new Player(0, name);
-        // getNewGameId feels wrong, game shouldn't need an id until saved
+
         Game.initialize(-1, currPlayer, currCollection);
-        game = Game.getInstance();
-        System.out.println("GameID : " + game.getId() + " PlayerID : " + game.getPlayer().getId() + " CollectionID : " + game.getCollection().getId());
+        System.out.println("GameID : " + Game.getInstance().getId()
+                + " PlayerID : " + Game.getInstance().getPlayer().getId()
+                + " CollectionID : " + Game.getInstance().getCollection().getId());
     }
 
-    //SaveGame is fairly tested
-    public void saveGame(){
+    public static void saveGame(String name) {
+        if (name == null) {
+            throw new ModelException("Game name cannot be empty");
+        }
+        Game game = Game.getInstance();
         GameDto gameDto = new GameDto(
                 game.getId(),
+                name,
                 game.getPlayer().getId(),
                 game.getPlayer().getSlot(0).getId(),
                 game.getPlayer().getSlot(1).getId(),
                 game.getPlayer().getSlot(2).getId(),
-                game.getCurrentStage()
-                );
+                game.getCurrentStage(),
+                LocalDateTime.now()
+        );
 
-        for (Card card : game.getCollection().getImportedCards()){
+        for (Card card : game.getCollection().getImportedCards()) {
             cardRepository.save(card);
         }
-        System.out.println("LOP : saving with id : " + game.getId());
-        System.out.println("Saving with team : " + game.getPlayer().getSlot(2).getName());
+
         int gameId = gameRepository.save(gameDto);
         game.setId(gameId);
-        ;
         collectionRepository.save(game.getCollection());
+        playerRepository.save(game.getPlayer());
     }
 
-    public void loadGame(int gameId) {
-        List<Card> playerInventory = new ArrayList<>();
+    public static void loadGame(int gameId) {
+        System.out.println("GameID before loading : " + gameId);
         GameDto gameDto = gameRepository.findById(gameId).orElse(null);
+        if (gameDto == null) {
+            throw new ModelException("Game not found with ID: " + gameId);
+        }
+
         Collection collection = collectionRepository.findById(gameDto.gameID()).orElse(null);
         Player player = playerRepository.findById(gameDto.playerID()).orElse(null);
 
@@ -74,26 +69,30 @@ public class GameManager {
         Card slot2 = cardRepository.findById(gameDto.slot2ID()).orElse(null);
         Card slot3 = cardRepository.findById(gameDto.slot3ID()).orElse(null);
 
-        playerInventory.addAll(List.of(slot1,slot2,slot3));
+        List<Card> playerInventory = new ArrayList<>(List.of(slot1, slot2, slot3));
         player.loadPlayerInventory(playerInventory);
-        game.loadGame(gameDto.gameID(), player, collection, gameDto.currentStage());
+
+        Game.getInstance().loadGame(gameDto.gameID(), player, collection, gameDto.currentStage());
+        ImageCache.getInstance().registerToCollection(collection);
+        System.out.println("GameID after loading : " + gameId);
     }
 
-    public Game getGame() {
-        return game;
+    public static void deleteGame(int gameId) {
+        try {
+            gameRepository.delete(gameId);
+        } catch (RepositoryException e) {
+            throw new ModelException("Error while deleting game: " + gameId);
+        }
     }
+
+
+    // TODO: only return game from that player name
+    public static List<GameDto> loadGames() {
+        return gameRepository.findAll();
+    }
+
+    public static Optional<Card> findCardById(String id) {
+        return cardRepository.findById(id);
+    }
+
 }
-
-    /*
-    TODO:
-        Make simple use case diagram?
-        Load logic mostly done in all of the Repository classes
-        Need an LoadGameController setup and LoadGame-view.fxml
-        -----------------------------------------
-        Make Collection show the game's collection
-        Make FilterMethod(name, type maybe?, and tier of course)
-        The Cards available are stored in a gridPane, after filtering, get the target of the player's mouse click
-            to select/deselect card
-        -----------------------------------------
-
-     */

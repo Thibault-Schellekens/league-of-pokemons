@@ -12,26 +12,13 @@ public class CardView extends StackPane {
     private final Card card;
     private final ImageView imageView;
     private final Button selectButton;
-    private final Image cropped;
-    private final CollectionController controller;
+    private CollectionController controller;
 
     public CardView(Card card, CollectionController controller, CardContext context) {
         this.card = card;
         this.controller = controller;
 
-        Image fullImage = new Image(card.getImageURL(), false);
-        this.cropped = new WritableImage(fullImage.getPixelReader(), 0, 0, 600, 425);
-        this.imageView = new ImageView(cropped);
-        this.selectButton = new Button();
-
-        setup(context);
-    }
-
-    public CardView(CardView other, CollectionController controller, CardContext context) {
-        this.card = other.card;
-        this.controller = controller;
-        this.cropped = other.cropped;
-        this.imageView = new ImageView(cropped);
+        this.imageView = ImageCache.getInstance().getImageView(card);
         this.selectButton = new Button();
 
         setup(context);
@@ -41,16 +28,11 @@ public class CardView extends StackPane {
         this.card = null;
         this.imageView = null;
         this.selectButton = null;
-        this.cropped = null;
         this.controller = null;
         this.getChildren().add(placeholder);
     }
 
     private void setup(CardContext context) {
-        imageView.setFitWidth(165);
-        imageView.setFitHeight(113);
-        imageView.setPreserveRatio(false);
-
         selectButton.setOpacity(0);
         selectButton.setPrefSize(165, 113);
         selectButton.setStyle("-fx-cursor: hand;");
@@ -69,6 +51,7 @@ public class CardView extends StackPane {
     public Card getCard() {
         return card;
     }
+
     public static CardView createEmptySlot() {
         StackPane placeholder = new StackPane();
         placeholder.setPrefSize(165, 113);
@@ -89,7 +72,6 @@ public class CardView extends StackPane {
                 "card=" + card +
                 ", imageView=" + imageView +
                 ", selectButton=" + selectButton +
-                ", cropped=" + cropped +
                 ", controller=" + controller +
                 '}';
     }

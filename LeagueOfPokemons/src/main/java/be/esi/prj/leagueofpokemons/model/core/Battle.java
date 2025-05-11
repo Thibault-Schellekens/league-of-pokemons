@@ -163,7 +163,6 @@ public class Battle {
         return status == BattleStatus.OPPONENT_WON || status == BattleStatus.PLAYER_WON;
     }
 
-    // Might have to just return the id/name
     public String getWinner() {
         if (status == BattleStatus.PLAYER_WON) {
             return player.getName();

@@ -11,7 +11,7 @@ public class SettingsManager {
 
     private SettingsManager() {
         volume = 100;
-        skipAnimation = true;
+        skipAnimation = false;
         animationSpeed = 1.0;
         maxAnimationSpeed = 5.0;
     }

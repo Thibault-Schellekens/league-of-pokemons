@@ -217,8 +217,8 @@ public class EffectAnimation {
         // Flicker effect
         Timeline flickerTimeline = new Timeline();
         for (int i = 0; i < 4; i++) {
-            KeyFrame keyFrame1 = new KeyFrame(Duration.seconds(i * 0.5), _ -> pokemonImage.setOpacity(0.7));
-            KeyFrame keyFrame2 = new KeyFrame(Duration.seconds(i * 0.5 + 0.25), _ -> pokemonImage.setOpacity(1.0));
+            KeyFrame keyFrame1 = new KeyFrame(Duration.seconds(i * 0.5), e -> pokemonImage.setOpacity(0.7));
+            KeyFrame keyFrame2 = new KeyFrame(Duration.seconds(i * 0.5 + 0.25), e -> pokemonImage.setOpacity(1.0));
             flickerTimeline.getKeyFrames().addAll(keyFrame1, keyFrame2);
         }
 

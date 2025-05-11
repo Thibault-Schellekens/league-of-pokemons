@@ -3,6 +3,7 @@ package be.esi.prj.leagueofpokemons.model.core;
 import javafx.beans.property.IntegerProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -58,6 +59,8 @@ public class Game {
         this.player = newPlayer;
         this.collection = newCollection;
         this.currentStage = currentStage;
+
+        // Register ImageCache to new Collection
     }
 
     public void nextStage() {

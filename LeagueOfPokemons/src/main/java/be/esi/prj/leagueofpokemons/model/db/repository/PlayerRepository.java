@@ -9,11 +9,12 @@ import java.util.*;
 
 public class PlayerRepository implements Repository<Integer, Player> {
     private final Connection connection;
-    private final CardRepository cardRepository;
 
     public PlayerRepository() {
         this.connection = ConnectionManager.getConnection();
-        cardRepository = new CardRepository();
+    }
+    public PlayerRepository(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -32,28 +33,88 @@ public class PlayerRepository implements Repository<Integer, Player> {
         return Optional.empty();
     }
 
+    // TODO: The save method for the Player should only be called via a login system, not via the Game save.
+
     @Override
     public Integer save(Player player) {
-        System.out.println("SAVING PLAYER");
+        String sql = "SELECT COUNT(*) FROM Player WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, player.getId());
+            ResultSet rs = stmt.executeQuery();
+            boolean exists = rs.next() && rs.getInt(1) > 0;
+
+            if (exists) {
+                int updatedRows = update(player);
+                return updatedRows > 0 ? player.getId() : -1;
+            } else {
+                return insert(player);
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error saving player: " + player, e);
+        }
+    }
+
+    private int insert(Player player) {
         String sql = "INSERT INTO Player (id, name) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.setString(2, player.getName());
+
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error inserting player: " + player, e);
+        }
+    }
+
+    private int update(Player player) {
+        String sql = "UPDATE Player SET name = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, player.getName());
+            stmt.setInt(2, player.getId());
+
+            return stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RepositoryException("Error updating player: " + player, e);
+        }
+    }
+
+    @Override
+    public List<Player> findAll() {
+        List<Player> players = new ArrayList<>();
+
+        String sql = "SELECT * FROM Player";
+        try(Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                int playerID = rs.getInt(1);
+                String playerName = rs.getString(2);
+                Player player = new Player(playerID,playerName);
+                players.add(player);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return players;
+    }
+
+    @Override
+    public void delete(Integer id) {
+        String sql = "DELETE FROM Player WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RepositoryException("Error saving player", e);
+            throw new RepositoryException("Error deleting", e);
+
         }
-        return player.getId();
-    }
-
-    @Override
-    public Set<Player> findAll() {
-        return null;
-    }
-
-    @Override
-    public void delete(Player entity) {
-
     }
 
 }

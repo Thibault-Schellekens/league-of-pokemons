@@ -38,6 +38,7 @@ public class SceneManager {
 
     public static void switchScene(SceneView view) {
         try {
+
             FXMLLoader fxmlLoader = new FXMLLoader(SceneManager.class.getResource("/be/esi/prj/leagueofpokemons/" + view.name().toLowerCase() + "-view.fxml"));
             // Loading main menu
             Parent root = fxmlLoader.load();
@@ -50,11 +51,11 @@ public class SceneManager {
                 Pane nextRoot = (Pane) root;
                 Pane mainRoot = new Pane();
                 Node previousRoot = scene.getRoot();
-                
+
                 SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot, settingsManager.getAnimationSpeed());
             }
             primaryStage.show();
-        } catch (IOException _) {
+        } catch (IOException e) {
         }
     }
 
