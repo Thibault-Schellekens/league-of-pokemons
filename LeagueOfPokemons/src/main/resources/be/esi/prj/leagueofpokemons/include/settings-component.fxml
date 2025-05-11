@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane fx:id="settingsPane" prefHeight="240.0" prefWidth="345.0" stylesheets="@../style/global.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.SettingsController">
+<Pane fx:id="settingsPane" prefHeight="240.0" prefWidth="345.0" stylesheets="@../style/global.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.SettingsController">
    <children>
       <ImageView fitHeight="267.0" fitWidth="405.0" layoutX="-16.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -35,11 +38,20 @@
       </Pane>
       <Pane layoutX="14.0" layoutY="92.0" prefHeight="57.0" prefWidth="314.0">
          <children>
-            <ImageView fitHeight="57.0" fitWidth="53.0" layoutX="14.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../pics/common/icons.png" />
-               </image>
-            </ImageView>
+            <Pane layoutY="-13.0">
+               <children>
+                  <ImageView fitHeight="57.0" fitWidth="53.0" layoutX="14.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../pics/common/icons.png" />
+                     </image>
+                  </ImageView>
+                  <Text layoutX="27.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" text="&gt;&gt;">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
             <Slider fx:id="animationSpeedSlider" layoutX="80.0" layoutY="22.0" prefHeight="14.0" prefWidth="184.0" />
             <Text fx:id="animationSpeedText" layoutX="270.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-rog" />
          </children>

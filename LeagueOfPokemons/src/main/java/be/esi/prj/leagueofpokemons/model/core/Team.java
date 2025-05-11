@@ -55,7 +55,7 @@ public class Team {
      */
     public void addPokemon(Pokemon pokemon) {
         if (!canAddPokemon(pokemon)) {
-            throw new ModelException("Cannot add this Pokémon: " + pokemon);
+            throw new ModelException("Cannot add this Pokémon: " + pokemon.getName());
         }
         pokemons.add(pokemon);
     }
