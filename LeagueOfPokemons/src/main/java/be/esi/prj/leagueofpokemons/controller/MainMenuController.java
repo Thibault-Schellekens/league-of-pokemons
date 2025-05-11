@@ -80,7 +80,6 @@ public class MainMenuController implements ControllerFXML {
         SceneManager.switchScene(SceneView.HUB);
     }
 
-    //todo quit method GameManager
     /**
      * Quits the game and shuts down any necessary resources.
      * <p>

@@ -33,7 +33,6 @@ public class PlayerRepository implements Repository<Integer, Player> {
         return Optional.empty();
     }
 
-    // TODO: The save method for the Player should only be called via a login system, not via the Game save.
 
     @Override
     public Integer save(Player player) {

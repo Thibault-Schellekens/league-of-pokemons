@@ -207,27 +207,6 @@ class PokemonTest {
     }
 
 
-
-    //TODO : check if possible to chance the when to return 1.0
-//    @Test
-//    void testCritAttackFail() {
-//        try (MockedStatic<RandomUtil> mocked = mockStatic(RandomUtil.class)) {
-//
-//            Pokemon attacker = fighting;
-//            Pokemon defender = water;
-//
-//            // Applying crit effect
-//            mocked.when(RandomUtil::nextDouble).thenReturn(0.0);
-//            int expected = (int) (defender.getCurrentHP() - (30 * 1.5));
-//            attacker.attack(true, defender);
-//            int actual = defender.getCurrentHP();
-//
-//            System.out.println("Actual: " + actual);
-//            System.out.println("Expected: " + expected);
-//            assertEquals(expected, actual);
-//        }
-//    }
-
     @Test
     void testParalyzeAttackSuccessNoDamageDealt() {
         // Testing if attacker can not attack if paralyzed
