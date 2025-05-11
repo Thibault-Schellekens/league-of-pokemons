@@ -2,11 +2,9 @@
 
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white) ![Markdown](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white)
 
-## Authors
+## Author
 
-- Group : **D112**
-- g63491 Schellekens Thibault
-- g63054 Mocircioiu Prodea Marian
+- Schellekens Thibault
 
 ## Project description
 
@@ -29,6 +27,26 @@ The collection is organized into multiple **[Tiers](#pokémon-tiers)**, ranked f
 Players can scan their own Pokémon cards by uploading an image file that meets specific requierements (e.g., size, positioning).
 
 Once a new card is scanned, its information is stored in the collection, making it available for the player to use in battles.
+
+Pokémon cards must come from a certain set.
+
+Here are the currently supported sets:
+
+1. https://www.tcgdex.net/database/Sword-&-Shield/Sword-&-Shield
+2. https://www.tcgdex.net/database/Sword-&-Shield/Rebel-Clash
+3. https://www.tcgdex.net/database/Sword-&-Shield/Darkness-Ablaze
+4. https://www.tcgdex.net/database/Sword-&-Shield/Vivid-Voltage
+5. https://www.tcgdex.net/database/Sword-&-Shield/Battle-Styles
+6. https://www.tcgdex.net/database/Sword-&-Shield/Chilling-Reign
+7. https://www.tcgdex.net/database/Sword-&-Shield/Evolving-Skies
+8. https://www.tcgdex.net/database/Sword-&-Shield/Fusion-Strike
+9. https://www.tcgdex.net/database/Sword-&-Shield/Brilliant-Stars
+
+The cards must be taken from this url:
+
+`https://assets.tcgdex.net/en/swsh/swsh{set_number}/{pokemon_local_id}/high.png`
+
+Where `set_number` is the number shown in the list above, and `pokemon_local_id` is the number of the wanted Pokémon within that set.
 
 ### Pokémon Tiers
 
@@ -145,58 +163,16 @@ The project has 5 main FXML files. The following images are just previews from t
 | **SAVELOAD-1** | Test saving game progress                    | Click "Save" in the HUB menu           | The game state, including the player's team, should be saved and available for future loading. |
 | **SAVELOAD-2** | Test loading game progress                   | Click "Load" in the HUB menu           | The previously saved game state should be loaded, allowing the player to continue from where they left off. |
 
-## Weekly Task Schedule
-
-### Week 1 - 6H
-
-| Who      | Description |
-| -------- | ----------- |
-| All      | Project analysis, readme completed      |
-| Thibault | FXML - Battle Scene + Scanner Scene      |
-| Marian   | FXML - Main Menu Scene, Hub Scene, Collection Scene     |
-
-### Week 2 - 6H
-
-| Who      | Description |
-| -------- | ----------- |
-| All      | Enhancing views     |
-| Thibault | OCR Service + view animations   |
-| Marian   | DataBase Connection      |
-
-### Week 3 - 6H
-
-| Who      | Description |
-| -------- | ----------- |
-| Thibault | Implementation of Model     |
-| Marian   | DataBase Connection      |
-
-### Week 4 - 6H
-
-| Who      | Description |
-| -------- | ----------- |
-| Thibault | Implementation of Model + Battle Controller      |
-| Marian   | DataBase Connection  + Collection    |
-
-### Week 5 - 6H
-
-| Who      | Description |
-| -------- | ----------- |
-| Thibault | Implementation of Model, unit tests, Controllers, animations      |
-| Marian   | DataBase Connection  unit tests    |
-
 
 ## Installation and Usage
 
 To use the application, follow these steps:
 
-1. Clone this repository :
+1. Clone this repository
 
-   ```bash
-   git clone https://git.esi-bru.be/63491/4prj1d-63491-63054.git
-   ```
 2. Go to the correct directory, containing the project.
    ```bash
-   cd 4prj1d-63491-63054/LeagueOfPokemons
+   cd league-of-pokemons/LeagueOfPokemons
    ```
 
 3. Start the project by running the command :
