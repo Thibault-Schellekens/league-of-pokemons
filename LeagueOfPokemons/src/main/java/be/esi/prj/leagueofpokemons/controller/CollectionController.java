@@ -29,6 +29,9 @@ public class CollectionController implements ControllerFXML {
     private final AudioManager audioManager;
 
     @FXML
+    private ErrorController errorPanelController;
+
+    @FXML
     private GridPane collectionGrid;
     @FXML
     private GridPane inventoryGrid;
@@ -206,7 +209,6 @@ public class CollectionController implements ControllerFXML {
      * Loads the inventory by adding all cards from the player's inventory to the inventory grid.
      */
     private void loadInventory() {
-        System.out.println("UPDATING INVENTORY");
         inventoryGrid.getChildren().clear();
         int row = 0;
 
@@ -282,12 +284,11 @@ public class CollectionController implements ControllerFXML {
      */
     public void onCollectionCardSelected(CardView card) {
         try {
-            audioManager.playSound(AudioSound.PLINK);
             game.addCardInPlayer(card.getCard());
+            audioManager.playSound(AudioSound.PLINK);
             loadInventory();
-            System.out.println("Added Card " + card.getCard().getName());
         } catch (ModelException e) {
-            System.out.println("Cannot add card: " + e.getMessage());
+            errorPanelController.displayError(e.getMessage());
         }
     }
 
@@ -303,7 +304,7 @@ public class CollectionController implements ControllerFXML {
             game.removeCardInPlayer(card);
             loadInventory();
         } catch (ModelException e) {
-            System.out.println("Cannot remove card: " + e.getMessage());
+            errorPanelController.displayError(e.getMessage());
         }
     }
 

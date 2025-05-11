@@ -231,6 +231,9 @@ public class Game {
      * @param card The card to be added.
      */
     public void addCardInPlayer(Card card) {
+        if (card.getTier().isGreater(Tier.values()[currentStage])) {
+            throw new ModelException("You can't add cards with a tier higher than the current stage");
+        }
         player.addCard(card);
     }
 

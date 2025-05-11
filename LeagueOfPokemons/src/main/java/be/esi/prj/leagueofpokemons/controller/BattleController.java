@@ -51,6 +51,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     private SettingsController settingsMenuController;
 
     @FXML
+    private Text currentStageText;
+    @FXML
     private Label playerCurrentPokemonNameLabel;
     @FXML
     private ImageView playerPokemonImage;
@@ -146,6 +148,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         player = battle.getPlayer();
         opponent = battle.getOpponent();
 
+        currentStageText.setText("Battle " + game.getCurrentStage());
         initializeSlotsPokemon();
         initNameLabels();
         initPokemonIndicators();

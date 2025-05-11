@@ -417,7 +417,7 @@
             <Image url="@pics/common/betterBoard.png" />
         </image>
     </ImageView>
-    <Text fill="WHITE" layoutX="56.0" layoutY="81.0" stroke="#0b0b0b" strokeType="OUTSIDE" styleClass="text-rog" text="Battle 10">
+    <Text fx:id="currentStageText" fill="WHITE" layoutX="56.0" layoutY="81.0" stroke="#0b0b0b" strokeType="OUTSIDE" styleClass="text-rog" text="Battle X">
         <font>
             <Font size="20.0" />
         </font>
