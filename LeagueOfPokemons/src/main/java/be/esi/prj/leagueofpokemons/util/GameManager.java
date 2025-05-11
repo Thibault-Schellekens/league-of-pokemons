@@ -6,7 +6,6 @@ import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.model.db.repository.*;
 import be.esi.prj.leagueofpokemons.view.ImageCache;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -29,16 +28,12 @@ public class GameManager {
      * @param name the name of the player for the new game.
      */
     public static void newGame(String name) {
-        System.out.println("League of Legends: Initializing game");
         Collection currCollection = new Collection(-1);
         ImageCache.getInstance().registerToCollection(currCollection);
         currCollection.loadCards(collectionRepository.loadBaseSet(), Collections.emptySet());
-        Player currPlayer = new Player(0, name);
+        Player currPlayer = new Player(-1, name);
 
         Game.initialize(-1, currPlayer, currCollection);
-        System.out.println("GameID : " + Game.getInstance().getId()
-                + " PlayerID : " + Game.getInstance().getPlayer().getId()
-                + " CollectionID : " + Game.getInstance().getCollection().getId());
     }
 
     /**
@@ -53,24 +48,12 @@ public class GameManager {
             throw new ModelException("Game name cannot be empty");
         }
         Game game = Game.getInstance();
-        GameDto gameDto = new GameDto(
-                game.getId(),
-                name,
-                game.getPlayer().getId(),
-                game.getPlayer().getSlot(0).getId(),
-                game.getPlayer().getSlot(1).getId(),
-                game.getPlayer().getSlot(2).getId(),
-                game.getCurrentStage(),
-                LocalDateTime.now()
-        );
+        GameDto gameDto = game.createGameDto(name);
 
         try {
-            for (Card card : game.getCollection().getImportedCards()) {
+            for (Card card : game.getImportedCards()) {
                 cardRepository.save(card);
             }
-
-            System.out.println("LOP : saving with id : " + game.getId());
-            System.out.println("Saving with team : " + game.getPlayer().getSlot(2).getName());
 
             int gameId = gameRepository.save(gameDto);
             game.setId(gameId);
@@ -89,26 +72,45 @@ public class GameManager {
      * @throws ModelException if the game is not found or there is an error during loading.
      */
     public static void loadGame(int gameId) {
-        System.out.println("GameID before loading : " + gameId);
+
         GameDto gameDto = gameRepository.findById(gameId).orElse(null);
         if (gameDto == null) {
             throw new ModelException("Game not found with ID: " + gameId);
         }
 
         Collection collection = collectionRepository.findById(gameDto.gameID()).orElse(null);
+        if (collection == null) {
+            throw new ModelException("Collection not found for Game ID: " + gameId);
+        }
+
         Player player = playerRepository.findById(gameDto.playerID()).orElse(null);
+        if (player == null) {
+            throw new ModelException("Player not found for Game ID: " + gameId);
+        }
 
         Card slot1 = cardRepository.findById(gameDto.slot1ID()).orElse(null);
+        if (slot1 == null) {
+            throw new ModelException("Card not found for Slot 1 in Game ID: " + gameId);
+        }
+
         Card slot2 = cardRepository.findById(gameDto.slot2ID()).orElse(null);
+        if (slot2 == null) {
+            throw new ModelException("Card not found for Slot 2 in Game ID: " + gameId);
+        }
+
         Card slot3 = cardRepository.findById(gameDto.slot3ID()).orElse(null);
+        if (slot3 == null) {
+            throw new ModelException("Card not found for Slot 3 in Game ID: " + gameId);
+        }
 
         List<Card> playerInventory = new ArrayList<>(List.of(slot1, slot2, slot3));
         player.loadPlayerInventory(playerInventory);
 
         Game.getInstance().loadGame(gameDto.gameID(), player, collection, gameDto.currentStage());
+
         ImageCache.getInstance().registerToCollection(collection);
-        System.out.println("GameID after loading : " + gameId);
     }
+
 
     /**
      * Deletes the game from the repository by the given game ID.
@@ -142,4 +144,6 @@ public class GameManager {
     public static Optional<Card> findCardById(String id) {
         return cardRepository.findById(id);
     }
+
+
 }

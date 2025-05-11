@@ -1,10 +1,13 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import javafx.beans.property.IntegerProperty;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a game session where a player competes against a series of opponents.
@@ -28,8 +31,8 @@ public class Game {
      * Initializes the game with the specified game ID, player, and collection.
      * This method can only be called once during the lifetime of the game instance.
      *
-     * @param gameId The ID of the game.
-     * @param player The player participating in the game.
+     * @param gameId     The ID of the game.
+     * @param player     The player participating in the game.
      * @param collection The collection of cards owned by the player.
      * @throws ModelException if the game has already been initialized.
      */
@@ -63,8 +66,8 @@ public class Game {
     /**
      * Private constructor to initialize the game with the provided details.
      *
-     * @param gameId The ID of the game.
-     * @param player The player participating in the game.
+     * @param gameId     The ID of the game.
+     * @param player     The player participating in the game.
      * @param collection The collection of cards owned by the player.
      */
     private Game(int gameId, Player player, Collection collection) {
@@ -90,10 +93,10 @@ public class Game {
     /**
      * Loads a saved game state with the specified game ID, player, collection, and current stage.
      *
-     * @param gameId The ID of the saved game.
-     * @param newPlayer The player to load into the game.
+     * @param gameId        The ID of the saved game.
+     * @param newPlayer     The player to load into the game.
      * @param newCollection The collection of cards for the player.
-     * @param currentStage The stage of the game at the time of loading.
+     * @param currentStage  The stage of the game at the time of loading.
      */
     public void loadGame(int gameId, Player newPlayer, Collection newCollection, int currentStage) {
         this.id = gameId;
@@ -228,5 +231,34 @@ public class Game {
      */
     public void addCardInPlayer(Card card) {
         player.addCard(card);
+    }
+
+    /**
+     * Creates a new GameDto instance with the provided game name and current game state.
+     *
+     * @param name The name of the game.
+     * @return A GameDto containing the game ID, name, player ID, IDs of the player's slots,
+     *         current stage, and the timestamp of the creation.
+     */
+    public GameDto createGameDto(String name) {
+        return new GameDto(
+                id,
+                name,
+                player.getId(),
+                player.getSlotId(0),
+                player.getSlotId(1),
+                player.getSlotId(2),
+                currentStage,
+                LocalDateTime.now()
+        );
+    }
+
+    /**
+     * Retrieves all imported cards from the player's collection.
+     *
+     * @return an unmodifiable set of all imported cards in the collection
+     */
+    public Set<Card> getImportedCards() {
+        return collection.getImportedCards();
     }
 }

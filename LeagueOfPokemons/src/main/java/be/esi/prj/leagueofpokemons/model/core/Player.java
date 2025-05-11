@@ -59,6 +59,17 @@ public class Player extends CombatEntity {
     }
 
     /**
+     * Retrieves the unique ID of the card at the specified index in the player's inventory.
+     *
+     * @param index The index of the card in the inventory.
+     * @return The ID of the card at the specified index.
+     * @throws ModelException If the index is out of bounds.
+     */
+    public String getSlotId(int index) {
+        return getSlot(index).getId();
+    }
+
+    /**
      * Gets the unique ID of the player.
      *
      * @return The player's ID.
