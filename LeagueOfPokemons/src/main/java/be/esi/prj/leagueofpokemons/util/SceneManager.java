@@ -12,6 +12,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Manages the scene transitions and settings for the application's user interface.
+ * Responsible for loading and switching between different scenes (e.g., main menu, game view) with optional animations.
+ */
 public class SceneManager {
     private static Stage primaryStage;
     private static Scene scene;
@@ -22,12 +26,20 @@ public class SceneManager {
 
     private SceneManager() {}
 
+    /**
+     * Initializes the primary stage and sets up the scene manager.
+     * This method is called to start the application.
+     */
     private static void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.setResizable(false);
         settingsManager = SettingsManager.getInstance();
     }
 
+    /**
+     * Starts the JavaFX application by initializing the primary stage
+     * and switching to the main menu scene.
+     */
     public static void start() {
         Platform.startup(() -> {
             primaryStage = new Stage();
@@ -36,14 +48,19 @@ public class SceneManager {
         });
     }
 
+    /**
+     * Switches to a specified scene, loading the corresponding FXML file.
+     * If animation is enabled, transitions between scenes with an animation effect.
+     *
+     * @param view the scene to switch to (e.g., MAINMENU, GAME).
+     */
     public static void switchScene(SceneView view) {
         try {
-
             FXMLLoader fxmlLoader = new FXMLLoader(SceneManager.class.getResource("/be/esi/prj/leagueofpokemons/" + view.name().toLowerCase() + "-view.fxml"));
-            // Loading main menu
             Parent root = fxmlLoader.load();
             ControllerFXML controller = fxmlLoader.getController();
             controller.init();
+
             if (scene == null || settingsManager.isSkipAnimation()) {
                 scene = new Scene(root, WIDTH, HEIGHT);
                 primaryStage.setScene(scene);
@@ -55,9 +72,7 @@ public class SceneManager {
                 SwapSceneAnimation.swapSceneTransition(scene, mainRoot, nextRoot, previousRoot, settingsManager.getAnimationSpeed());
             }
             primaryStage.show();
-        } catch (IOException _) {
+        } catch (IOException e) {
         }
     }
-
 }
-

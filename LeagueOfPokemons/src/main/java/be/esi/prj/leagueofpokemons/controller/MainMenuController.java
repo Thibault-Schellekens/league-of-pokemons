@@ -10,7 +10,15 @@ import be.esi.prj.leagueofpokemons.view.ImageCache;
 import javafx.scene.control.TextInputDialog;
 import javafx.fxml.FXML;
 
-public class MainMenuController implements ControllerFXML{
+/**
+ * Controller for managing the main menu in the League of Pokemons game.
+ * <p>
+ * This controller handles the main menu actions such as opening settings, loading a saved game, saving the game,
+ * and quitting the game.
+ * </p>
+ */
+public class MainMenuController implements ControllerFXML {
+
     @FXML
     private SettingsController settingsMenuController;
     @FXML
@@ -20,14 +28,27 @@ public class MainMenuController implements ControllerFXML{
 
     private final AudioManager audioManager;
 
+    /**
+     * Constructor for MainMenuController.
+     * Initializes the audio manager instance.
+     */
     public MainMenuController() {
         audioManager = AudioManager.getInstance();
     }
 
+    /**
+     * Initializes the main menu controller. Currently does not contain any specific logic.
+     */
     @Override
     public void init() {
     }
 
+    /**
+     * Opens the settings menu.
+     * <p>
+     * This method displays the settings menu if the settings menu controller is initialized.
+     * </p>
+     */
     @FXML
     private void openSettings() {
         if (settingsMenuController != null) {
@@ -35,6 +56,12 @@ public class MainMenuController implements ControllerFXML{
         }
     }
 
+    /**
+     * Opens the load game menu.
+     * <p>
+     * This method displays the load game screen if the load game menu controller is initialized.
+     * </p>
+     */
     @FXML
     private void openLoadGame() {
         if (loadGameMenuController != null) {
@@ -42,21 +69,38 @@ public class MainMenuController implements ControllerFXML{
         }
     }
 
+    /**
+     * Starts a new game by switching to the hub scene.
+     * <p>
+     * This method is triggered when the user chooses to play a new game.
+     * </p>
+     */
     @FXML
     private void play() {
         SceneManager.switchScene(SceneView.HUB);
     }
 
-
-    //TODO: GameManager quit method
+    //todo quit method GameManager
+    /**
+     * Quits the game and shuts down any necessary resources.
+     * <p>
+     * This method is triggered when the user chooses to quit the game. It shuts down all resources
+     * and exits the application.
+     * </p>
+     */
     @FXML
     private void quit() {
         ImageCache.getInstance().shutdown();
         System.exit(0);
     }
 
-
-    //TODO Already load the name if it has one
+    /**
+     * Prompts the user to enter a name for the saved game and saves the game.
+     * <p>
+     * This method displays a dialog to ask the user for a name, and then it saves the game with the provided name.
+     * If an error occurs during saving, an error message is displayed.
+     * </p>
+     */
     @FXML
     private void save() {
         TextInputDialog dialog = new TextInputDialog();
@@ -74,7 +118,12 @@ public class MainMenuController implements ControllerFXML{
         });
     }
 
-
+    /**
+     * Placeholder method for news functionality.
+     * <p>
+     * This method currently does not contain any logic but can be implemented in the future to display game news.
+     * </p>
+     */
     @FXML
     private void news() {
 

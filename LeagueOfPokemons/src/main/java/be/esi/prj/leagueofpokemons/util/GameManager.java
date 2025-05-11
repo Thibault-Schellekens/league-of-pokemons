@@ -9,6 +9,12 @@ import be.esi.prj.leagueofpokemons.view.ImageCache;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Manages the overall game operations, including creating, saving, loading, and deleting games.
+ * The class interacts with various repositories to handle game data and player information.
+ * It also initializes and registers the game environment and player data for each session.
+ * This class provides functionality for game lifecycle management.
+ */
 public class GameManager {
 
     private static final CardRepository cardRepository = new CardRepository();
@@ -16,8 +22,14 @@ public class GameManager {
     private static final PlayerRepository playerRepository = new PlayerRepository();
     private static final GameRepository gameRepository = new GameRepository();
 
+    /**
+     * Initializes a new game with the provided player name.
+     * A new game instance is created, including a collection of cards and a new player.
+     *
+     * @param name the name of the player for the new game.
+     */
     public static void newGame(String name) {
-        System.out.println("League of legends : Initializing game");
+        System.out.println("League of Legends: Initializing game");
         Collection currCollection = new Collection(-1);
         ImageCache.getInstance().registerToCollection(currCollection);
         currCollection.loadCards(collectionRepository.loadBaseSet(), Collections.emptySet());
@@ -29,6 +41,13 @@ public class GameManager {
                 + " CollectionID : " + Game.getInstance().getCollection().getId());
     }
 
+    /**
+     * Saves the current game with the specified name.
+     * It stores the game's data, player details, and collection of cards to the repository.
+     *
+     * @param name the name to associate with the saved game.
+     * @throws ModelException if the game name is null or there is an issue during saving.
+     */
     public static void saveGame(String name) {
         if (name == null) {
             throw new ModelException("Game name cannot be empty");
@@ -60,9 +79,15 @@ public class GameManager {
         } catch (RepositoryException e) {
             throw new ModelException("Error while saving game");
         }
-
     }
 
+    /**
+     * Loads a game from the repository by the given game ID.
+     * Retrieves game data, player details, and the collection associated with the game.
+     *
+     * @param gameId the ID of the game to load.
+     * @throws ModelException if the game is not found or there is an error during loading.
+     */
     public static void loadGame(int gameId) {
         System.out.println("GameID before loading : " + gameId);
         GameDto gameDto = gameRepository.findById(gameId).orElse(null);
@@ -85,6 +110,12 @@ public class GameManager {
         System.out.println("GameID after loading : " + gameId);
     }
 
+    /**
+     * Deletes the game from the repository by the given game ID.
+     *
+     * @param gameId the ID of the game to delete.
+     * @throws ModelException if there is an error during game deletion.
+     */
     public static void deleteGame(int gameId) {
         try {
             gameRepository.delete(gameId);
@@ -93,14 +124,22 @@ public class GameManager {
         }
     }
 
-
-    // TODO: only return game from that player name
+    /**
+     * Retrieves all games from the repository.
+     *
+     * @return a list of all saved games.
+     */
     public static List<GameDto> loadGames() {
         return gameRepository.findAll();
     }
 
+    /**
+     * Finds a card by its ID.
+     *
+     * @param id the ID of the card to find.
+     * @return an Optional containing the card if found, otherwise empty.
+     */
     public static Optional<Card> findCardById(String id) {
         return cardRepository.findById(id);
     }
-
 }

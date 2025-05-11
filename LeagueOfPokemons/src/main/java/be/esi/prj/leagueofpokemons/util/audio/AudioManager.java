@@ -14,6 +14,11 @@ import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Singleton class responsible for managing and playing audio in the application.
+ * Supports both {@link AudioClip} for short sounds and {@link MediaPlayer} for longer sounds or background music.
+ * Handles the playback of sounds, volume adjustments, and the lifecycle of media resources.
+ */
 public class AudioManager {
     private static AudioManager instance;
 
@@ -28,6 +33,10 @@ public class AudioManager {
 
     private final SettingsManager settingsManager;
 
+    /**
+     * Private constructor to initialize audio resources and media players.
+     * Sets up sound maps, media player settings, and the settings manager.
+     */
     private AudioManager() {
         soundMap = new HashMap<>();
         clipsPlaying = new ArrayList<>();
@@ -43,10 +52,19 @@ public class AudioManager {
         initSounds();
     }
 
+    /**
+     * Initializes the media player sounds that require {@link MediaPlayer} for playback.
+     */
     private void initMediaPlayerSounds() {
         useMediaPlayerSounds.add(AudioSound.IN_BATTLE);
     }
 
+    /**
+     * Returns the singleton instance of the AudioManager.
+     * If the instance does not exist, it creates a new one.
+     *
+     * @return the singleton instance of {@link AudioManager}.
+     */
     public static AudioManager getInstance() {
         if (instance == null) {
             instance = new AudioManager();
@@ -54,10 +72,21 @@ public class AudioManager {
         return instance;
     }
 
+    /**
+     * Plays the specified sound at the default volume (1.0).
+     *
+     * @param sound the {@link AudioSound} to be played.
+     */
     public void playSound(AudioSound sound) {
         playSound(sound, 1.0);
     }
 
+    /**
+     * Plays the specified sound at the given volume.
+     *
+     * @param sound the {@link AudioSound} to be played.
+     * @param volume the volume multiplier for the sound (ranges from 0.0 to 1.0).
+     */
     public void playSound(AudioSound sound, double volume) {
         if (useMediaPlayerSounds.contains(sound)) {
             playWithMediaPlayer(sound, volume);
@@ -66,6 +95,12 @@ public class AudioManager {
         }
     }
 
+    /**
+     * Plays the sound using an {@link AudioClip} with the specified volume.
+     *
+     * @param sound the {@link AudioSound} to be played.
+     * @param volume the volume multiplier for the sound (ranges from 0.0 to 1.0).
+     */
     private void playWithAudioClip(AudioSound sound, double volume) {
         AudioClip clip = soundMap.get(sound);
         double actualVolume = ((double) settingsManager.getVolume() / 100) * volume;
@@ -74,6 +109,12 @@ public class AudioManager {
         clipsPlaying.add(sound);
     }
 
+    /**
+     * Plays the sound using a {@link MediaPlayer} with the specified volume.
+     *
+     * @param sound the {@link AudioSound} to be played.
+     * @param volume the volume multiplier for the sound (ranges from 0.0 to 1.0).
+     */
     private void playWithMediaPlayer(AudioSound sound, double volume) {
         mediaVolumeMultipliers.put(sound, volume);
 
@@ -92,6 +133,12 @@ public class AudioManager {
         player.play();
     }
 
+    /**
+     * Stops the specified sound. If the sound is using a {@link MediaPlayer}, it stops and disposes of it.
+     * If the sound is using an {@link AudioClip}, it stops the clip playback.
+     *
+     * @param sound the {@link AudioSound} to stop.
+     */
     public void stopSound(AudioSound sound) {
         if (useMediaPlayerSounds.contains(sound)) {
             stopMediaPlayer(sound);
@@ -100,12 +147,22 @@ public class AudioManager {
         }
     }
 
+    /**
+     * Stops the playback of the specified {@link AudioClip} sound.
+     *
+     * @param sound the {@link AudioSound} whose clip to stop.
+     */
     private void stopAudioClip(AudioSound sound) {
         AudioClip clip = soundMap.get(sound);
         clip.stop();
         clipsPlaying.remove(sound);
     }
 
+    /**
+     * Stops the playback and disposes of the specified {@link MediaPlayer} sound.
+     *
+     * @param sound the {@link AudioSound} whose media player to stop.
+     */
     private void stopMediaPlayer(AudioSound sound) {
         if (activeMediaPlayers.containsKey(sound)) {
             MediaPlayer player = activeMediaPlayers.get(sound);
@@ -116,6 +173,9 @@ public class AudioManager {
         }
     }
 
+    /**
+     * Updates the volume for all currently playing media players based on the settings.
+     */
     public void updateAllSoundVolumes() {
         for (Map.Entry<AudioSound, MediaPlayer> entry : activeMediaPlayers.entrySet()) {
             AudioSound sound = entry.getKey();
@@ -127,6 +187,9 @@ public class AudioManager {
         }
     }
 
+    /**
+     * Initializes all sounds, preloading the resources for {@link AudioClip} and {@link Media}.
+     */
     private void initSounds() {
         for (AudioSound sound : AudioSound.values()) {
             URL resourceUrl = getClass().getResource(sound.getFilePath());
@@ -148,6 +211,9 @@ public class AudioManager {
         }
     }
 
+    /**
+     * Shuts down the audio manager, stopping and disposing all active audio resources.
+     */
     public void shutdown() {
         for (MediaPlayer player : activeMediaPlayers.values()) {
             player.stop();
@@ -161,5 +227,4 @@ public class AudioManager {
         }
         clipsPlaying.clear();
     }
-
 }

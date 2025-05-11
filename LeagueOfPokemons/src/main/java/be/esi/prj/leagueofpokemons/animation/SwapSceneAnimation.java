@@ -17,6 +17,11 @@ import javafx.util.Duration;
 
 import java.util.Random;
 
+/**
+ * Utility class responsible for animating a leaf curtain scene transition in the League of Pokémons application.
+ * <p>
+ * The JavaFX leaves have been created by AI.
+ */
 public class SwapSceneAnimation {
     private static final Random RANDOM = new Random();
     private static final int WIDTH = SceneManager.WIDTH;
@@ -33,6 +38,15 @@ public class SwapSceneAnimation {
 
     private SwapSceneAnimation() {}
 
+    /**
+     * Initiates a curtain-style scene transition using animated leaves.
+     *
+     * @param scene        the {@link Scene} where the transition will take place
+     * @param mainRoot     the current main {@link Pane} containing the old content
+     * @param nextRoot     the {@link Pane} for the new scene to transition into
+     * @param previousRoot the {@link Node} of the previous content being transitioned out
+     * @param speed        the animation speed multiplier
+     */
     public static void swapSceneTransition(Scene scene, Pane mainRoot, Pane nextRoot, Node previousRoot, double speed) {
         mainRoot.getChildren().add(previousRoot);
 

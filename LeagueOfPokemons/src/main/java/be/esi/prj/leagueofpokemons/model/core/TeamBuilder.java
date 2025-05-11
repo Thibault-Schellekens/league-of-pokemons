@@ -1,7 +1,20 @@
 package be.esi.prj.leagueofpokemons.model.core;
 
+/**
+ * The {@link TeamBuilder} class is responsible for constructing Pokémon teams based on difficulty and maximum tier.
+ * It provides methods to create teams with varying difficulty levels, each containing a different set of Pokémon.
+ */
 public class TeamBuilder {
 
+    /**
+     * Builds a team based on the specified difficulty and maximum tier.
+     * The difficulty determines the strength and number of Pokémon in the team.
+     *
+     * @param difficulty The difficulty level (0-4) to define the strength of the team.
+     * @param maxTier    The maximum tier that the Pokémon in the team can have.
+     * @return The constructed {@link Team} for the given difficulty and maximum tier.
+     * @throws ModelException If an invalid difficulty level is provided.
+     */
     public Team buildTeam(int difficulty, Tier maxTier) {
         return switch (difficulty) {
             case 0 -> buildTeamDifficulty0(maxTier);
@@ -13,6 +26,12 @@ public class TeamBuilder {
         };
     }
 
+    /**
+     * Constructs a team for difficulty level 0, with weaker Pokémon.
+     *
+     * @param maxTier The maximum tier for the Pokémon in the team.
+     * @return A {@link Team} with Pokémon suited for difficulty level 0.
+     */
     private Team buildTeamDifficulty0(Tier maxTier) {
         Team team = new Team(maxTier);
 
@@ -24,6 +43,12 @@ public class TeamBuilder {
         return team;
     }
 
+    /**
+     * Constructs a team for difficulty level 1, with moderately strong Pokémon.
+     *
+     * @param maxTier The maximum tier for the Pokémon in the team.
+     * @return A {@link Team} with Pokémon suited for difficulty level 1.
+     */
     private Team buildTeamDifficulty1(Tier maxTier) {
         Team team = new Team(maxTier);
 
@@ -38,6 +63,12 @@ public class TeamBuilder {
         return team;
     }
 
+    /**
+     * Constructs a team for difficulty level 2, with stronger Pokémon.
+     *
+     * @param maxTier The maximum tier for the Pokémon in the team.
+     * @return A {@link Team} with Pokémon suited for difficulty level 2.
+     */
     private Team buildTeamDifficulty2(Tier maxTier) {
         Team team = new Team(maxTier);
 
@@ -50,6 +81,12 @@ public class TeamBuilder {
         return team;
     }
 
+    /**
+     * Constructs a team for difficulty level 3, with even stronger Pokémon.
+     *
+     * @param maxTier The maximum tier for the Pokémon in the team.
+     * @return A {@link Team} with Pokémon suited for difficulty level 3.
+     */
     private Team buildTeamDifficulty3(Tier maxTier) {
         Team team = new Team(maxTier);
 
@@ -64,9 +101,14 @@ public class TeamBuilder {
         return team;
     }
 
+    /**
+     * Constructs a team for difficulty level 4, with the strongest Pokémon.
+     *
+     * @param maxTier The maximum tier for the Pokémon in the team.
+     * @return A {@link Team} with Pokémon suited for difficulty level 4.
+     */
     private Team buildTeamDifficulty4(Tier maxTier) {
         Team team = new Team(maxTier);
-
 
         Pokemon pokemon1 = new Pokemon(new Card("swsh3-95", "Rhyperior V", 230, "https://assets.tcgdex.net/en/swsh/swsh3/95/high.png", Type.FIGHTING));
         Pokemon pokemon2 = new Pokemon(new Card("swsh3-19", "Charizard V", 220, "https://assets.tcgdex.net/en/swsh/swsh3/19/high.png", Type.FIRE));
@@ -78,5 +120,4 @@ public class TeamBuilder {
 
         return team;
     }
-
 }

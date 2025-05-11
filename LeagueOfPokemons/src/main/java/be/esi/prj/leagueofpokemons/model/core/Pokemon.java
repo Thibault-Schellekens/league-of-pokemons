@@ -95,7 +95,7 @@ public class Pokemon {
         }
 
         // Apply attack effect if applicable
-        if (attack.hasEffect(special, defender.getType()) && damage > 0) {
+        if (attack.hasEffect(special) && damage > 0) {
             attack.applyEffect(this, defender);
         }
 

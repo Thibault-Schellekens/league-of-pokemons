@@ -33,7 +33,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
-//todo: enhance buttons
+
+/**
+ * Controller for managing the Pokémon battle screen. Handles interactions, UI updates,
+ * and responses to model changes during a battle.
+ */
 public class BattleController implements ControllerFXML, PropertyChangeListener {
 
     private Game game;
@@ -97,8 +101,6 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     @FXML
     private ErrorController errorPanelController;
-
-    // Might encapsulate into its own FXML + Controller
     @FXML
     private Circle playerSlot1Indicator;
     @FXML
@@ -131,6 +133,10 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         audioManager = AudioManager.getInstance();
     }
 
+    /**
+     * Initializes the battle controller by setting up the game state, player and opponent references,
+     * UI elements, and starting the battle music and logic.
+     */
     @Override
     public void init() {
         game = Game.getInstance();
@@ -147,6 +153,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         audioManager.playSound(AudioSound.IN_BATTLE, 0.2);
     }
 
+    /**
+     * Opens the settings panel using the associated settings controller.
+     */
     @FXML
     private void openSettings() {
         if (settingsMenuController != null) {
@@ -261,6 +270,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         }).start();
     }
 
+    /**
+     * Escapes from the current battle and returns to the HUB screen, stopping battle music.
+     */
     @FXML
     private void escape() {
         audioManager.stopSound(AudioSound.IN_BATTLE);
@@ -268,6 +280,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         SceneManager.switchScene(SceneView.HUB);
     }
 
+    /**
+     * Returns to the HUB scene, stopping the battle music and advancing to the next stage.
+     */
     @FXML
     private void backToHub() {
         audioManager.stopSound(AudioSound.BATTLE_WON);
@@ -276,18 +291,27 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         SceneManager.switchScene(SceneView.HUB);
     }
 
+    /**
+     * Displays the selection pane in the UI.
+     */
     @FXML
     private void swapToSelectionPane() {
         hidePanes();
         selectionPane.setVisible(true);
     }
 
+    /**
+     * Displays the attack pane in the UI.
+     */
     @FXML
     private void swapToAttackPane() {
         hidePanes();
         attackPane.setVisible(true);
     }
 
+    /**
+     * Displays the team pane in the UI.
+     */
     @FXML
     private void swapToTeamPane() {
         hidePanes();
@@ -311,6 +335,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         inTurnPane.setVisible(false);
     }
 
+    /**
+     * Switches the player's active Pokémon to the Pokémon in slot 1 and triggers a turn.
+     */
     @FXML
     private void swapSlot1Pokemon() {
         Pokemon pokemonSlot1 = player.getSlot1Pokemon();
@@ -320,6 +347,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         playTurnHandler();
     }
 
+    /**
+     * Switches the player's active Pokémon to the Pokémon in slot 2 and triggers a turn.
+     */
     @FXML
     private void swapSlot2Pokemon() {
         Pokemon pokemonSlot2 = player.getSlot2Pokemon();
@@ -329,6 +359,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         playTurnHandler();
     }
 
+    /**
+     * Executes a normal (basic) attack by the player's active Pokémon.
+     */
     @FXML
     private void normalAttack() {
         battle.prepareTurn(ActionType.BASIC_ATTACK, opponent.think(player.getActivePokemon()));
@@ -336,6 +369,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         playTurnHandler();
     }
 
+    /**
+     * Executes a special attack by the player's active Pokémon.
+     */
     @FXML
     private void specialAttack() {
         battle.prepareTurn(ActionType.SPECIAL_ATTACK, opponent.think(player.getActivePokemon()));
@@ -343,6 +379,9 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         playTurnHandler();
     }
 
+    /**
+     * Plays the current turn in the battle, handling model exceptions.
+     */
     @FXML
     private void playTurnHandler() {
         try {
@@ -352,6 +391,12 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
         }
     }
 
+    /**
+     * Listens for property changes in the model and delegates appropriate handlers
+     * based on the type of event.
+     *
+     * @param evt the property change event received from the model
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Object newValue = evt.getNewValue();
