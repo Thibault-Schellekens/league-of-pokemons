@@ -33,14 +33,16 @@ public class ConnectionManager {
                 loadProperties();
                 String url = properties.getProperty("db.url");
                 connection = DriverManager.getConnection(url);
-                Statement statement = connection.createStatement();
-                statement.execute("PRAGMA foreign_keys = ON;");
+                try (Statement statement = connection.createStatement()) {
+                    statement.execute("PRAGMA foreign_keys = ON;");
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
         return connection;
     }
+
 
     static void close() {
         try {

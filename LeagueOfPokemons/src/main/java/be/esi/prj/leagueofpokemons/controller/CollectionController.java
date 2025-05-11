@@ -3,6 +3,8 @@ package be.esi.prj.leagueofpokemons.controller;
 import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.util.SceneManager;
 import be.esi.prj.leagueofpokemons.util.SceneView;
+import be.esi.prj.leagueofpokemons.util.audio.AudioManager;
+import be.esi.prj.leagueofpokemons.util.audio.AudioSound;
 import be.esi.prj.leagueofpokemons.view.CardContext;
 import be.esi.prj.leagueofpokemons.view.CardView;
 import javafx.fxml.FXML;
@@ -12,13 +14,22 @@ import javafx.scene.layout.GridPane;
 
 import java.util.*;
 
+/**
+ * Controller for managing the player's collection of cards in the League of Pokemons game.
+ */
 public class CollectionController implements ControllerFXML {
+
     private Game game;
     private int page = 1;
     private Tier tier = Tier.TIER_I;
     private String name;
     private Type type;
     private static final int CARDS_PER_PAGE = 6;
+
+    private final AudioManager audioManager;
+
+    @FXML
+    private ErrorController errorPanelController;
 
     @FXML
     private GridPane collectionGrid;
@@ -58,10 +69,16 @@ public class CollectionController implements ControllerFXML {
 
     private final Map<String, CardView> collectionCardViews = new HashMap<>();
 
+    public CollectionController() {
+        game = Game.getInstance();
+        audioManager = AudioManager.getInstance();
+    }
 
+    /**
+     * Initializes the controller by setting up buttons, loading card views, and updating the page.
+     */
     @Override
     public void init() {
-        game = Game.getInstance();
         initTierButtons();
         initTypeButtons();
 
@@ -71,24 +88,33 @@ public class CollectionController implements ControllerFXML {
         updatePaginationButtons();
     }
 
+    /**
+     * Initializes the buttons for selecting card types.
+     * This ensures only one type is selected at a time and changes the opacity based on selection.
+     */
     private void initTypeButtons() {
         List<RadioButton> typeButtons = List.of(fireButton, waterButton, grassButton, lightningButton, fightingButton);
 
         for (RadioButton rb : typeButtons) {
             rb.setOnAction(e -> {
-               boolean isSelected = rb.isSelected();
-               for (RadioButton b : typeButtons) {
-                   b.setSelected(false);
-                   b.getParent().setOpacity(0.5);
-               }
-               if (isSelected) {
-                   rb.setSelected(true);
-                   rb.getParent().setOpacity(1);
-               }
+                boolean isSelected = rb.isSelected();
+                for (RadioButton b : typeButtons) {
+                    b.setSelected(false);
+                    b.getParent().setOpacity(0.5);
+                }
+                if (isSelected) {
+                    rb.setSelected(true);
+                    rb.getParent().setOpacity(1);
+                }
             });
         }
     }
 
+    /**
+     * Returns the selected card type based on the radio button selected.
+     *
+     * @return The selected card type, or null if none is selected.
+     */
     private Type getSelectedButtonType() {
         List<RadioButton> typeButtons = List.of(fireButton, waterButton, grassButton, lightningButton, fightingButton);
 
@@ -100,7 +126,9 @@ public class CollectionController implements ControllerFXML {
         return null;
     }
 
-
+    /**
+     * Initializes the buttons for selecting tiers and sets the corresponding action to reload the collection.
+     */
     private void initTierButtons() {
         tier1btn.setOnAction(e -> setTierAndReload(Tier.TIER_I));
         tier2btn.setOnAction(e -> setTierAndReload(Tier.TIER_II));
@@ -109,11 +137,17 @@ public class CollectionController implements ControllerFXML {
         tier5btn.setOnAction(e -> setTierAndReload(Tier.TIER_V));
     }
 
+    /**
+     * Updates the pagination buttons to reflect the current state.
+     */
     private void updatePaginationButtons() {
         updatePreviousPaginationButton();
         updateNextPaginationButton();
     }
 
+    /**
+     * Updates the "Next" pagination button to disable it when there are no more pages.
+     */
     private void updateNextPaginationButton() {
         int totalPages = (int) Math.ceil((double) filteredCardViews().size() / CARDS_PER_PAGE);
         boolean nextDisable = page >= totalPages;
@@ -121,22 +155,33 @@ public class CollectionController implements ControllerFXML {
         nextImage.setOpacity(nextDisable ? 0.5 : 1);
     }
 
+    /**
+     * Updates the "Previous" pagination button to disable it when there are no previous pages.
+     */
     private void updatePreviousPaginationButton() {
         boolean prevDisable = page <= 1;
         prevPageBtn.setDisable(prevDisable);
         prevImage.setOpacity(prevDisable ? 0.5 : 1);
     }
 
+    /**
+     * Handles filtered search based on the entered name and selected type.
+     * Reloads the collection page with updated filters.
+     */
     @FXML
     private void filteredSearch() {
         String name = nameField.getText();
         Type type = getSelectedButtonType();
-        
+
         this.name = name;
         this.type = type;
         loadCollectionPage();
     }
 
+    /**
+     * Handles the action of moving to the previous page of the collection.
+     * Updates the page and reloads the collection.
+     */
     @FXML
     private void prevPage() {
         if (page > 1) {
@@ -146,6 +191,10 @@ public class CollectionController implements ControllerFXML {
         }
     }
 
+    /**
+     * Handles the action of moving to the next page of the collection.
+     * Updates the page and reloads the collection.
+     */
     @FXML
     private void nextPage() {
         int totalPages = (int) Math.ceil((double) filteredCardViews().size() / CARDS_PER_PAGE);
@@ -156,37 +205,34 @@ public class CollectionController implements ControllerFXML {
         }
     }
 
-    // change this in the future so that it creates cardView by grabing the selected cardView's cropped image
-    // -> skip image processing for better performance
+    /**
+     * Loads the inventory by adding all cards from the player's inventory to the inventory grid.
+     */
     private void loadInventory() {
-        System.out.println("UPDATING INVENTORY");
-        System.out.println("collections view card static");
-
-
         inventoryGrid.getChildren().clear();
         int row = 0;
-        System.out.print("Cards in inventory : ");
 
         for (Card card : game.getPlayerInventory()) {
-            CardView cardView = new CardView(card, this, CardContext.INVENTORY);;
-            System.out.println();
-            System.out.println(cardView + "cardview");
-            System.out.println("row: " + row);
-
+            CardView cardView = new CardView(card, this, CardContext.INVENTORY);
             inventoryGrid.add(cardView, 0, row);
-            System.out.print(card.getName() + ", ");
             row++;
         }
-        System.out.println(" .");
-        System.out.println(inventoryGrid.getChildren());
     }
 
+    /**
+     * Sets the selected tier and reloads the collection page with the updated tier.
+     *
+     * @param selectedTier The tier to be set.
+     */
     private void setTierAndReload(Tier selectedTier) {
         tier = selectedTier;
         page = 1;
         loadCollectionPage();
     }
 
+    /**
+     * Loads the collection page by displaying the filtered cards in the collection grid.
+     */
     public void loadCollectionPage() {
         collectionGrid.getChildren().clear();
         List<CardView> filtered = filteredCardViews();
@@ -204,7 +250,11 @@ public class CollectionController implements ControllerFXML {
         }
     }
 
-
+    /**
+     * Filters the card views based on the selected tier, name, and type.
+     *
+     * @return A list of filtered card views.
+     */
     private List<CardView> filteredCardViews() {
         CardFilter filter = new CardFilter.Builder()
                 .tier(tier)
@@ -219,38 +269,52 @@ public class CollectionController implements ControllerFXML {
                 .toList();
     }
 
-
+    /**
+     * Navigates the user back to the hub scene.
+     */
     public void back() {
         SceneManager.switchScene(SceneView.HUB);
     }
 
+    /**
+     * Handles the action of selecting a card from the collection.
+     * Adds the selected card to the player's inventory.
+     *
+     * @param card The selected card to be added.
+     */
     public void onCollectionCardSelected(CardView card) {
         try {
             game.addCardInPlayer(card.getCard());
+            audioManager.playSound(AudioSound.PLINK);
             loadInventory();
-            System.out.println("Added Card " + card.getCard().getName());
         } catch (ModelException e) {
-            System.out.println("Cannot add card: " + e.getMessage());
+            errorPanelController.displayError(e.getMessage());
         }
     }
 
+    /**
+     * Handles the action of selecting a card from the inventory.
+     * Removes the selected card from the player's inventory.
+     *
+     * @param card The selected card to be removed.
+     */
     public void onInventoryCardSelected(Card card) {
-        try{
+        try {
+            audioManager.playSound(AudioSound.PLINK);
             game.removeCardInPlayer(card);
-            System.out.println(card.getName() + " got removed");
             loadInventory();
-        } catch (ModelException e){
-            System.out.println("Cannot remove card: " + e.getMessage());
+        } catch (ModelException e) {
+            errorPanelController.displayError(e.getMessage());
         }
     }
 
-
-    private void loadCardViews (){
-        System.out.println("LOADING ALL CARDVIEWS");
+    /**
+     * Loads all card views into the collection card views map.
+     */
+    private void loadCardViews() {
         Set<Card> collection = game.getCollection().getAvailableCards();
-        for (Card card : collection ){
+        for (Card card : collection) {
             if (!collectionCardViews.containsKey(card.getId())) {
-                System.out.println("Card : " + card.getId() + " | name : " + card.getName() + " is getting added");
                 collectionCardViews.put(card.getId(), new CardView(card, this, CardContext.COLLECTION));
             }
         }

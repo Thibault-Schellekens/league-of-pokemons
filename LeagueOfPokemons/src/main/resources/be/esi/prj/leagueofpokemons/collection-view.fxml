@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="1061.0" stylesheets="style/global.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.CollectionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="1061.0" stylesheets="@style/global.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.esi.prj.leagueofpokemons.controller.CollectionController">
     <children>
         <ImageView fx:id="roomBackground" fitHeight="783.0" fitWidth="1138.0" layoutX="-24.0" layoutY="-81.0" pickOnBounds="true" preserveRatio="true">
             <image>
@@ -59,12 +59,12 @@
             <StackPane opacity="0.5">
                 <children>
 
-                    <ImageView fitHeight="30.0" fitWidth="30.0" >
+                    <ImageView fitHeight="30.0" fitWidth="30.0">
                         <image>
                             <Image url="@pics/common/FIRE_type.png" />
                         </image>
                     </ImageView>
-                    <RadioButton fx:id="fireButton" prefHeight="30.0" prefWidth="30.0" opacity="0.0" style="-fx-cursor: hand" text="FIRE"/>
+                    <RadioButton fx:id="fireButton" opacity="0.0" prefHeight="30.0" prefWidth="30.0" style="-fx-cursor: hand" text="FIRE" />
                 </children>
             </StackPane>
 
@@ -76,7 +76,7 @@
                             <Image url="@pics/common/WATER_type.png" />
                         </image>
                     </ImageView>
-                    <RadioButton fx:id="waterButton" prefHeight="30.0" prefWidth="30.0" opacity="0" style="-fx-cursor: hand" text="WATER"/>
+                    <RadioButton fx:id="waterButton" opacity="0" prefHeight="30.0" prefWidth="30.0" style="-fx-cursor: hand" text="WATER" />
                 </children>
             </StackPane>
 
@@ -88,7 +88,7 @@
                             <Image url="@pics/common/GRASS_type.png" />
                         </image>
                     </ImageView>
-                    <RadioButton fx:id="grassButton" prefHeight="30.0" prefWidth="30.0" opacity="0" style="-fx-cursor: hand" text="GRASS"/>
+                    <RadioButton fx:id="grassButton" opacity="0" prefHeight="30.0" prefWidth="30.0" style="-fx-cursor: hand" text="GRASS" />
                 </children>
             </StackPane>
 
@@ -100,7 +100,7 @@
                             <Image url="@pics/common/LIGHTNING_type.png" />
                         </image>
                     </ImageView>
-                    <RadioButton fx:id="lightningButton" prefHeight="30.0" prefWidth="30.0" opacity="0" style="-fx-cursor: hand" text="LIGHTNING"/>
+                    <RadioButton fx:id="lightningButton" opacity="0" prefHeight="30.0" prefWidth="30.0" style="-fx-cursor: hand" text="LIGHTNING" />
                 </children>
             </StackPane>
 
@@ -112,7 +112,7 @@
                             <Image url="@pics/common/FIGHTING_type.png" />
                         </image>
                     </ImageView>
-                    <RadioButton fx:id="fightingButton" prefHeight="30.0" prefWidth="30.0" opacity="0" style="-fx-cursor: hand" text="FIGHTING"/>
+                    <RadioButton fx:id="fightingButton" opacity="0" prefHeight="30.0" prefWidth="30.0" style="-fx-cursor: hand" text="FIGHTING" />
                 </children>
             </StackPane>
         </HBox>
@@ -244,6 +244,9 @@
                 </ImageView>
                 <Button fx:id="prevPageBtn" mnemonicParsing="false" onMouseClicked="#prevPage" opacity="0.0" prefHeight="40.0" prefWidth="40.0" style="-fx-cursor: hand" text="Next" />
             </children>
+        </Pane>
+        <Pane layoutX="806.0" layoutY="499.0">
+            <fx:include fx:id="errorPanel" source="include/error-component.fxml" />
         </Pane>
     </children>
 </Pane>

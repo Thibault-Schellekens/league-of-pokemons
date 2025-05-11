@@ -55,7 +55,7 @@ class GameTest {
     }
 
     @Test
-    void testGameOverIfPlayerLost() {
+    void testSameStageIfPlayerLost() {
         player.addCard(new Card("test1", "test1", 100, "url", Type.FIRE));
         player.addCard(new Card("test2", "test2", 100, "url", Type.FIRE));
         player.addCard(new Card("test3", "test3", 100, "url", Type.FIRE));
@@ -73,10 +73,11 @@ class GameTest {
         battle.playTurn();
 
 
+        int expected = game.getCurrentStage();
         game.nextStage();
 
-        boolean expected = true;
-        boolean actual = game.isGameOver();
+
+        int actual = game.getCurrentStage();
 
         assertEquals(expected, actual);
     }
