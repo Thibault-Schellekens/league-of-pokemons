@@ -104,4 +104,29 @@ class GameTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void testAddCardIfHigherTierThanCurrentStage() {
+        Card card = new Card("test", "test", 1000, "url", Type.FIRE);
+
+        assertThrows(ModelException.class, () -> game.addCardInPlayer(card));
+    }
+
+    @Test
+    void testAddCardSuccess() {
+        Card card = new Card("test", "test", 60, "url", Type.FIRE);
+        game.addCardInPlayer(card);
+
+        assertEquals(1, game.getPlayer().getInventory().size());
+        assertEquals(card, game.getPlayer().getInventory().getFirst());
+    }
+
+    @Test
+    void testRemoveCardInPlayer() {
+        Card card = new Card("test", "test", 60, "url", Type.FIRE);
+        game.addCardInPlayer(card);
+        game.removeCardInPlayer(card);
+
+        assertEquals(0, game.getPlayer().getInventory().size());
+    }
+
 }
