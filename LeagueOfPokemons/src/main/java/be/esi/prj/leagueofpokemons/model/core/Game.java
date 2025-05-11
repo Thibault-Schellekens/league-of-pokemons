@@ -103,6 +103,7 @@ public class Game {
         this.player = newPlayer;
         this.collection = newCollection;
         this.currentStage = currentStage;
+        this.gameOver = currentStage == MAX_STAGE;
     }
 
     /**
@@ -120,7 +121,7 @@ public class Game {
         if (currentBattle.getWinner().equals(player.getName())) {
             currentStage++;
         }
-        if (currentStage > MAX_STAGE) {
+        if (currentStage >= MAX_STAGE) {
             endGame();
         }
         currentBattle = null;
