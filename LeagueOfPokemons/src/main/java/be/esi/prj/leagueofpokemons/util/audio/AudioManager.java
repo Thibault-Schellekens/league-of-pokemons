@@ -65,7 +65,7 @@ public class AudioManager {
      *
      * @return the singleton instance of {@link AudioManager}.
      */
-    public static AudioManager getInstance() {
+    public static synchronized AudioManager getInstance() {
         if (instance == null) {
             instance = new AudioManager();
         }

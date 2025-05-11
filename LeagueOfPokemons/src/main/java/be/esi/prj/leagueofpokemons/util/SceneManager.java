@@ -56,7 +56,7 @@ public class SceneManager {
      * Switches to a specified scene, loading the corresponding FXML file.
      * If animation is enabled, transitions between scenes with an animation effect.
      *
-     * @param view the scene to switch to (e.g., MAINMENU, GAME).
+     * @param view the scene to switch to (e.g., MAINMENU, BATTLE).
      */
     public static void switchScene(SceneView view) {
         try {

@@ -43,7 +43,7 @@ public class ImageCache implements PropertyChangeListener {
      *
      * @return the singleton instance of the {@link ImageCache}
      */
-    public static ImageCache getInstance() {
+    public static synchronized ImageCache getInstance() {
         if (instance == null) {
             instance = new ImageCache();
         }

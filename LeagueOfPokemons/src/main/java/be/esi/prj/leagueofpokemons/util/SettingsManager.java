@@ -33,7 +33,7 @@ public class SettingsManager {
      *
      * @return the singleton instance of the {@link SettingsManager}
      */
-    public static SettingsManager getInstance() {
+    public static synchronized SettingsManager getInstance() {
         if (instance == null) {
             instance = new SettingsManager();
         }
