@@ -159,7 +159,7 @@ The project has 5 main FXML files. The following images are just previews from t
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | Implementation of Model + Enhancing views     |
+| All      | Enhancing views     |
 | Thibault | OCR Service + view animations   |
 | Marian   | DataBase Connection      |
 
@@ -167,25 +167,22 @@ The project has 5 main FXML files. The following images are just previews from t
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | Implementation of Model      |
-| Thibault | _TBD_      |
-| Marian   | _TBD_      |
+| Thibault | Implementation of Model     |
+| Marian   | DataBase Connection      |
 
 ### Week 4 - 6H
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | Implementation of MVC      |
-| Thibault | _TBD_      |
-| Marian   | _TBD_      |
+| Thibault | Implementation of Model + Battle Controller      |
+| Marian   | DataBase Connection  + Collection    |
 
 ### Week 5 - 6H
 
 | Who      | Description |
 | -------- | ----------- |
-| All      | Preparing final release      |
-| Thibault | _TODO_      |
-| Marian   | _TODO_      |
+| Thibault | Implementation of Model, unit tests, Controllers, animations      |
+| Marian   | DataBase Connection  unit tests    |
 
 
 ## Installation and Usage
@@ -200,17 +197,24 @@ To use the application, follow these steps:
 
 2. Start the project by running the command :
    ```bash
-   mvn ...
+   mvn javafx:run
    ```
+
+Make sure to have Tesseract installed to be able to scan cards, at the default installation location.
 
 ## Known Issues of the Application
 
 During the functional testing, we identified the following issues:
 
-- ...
+- Visual bug while manipulating the TableView within the LoadGame interface. The user may experience a rare bug, where the TableView doesn't allow scrolling anymore. 
 
 ## Retrospective
 
 We observed the following differences between the initially imagined class diagram and the implemented version:
 
-- ...
+- Added an abstract class to better encapsulate the Attack classes (Basic Attack, Special Attack).
+- Added a whole Effect system, to enhance the Battle, making it more strategic.
+- Added a TurnResult record, linked to the Battle, to handle passing informations to the controller.
+- Removed GameResult, and added a GameManager class, to handle connections between our repositories and the Game class.
+- Added a CardFilter class, to encapsulate the logic of filtering and let the Collection uses this class. This class uses a Builder Pattern, making it easy to maintain and add logic.
+- Added a TeamBuilder class, to encapsulate the logic behind creating teams for the AI Opponent.
