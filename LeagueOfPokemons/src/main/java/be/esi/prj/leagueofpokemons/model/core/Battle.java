@@ -40,6 +40,34 @@ public class Battle {
     }
 
     /**
+     * Retrieves the current player in the game.
+     *
+     * @return the {@link Player} representing the current player
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Retrieves the opponent in the game.
+     *
+     * @return the {@link Opponent} representing the opponent
+     */
+    public Opponent getOpponent() {
+        return opponent;
+    }
+
+    /**
+     * Checks if it is the current player's turn.
+     *
+     * @return true if it is the current player's turn, false otherwise
+     */
+    public boolean isInTurn() {
+        return inTurn;
+    }
+
+
+    /**
      * Starts the battle if it hasn't started already.
      * Sets the battle status to IN_PROGRESS and fires property changes for both players' Pokémon.
      */
