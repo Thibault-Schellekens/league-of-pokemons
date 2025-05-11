@@ -90,8 +90,7 @@ public class MainMenuController implements ControllerFXML {
      */
     @FXML
     private void quit() {
-        ImageCache.getInstance().shutdown();
-        System.exit(0);
+        GameManager.quit();
     }
 
     /**

@@ -34,6 +34,10 @@ public class SceneManager {
         primaryStage = stage;
         primaryStage.setResizable(false);
         settingsManager = SettingsManager.getInstance();
+
+        primaryStage.setOnCloseRequest(event -> {
+            GameManager.quit();
+        });
     }
 
     /**

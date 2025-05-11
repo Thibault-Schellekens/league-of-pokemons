@@ -4,6 +4,7 @@ import be.esi.prj.leagueofpokemons.model.core.*;
 import be.esi.prj.leagueofpokemons.model.core.Collection;
 import be.esi.prj.leagueofpokemons.model.db.dto.GameDto;
 import be.esi.prj.leagueofpokemons.model.db.repository.*;
+import be.esi.prj.leagueofpokemons.util.audio.AudioManager;
 import be.esi.prj.leagueofpokemons.view.ImageCache;
 
 import java.util.*;
@@ -34,6 +35,22 @@ public class GameManager {
         Player currPlayer = new Player(-1, name);
 
         Game.initialize(-1, currPlayer, currCollection);
+    }
+
+    /**
+     * Terminates the application by shutting down key system components and exiting the runtime.
+     * <ul>
+     *   <li>Closes any active database connections using {@code ConnectionManager.close()}.</li>
+     *   <li>Shuts down the image caching system via {@code ImageCache.shutdown()}.</li>
+     *   <li>Shuts down the audio management system via {@code AudioManager.shutdown()}.</li>
+     *   <li>Exits the application with a status code of 0 using {@code System.exit(0)}.</li>
+     * </ul>
+     */
+    public static void quit() {
+        ConnectionManager.close();
+        ImageCache.getInstance().shutdown();
+        AudioManager.getInstance().shutdown();
+        System.exit(0);
     }
 
     /**
