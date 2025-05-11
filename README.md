@@ -194,13 +194,12 @@ To use the application, follow these steps:
    ```bash
    git clone https://git.esi-bru.be/63491/4prj1d-63491-63054.git
    ```
-2. 
-
+2. Go to the correct directory, containing the project.
    ```bash
    cd 4prj1d-63491-63054/LeagueOfPokemons
    ```
 
-2. Start the project by running the command :
+3. Start the project by running the command :
    ```bash
    mvn javafx:run
    ```
