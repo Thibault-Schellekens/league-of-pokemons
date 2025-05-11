@@ -196,7 +196,7 @@ public class Battle {
     private void endBattle(BattleStatus finalStatus, CombatEntity defeated, CombatEntity winner) {
         status = finalStatus;
         inTurn = false;
-        pcs.firePropertyChange("pokemonDefeated", null, defeated.getActivePokemon());
+        pcs.firePropertyChange("pokemonDefeated", null, defeated);
         pcs.firePropertyChange("battleOver", null, winner.getName());
     }
 
