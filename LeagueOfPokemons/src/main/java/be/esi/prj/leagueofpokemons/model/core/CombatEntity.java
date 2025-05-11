@@ -29,6 +29,15 @@ public abstract class CombatEntity {
     }
 
     /**
+     * Retrieves the type of the currently active Pokémon.
+     *
+     * @return the {@link Type} of the active Pokémon
+     */
+    public Type getActivePokemonType() {
+        return activePokemon.getType();
+    }
+
+    /**
      * Checks if the currently active Pokémon is dead (defeated).
      *
      * @return true if the active Pokémon is defeated, otherwise false
@@ -100,6 +109,34 @@ public abstract class CombatEntity {
      */
     public int getActivePokemonCurrentHP() {
         return activePokemon.getCurrentHP();
+    }
+
+    /**
+     * Retrieves the maximum health points (HP) of the currently active Pokémon.
+     *
+     * @return the maximum HP of the active Pokémon
+     */
+    public int getActivePokemonMaxHP() {
+        return activePokemon.getMaxHP();
+    }
+
+    /**
+     * Retrieves the name of the currently active Pokémon for this combat entity.
+     *
+     * @return the name of the active Pokémon
+     */
+    public String getActivePokemonName() {
+        return activePokemon.getName();
+    }
+
+    /**
+     * Checks if the currently active Pokémon of this combat entity is affected by the specified effect type.
+     *
+     * @param effectType the type of effect to check for on the active Pokémon
+     * @return true if the active Pokémon has the specified effect type, otherwise false
+     */
+    public boolean hasEffectOnActivePokemon(Effect.EffectType effectType) {
+        return activePokemon.hasEffect(effectType);
     }
 
     /**

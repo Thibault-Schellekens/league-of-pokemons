@@ -458,8 +458,8 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
 
     private void handleAttackTurnEvent(TurnResult turnResultEvent) {
         if (turnResultEvent.damage() > 0) {
-            handleAttackSound(turnResultEvent.attacker().getActivePokemon().getType());
-            double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.defender().getActivePokemon().getMaxHP();
+            handleAttackSound(turnResultEvent.attackType());
+            double newHPBarValue = (double) turnResultEvent.defenderHP() / turnResultEvent.getDefenderMaxHP();
             if (turnResultEvent.attacker() == player) {
                 BattleAnimation.playDamageAnimation(opponentPokemonImage, opponentPokemonCurrentHPBar, newHPBarValue, opponentPokemonCurrentHPText, turnResultEvent.defenderHP());
             } else {
@@ -467,7 +467,7 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
             }
         }
         if (turnResultEvent.effectType() == Effect.EffectType.DRAIN) {
-            double newHPBarValue = (double) turnResultEvent.attackerHP() / turnResultEvent.attacker().getActivePokemon().getMaxHP();
+            double newHPBarValue = (double) turnResultEvent.attackerHP() / turnResultEvent.getAttackerMaxHP();
             if (turnResultEvent.attacker() == player) {
                 BattleAnimation.playRestoreHealthAnimation(playerPokemonCurrentHPBar, newHPBarValue, playerPokemonCurrentHPText, turnResultEvent.attackerHP());
             } else {
@@ -511,12 +511,12 @@ public class BattleController implements ControllerFXML, PropertyChangeListener 
     }
 
     private void handleEffectMessage(TurnResult turnResultEvent) {
-        if (turnResultEvent.attacker().getActivePokemon().hasEffect(Effect.EffectType.DODGE)) {
+        if (turnResultEvent.hasEffectOnAttackerActivePokemon(Effect.EffectType.DODGE)) {
             effectPane.setVisible(true);
-            effectLabel.setText("dodge active on " + turnResultEvent.attacker().getActivePokemon().getName());
-        } else if (turnResultEvent.defender().getActivePokemon().hasEffect(Effect.EffectType.PARALYZE)) {
+            effectLabel.setText("dodge active on " + turnResultEvent.getAttackerActivePokemonName());
+        } else if (turnResultEvent.hasEffectOnDefenderActivePokemon(Effect.EffectType.PARALYZE)) {
             effectPane.setVisible(true);
-            effectLabel.setText("paralized active on " + turnResultEvent.defender().getActivePokemon().getName());
+            effectLabel.setText("paralized active on " + turnResultEvent.getDefenderActivePokemonName());
         }
 
 

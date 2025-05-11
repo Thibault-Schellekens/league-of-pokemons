@@ -54,4 +54,70 @@ public record TurnResult(
          */
         Effect.EffectType effectType
 ) {
+
+    /**
+     * Retrieves the type of the active Pokémon of the attacking combat entity.
+     *
+     * @return the {@link Type} representing the elemental type of the attacker's active Pokémon
+     */
+    public Type attackType() {
+        return attacker.getActivePokemonType();
+    }
+
+    /**
+     * Retrieves the maximum health points (HP) of the defender's currently active Pokémon.
+     *
+     * @return the maximum HP of the defender's active Pokémon
+     */
+    public int getDefenderMaxHP() {
+        return defender.getActivePokemonMaxHP();
+    }
+
+    /**
+     * Retrieves the maximum health points (HP) of the attacker's currently active Pokémon.
+     *
+     * @return the maximum HP of the attacker's active Pokémon
+     */
+    public int getAttackerMaxHP() {
+        return attacker.getActivePokemonMaxHP();
+    }
+
+    /**
+     * Checks whether a specific effect type is currently active on the attacker's
+     * active Pokémon during the current turn.
+     *
+     * @param effectType the type of effect to check for on the attacker's active Pokémon
+     * @return true if the specified effect type is active on the attacker's active Pokémon, false otherwise
+     */
+    public boolean hasEffectOnAttackerActivePokemon(Effect.EffectType effectType) {
+        return attacker.hasEffectOnActivePokemon(effectType);
+    }
+
+    /**
+     * Checks whether a specific effect type has an effect on the defender's currently active Pokémon.
+     *
+     * @param effectType the type of the effect to check (e.g., BURN, DODGE, DRAIN, etc.)
+     * @return true if the specified effect type has an effect on the defender's active Pokémon, false otherwise
+     */
+    public boolean hasEffectOnDefenderActivePokemon(Effect.EffectType effectType) {
+        return defender.hasEffectOnActivePokemon(effectType);
+    }
+
+    /**
+     * Retrieves the name of the currently active Pokémon for the attacking combat entity.
+     *
+     * @return the name of the attacker's active Pokémon
+     */
+    public String getAttackerActivePokemonName() {
+        return attacker.getActivePokemonName();
+    }
+
+    /**
+     * Retrieves the name of the currently active Pokémon for the defender's combat entity.
+     *
+     * @return the name of the defender's active Pokémon
+     */
+    public String getDefenderActivePokemonName() {
+        return defender.getActivePokemonName();
+    }
 }
