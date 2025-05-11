@@ -66,6 +66,15 @@ public class Battle {
         return inTurn;
     }
 
+    /**
+     * Retrieves the current turn's name.
+     *
+     * @return the {@link String} name representing the current turn.
+     */
+    public String getCurrentTurnName() {
+        return currentTurn.getName();
+    }
+
 
     /**
      * Starts the battle if it hasn't started already.
